@@ -12,8 +12,8 @@ export async function executeCommand(command: string): Promise<ExecResult> {
 
   return new Promise((resolve) => {
     const isWindows = process.platform === 'win32';
-    const shell = isWindows ? 'cmd.exe' : '/bin/sh';
-    const shellArg = isWindows ? '/c' : '-c';
+    const shell = isWindows ? 'powershell.exe' : '/bin/sh';
+    const shellArg = isWindows ? '-Command' : '-c';
 
     const child = spawn(shell, [shellArg, command], {
       stdio: ['inherit', 'pipe', 'pipe'],
