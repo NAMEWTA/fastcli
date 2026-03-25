@@ -206,4 +206,4 @@ pnpm link -g
 
 ## License
 
-MIT
+MIT © [namewta](https://github.com/namewta)
