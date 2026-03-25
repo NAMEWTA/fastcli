@@ -64,12 +64,13 @@ workflowCmd
 // 默认命令：运行别名或工作流
 program
   .argument('[name]', '别名或工作流名称')
-  .action(async (name?: string) => {
+  .option('--dry-run', '预览命令但不执行')
+  .action(async (name: string | undefined, options: { dryRun?: boolean }) => {
     if (!name) {
       program.help();
       return;
     }
-    await run(name);
+    await run(name, { dryRun: options.dryRun });
   });
 
 program.parse();

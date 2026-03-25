@@ -53,7 +53,7 @@ export function calculateTotalSteps(workflow: Workflow, startId: string): number
 /**
  * 运行工作流
  */
-export async function runWorkflow(workflow: Workflow): Promise<void> {
+export async function runWorkflow(workflow: Workflow, dryRun = false): Promise<void> {
   if (workflow.steps.length === 0) {
     logger.error('工作流没有步骤');
     return;
@@ -92,7 +92,11 @@ export async function runWorkflow(workflow: Workflow): Promise<void> {
       if (selected.command) {
         const finalCommand = buildFinalCommand(selected.command, context.values);
         console.log();
-        await executeCommand(finalCommand);
+        if (dryRun) {
+          logger.preview(`将执行: ${finalCommand}`);
+        } else {
+          await executeCommand(finalCommand);
+        }
         console.log();
         logger.success('工作流完成');
         return;

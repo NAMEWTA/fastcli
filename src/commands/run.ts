@@ -6,7 +6,11 @@ import { runWorkflow } from '../core/workflow-runner.js';
 import { logger } from '../utils/logger.js';
 import { getConfigPath } from '../utils/path.js';
 
-export async function run(name: string): Promise<void> {
+export interface RunOptions {
+  dryRun?: boolean;
+}
+
+export async function run(name: string, options: RunOptions = {}): Promise<void> {
   const configPath = getConfigPath();
 
   if (!existsSync(configPath)) {
@@ -30,8 +34,12 @@ export async function run(name: string): Promise<void> {
 
   if (result.type === 'alias') {
     console.log();
-    await executeCommand(result.data.command);
+    if (options.dryRun) {
+      logger.preview(`将执行: ${result.data.command}`);
+    } else {
+      await executeCommand(result.data.command);
+    }
   } else {
-    await runWorkflow(result.data);
+    await runWorkflow(result.data, options.dryRun);
   }
 }
