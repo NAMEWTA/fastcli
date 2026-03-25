@@ -5,7 +5,7 @@
 FastCLI 是一个全局安装的 npm CLI 工具，用于简化终端命令的使用。它提供两个核心功能：
 
 1. **命令别名** - 将复杂的终端命令简化为短指令
-2. **交互式命令组** - 配置一组相关命令，通过交互界面循环选择执行
+2. **树状工作流** - 配置多步骤交互式工作流，支持条件分支和变量传递
 
 ## 目标用户
 
@@ -16,10 +16,10 @@ FastCLI 是一个全局安装的 npm CLI 工具，用于简化终端命令的使
 ## 核心需求
 
 - 主命令名称：`fastcli`
-- 统一入口：`fastcli <名称>` 自动识别是别名还是命令组
-- 名称唯一性：别名和命令组共用命名空间，不允许重名
+- 统一入口：`fastcli <名称>` 自动识别是别名还是工作流
+- 名称唯一性：别名和工作流共用命名空间，不允许重名
 - 命令预览：执行前显示完整命令
-- 工作流模式：命令组执行后返回选择界面，支持连续操作
+- 树状工作流：支持多步骤选择、条件分支、变量模板替换
 
 ## 技术栈
 
@@ -39,15 +39,14 @@ FastCLI 是一个全局安装的 npm CLI 工具，用于简化终端命令的使
 fastcli/
 ├── src/
 │   ├── commands/                # 子命令
-│   │   ├── run.ts              # 运行别名/命令组（默认命令）
+│   │   ├── run.ts              # 运行别名/工作流（默认命令）
 │   │   ├── alias/              # 别名管理
 │   │   │   ├── add.ts
 │   │   │   ├── remove.ts
 │   │   │   └── list.ts
-│   │   ├── group/              # 命令组管理
-│   │   │   ├── add.ts
-│   │   │   ├── remove.ts
-│   │   │   └── list.ts
+│   │   ├── workflow/           # 工作流管理
+│   │   │   ├── list.ts
+│   │   │   └── show.ts
 │   │   └── config/             # 配置管理
 │   │       ├── init.ts
 │   │       ├── edit.ts
@@ -55,7 +54,8 @@ fastcli/
 │   ├── core/
 │   │   ├── config-manager.ts   # 配置读写
 │   │   ├── executor.ts         # 命令执行器
-│   │   ├── interactive-runner.ts # 交互式选择器
+│   │   ├── workflow-runner.ts  # 工作流引擎
+│   │   ├── template-engine.ts  # 变量模板引擎
 │   │   └── name-resolver.ts    # 名称解析器
 │   ├── types/
 │   │   └── index.ts            # TypeScript 类型定义
@@ -90,19 +90,75 @@ fastcli/
       "description": "启动 Claude 服务"
     }
   },
-  "groups": {
+  "workflows": {
+    "copilot": {
+      "description": "Copilot 账号管理",
+      "steps": [
+        {
+          "id": "select-account",
+          "prompt": "选择账号",
+          "options": [
+            { "name": "账号1", "value": "account1", "next": "select-action" },
+            { "name": "账号2", "value": "account2", "next": "select-action" },
+            { "name": "账号3", "value": "account3", "next": "select-action-v2" }
+          ]
+        },
+        {
+          "id": "select-action",
+          "prompt": "选择操作",
+          "options": [
+            { "name": "查看版本", "command": "copilot --account={{select-account}} --version" },
+            { "name": "启动", "command": "copilot --account={{select-account}}" }
+          ]
+        },
+        {
+          "id": "select-action-v2",
+          "prompt": "账号3专属操作",
+          "options": [
+            { "name": "特殊模式", "command": "copilot --account={{select-account}} --special" }
+          ]
+        }
+      ]
+    },
     "git-flow": {
-      "description": "Git 工作流命令",
-      "commands": [
-        { "name": "add all", "command": "git add ." },
-        { "name": "add src", "command": "git add src/" },
-        { "name": "commit", "command": "git commit -m \"update\"" },
-        { "name": "push", "command": "git push" }
+      "description": "Git 提交流程",
+      "steps": [
+        {
+          "id": "select-add",
+          "prompt": "选择添加范围",
+          "options": [
+            { "name": "全部文件", "value": ".", "next": "select-commit" },
+            { "name": "仅 src", "value": "src/", "next": "select-commit" }
+          ]
+        },
+        {
+          "id": "select-commit",
+          "prompt": "选择提交类型",
+          "options": [
+            { "name": "功能", "command": "git add {{select-add}} && git commit -m \"feat: update\"" },
+            { "name": "修复", "command": "git add {{select-add}} && git commit -m \"fix: update\"" },
+            { "name": "仅添加", "command": "git add {{select-add}}" }
+          ]
+        }
       ]
     }
   }
 }
 ```
+
+### 工作流配置说明
+
+| 字段 | 说明 |
+|------|------|
+| `steps[]` | 步骤数组，按 `id` 索引 |
+| `step.id` | 步骤唯一标识，用于 `next` 跳转和变量引用 |
+| `step.prompt` | 该步骤的提示文字 |
+| `step.options[]` | 选项列表 |
+| `option.name` | 选项显示名称 |
+| `option.value` | 选项值，用于变量替换（可选，默认使用 name） |
+| `option.next` | 下一步骤的 ID（分支跳转） |
+| `option.command` | 最终执行的命令（有此字段表示终点） |
+| `{{step-id}}` | 变量模板，替换为对应步骤选择的 value |
 
 ## 命令接口
 
@@ -113,7 +169,7 @@ fastcli <名称>
 ```
 
 - 如果是别名：显示完整命令 → 执行
-- 如果是命令组：进入交互选择界面 → 循环执行
+- 如果是工作流：进入交互式步骤选择 → 逐步推进 → 执行最终命令
 
 ### 别名管理
 
@@ -123,13 +179,15 @@ fastcli alias rm <name>
 fastcli alias ls
 ```
 
-### 命令组管理
+### 工作流管理
 
 ```bash
-fastcli group add <groupName> <cmdName> <command> [-d, --description <desc>]
-fastcli group rm <groupName> [cmdName]  # 省略 cmdName 则删除整个组
-fastcli group ls [groupName]            # 省略则列出所有组
+fastcli workflow ls              # 列出所有工作流
+fastcli workflow show <name>     # 显示工作流结构（树形展示）
 ```
+
+> **注意**：工作流结构较复杂，建议直接编辑配置文件进行管理。
+> 使用 `fastcli config edit` 打开配置文件进行编辑。
 
 ### 配置管理
 
@@ -166,22 +224,38 @@ interface Executor {
 }
 ```
 
-### InteractiveRunner
+### WorkflowRunner
 
-负责命令组的交互式循环选择。
+负责工作流的交互式步骤执行。
 
 ```typescript
-interface InteractiveRunner {
-  start(group: CommandGroup): Promise<void>;
+interface WorkflowRunner {
+  start(workflow: Workflow): Promise<void>;
 }
 ```
 
-交互流程：
-1. 显示命令组中的所有命令（带编号）
-2. 用户通过箭头键或数字选择
-3. 执行选中的命令
-4. 显示执行结果
-5. 返回步骤 1（直到用户按 q 或 Ctrl+C 退出）
+工作流执行流程：
+1. 从第一个步骤开始（steps[0]）
+2. 显示当前步骤的选项（带编号）
+3. 用户通过箭头键或数字选择
+4. 记录选择的 value 到上下文（用于变量替换）
+5. 如果选项有 `next`：跳转到对应步骤，回到步骤 2
+6. 如果选项有 `command`：替换变量，执行命令，工作流结束
+
+### TemplateEngine
+
+负责变量模板的解析和替换。
+
+```typescript
+interface TemplateEngine {
+  parse(template: string, context: Record<string, string>): string;
+}
+
+// 示例
+// template: "git add {{select-add}}"
+// context: { "select-add": "src/" }
+// result: "git add src/"
+```
 
 ### NameResolver
 
@@ -195,33 +269,52 @@ interface NameResolver {
 
 type ResolveResult = 
   | { type: 'alias'; data: Alias }
-  | { type: 'group'; data: CommandGroup };
+  | { type: 'workflow'; data: Workflow };
 ```
 
 ## 交互界面设计
 
-### 命令组选择界面
+### 工作流步骤选择
 
 ```
-┌─────────────────────────────────────────┐
-│  Git 工作流命令                          │
-├─────────────────────────────────────────┤
-│ ❯ 1. add all     → git add .            │
-│   2. add src     → git add src/         │
-│   3. commit      → git commit -m "..."  │
-│   4. push        → git push             │
-├─────────────────────────────────────────┤
-│  [↑↓/数字] 选择  [Enter] 执行  [q] 退出  │
-└─────────────────────────────────────────┘
+fastcli copilot
+
+┌─ Copilot 账号管理 ─────────────────────┐
+│                                        │
+│  [步骤 1/2] 选择账号                    │
+│                                        │
+│  ❯ 1. 账号1                            │
+│    2. 账号2                            │
+│    3. 账号3                            │
+│                                        │
+│  [↑↓/数字] 选择  [Enter] 确认  [q] 退出 │
+└────────────────────────────────────────┘
+
+→ 选择: 账号2
+
+┌─ Copilot 账号管理 ─────────────────────┐
+│                                        │
+│  [步骤 2/2] 选择操作                    │
+│                                        │
+│  ❯ 1. 查看版本                         │
+│    2. 启动                             │
+│                                        │
+│  [↑↓/数字] 选择  [Enter] 确认  [q] 退出 │
+└────────────────────────────────────────┘
+
+→ 选择: 查看版本
+→ 执行: copilot --account=account2 --version
+✓ 执行完成
 ```
 
 ### 执行反馈
 
 ```
-→ 执行: git add .
-✓ 执行完成
+→ 执行: copilot --account=account2 --version
 
-? 继续选择命令:
+[命令输出内容...]
+
+✓ 工作流完成
 ```
 
 ## 错误处理
@@ -229,17 +322,20 @@ type ResolveResult =
 | 场景 | 处理方式 |
 |------|---------|
 | 配置文件不存在 | 提示运行 `fastcli config init` |
-| 别名/命令组不存在 | 友好提示，建议相似名称 |
+| 别名/工作流不存在 | 友好提示，建议相似名称 |
 | 名称冲突 | 拒绝添加，提示名称已被占用 |
-| 命令执行失败 | 显示错误，不中断交互循环 |
+| 命令执行失败 | 显示错误信息，工作流结束 |
 | 配置格式错误 | 显示具体错误位置 |
+| 工作流步骤缺失 | 启动时校验，提示缺失的 step ID |
+| 变量未定义 | 执行时提示哪个变量未找到 |
+| 用户中途退出 | 按 q 或 Ctrl+C 安全退出，不执行命令 |
 
 ## 类型定义
 
 ```typescript
 interface Config {
   aliases: Record<string, Alias>;
-  groups: Record<string, CommandGroup>;
+  workflows: Record<string, Workflow>;
 }
 
 interface Alias {
@@ -247,15 +343,27 @@ interface Alias {
   description?: string;
 }
 
-interface CommandGroup {
+interface Workflow {
   description?: string;
-  commands: GroupCommand[];
+  steps: WorkflowStep[];
 }
 
-interface GroupCommand {
+interface WorkflowStep {
+  id: string;
+  prompt: string;
+  options: WorkflowOption[];
+}
+
+interface WorkflowOption {
   name: string;
-  command: string;
-  description?: string;
+  value?: string;       // 用于变量替换，默认使用 name
+  next?: string;        // 下一步骤 ID（分支跳转）
+  command?: string;     // 最终命令（终点）
+}
+
+// 运行时上下文
+interface WorkflowContext {
+  values: Record<string, string>;  // step.id → selected value
 }
 ```
 
