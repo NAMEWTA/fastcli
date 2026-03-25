@@ -3,30 +3,15 @@ name: npm-publish
 description: npm 包发布工作流 — 构建、测试、版本更新、Git 推送、npm 发布一条龙。当用户提到"发布 npm"、"publish"、"发版"、"推送到 npm"、"更新版本号"时使用此技能。
 ---
 
+
 # npm 包发布工作流
 
 自动化执行 npm 包发布的完整流程，确保每次发布都经过验证。
 
-## 触发条件
+## 本地开发注意
 
-- 用户说"发布到 npm"、"npm publish"、"发版"
-- 用户想要更新版本并发布
-- 用户需要推送代码到 GitHub 并发布 npm 包
 
-## 前置要求
-
-在开始前，向用户确认以下信息：
-
-1. **NPM_TOKEN**：必须由用户提供，不存储在任何配置中
-   - 提示用户："请提供你的 npm access token（需要启用 2FA bypass）"
-   - Token 获取地址：https://www.npmjs.com/settings/~/tokens
-   - 创建时选择 **Granular Access Token** 并勾选 **"Bypass two-factor authentication for automation"**
-
-2. **版本类型**：询问用户想要的版本更新类型
-   - `patch`：修复 bug（1.0.0 → 1.0.1）
-   - `minor`：新功能（1.0.0 → 1.1.0）
-   - `major`：破坏性更新（1.0.0 → 2.0.0）
-   - 或指定具体版本号
+如仅需本地构建/测试/版本号更新，在推送到 GitHub 后由远程 Action 自动发布。
 
 ## 执行流程
 
@@ -77,15 +62,11 @@ git push
 git push --tags
 ```
 
-### 第五步：发布到 npm
 
-```bash
-# 配置 token（仅在当前会话有效）
-pnpm config set //registry.npmjs.org/:_authToken <用户提供的TOKEN>
 
-# 发布
-pnpm publish --access public --no-git-checks
-```
+### 第五步：由 GitHub Action 远程发布
+
+推送代码和 tag 后，GitHub Action 会自动完成 npm 发布，无需本地执行 publish。
 
 ## 完成输出
 
@@ -99,23 +80,4 @@ pnpm publish --access public --no-git-checks
 🔗 npm: https://www.npmjs.com/package/@scope/package-name
 🔗 GitHub: <仓库地址>
 
-安装命令:
-npm install -g @scope/package-name
 ```
-
-## 错误处理
-
-| 错误 | 解决方案 |
-|------|----------|
-| 403 Forbidden (2FA) | Token 需要启用 "Bypass 2FA"，引导用户重新创建 |
-| 401 Unauthorized | Token 无效或过期，请用户检查 |
-| 测试失败 | 停止发布，修复测试后重试 |
-| 构建失败 | 停止发布，修复构建错误后重试 |
-| Git 工作区脏 | 询问用户是否提交当前更改 |
-
-## 安全提醒
-
-⚠️ **重要**：
-- NPM_TOKEN 仅在交互时由用户提供
-- 不要将 token 写入任何文件或日志
-- 每次发布后 token 配置仅在当前会话有效
