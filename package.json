@@ -1,0 +1,43 @@
+{
+  "name": "fastcli",
+  "version": "1.0.0",
+  "description": "终端命令别名和交互式工作流管理工具",
+  "type": "module",
+  "bin": {
+    "fastcli": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "link": "pnpm build && pnpm link -g",
+    "unlink": "pnpm unlink -g"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "cli",
+    "alias",
+    "workflow",
+    "terminal",
+    "command"
+  ],
+  "license": "MIT",
+  "packageManager": "pnpm@10.29.2",
+  "dependencies": {
+    "@inquirer/prompts": "^8.3.2",
+    "commander": "^14.0.3",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.1"
+  }
+}
