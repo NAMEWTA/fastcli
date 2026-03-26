@@ -196,7 +196,7 @@ describe.sequential('WebApiServer', () => {
     }
   });
 
-  it('POST /api/validate should return normalized error list', async () => {
+  it('POST /api/validate should return 401 without session', async () => {
     const homeDir = join(TEST_ROOT, 'home-validate-errors');
     process.env.HOME = homeDir;
     process.env.USERPROFILE = homeDir;
@@ -207,8 +207,33 @@ describe.sequential('WebApiServer', () => {
 
     const server = await startWebAdminServer();
     try {
+      const response = await requestJson<{ ok: boolean; error: string }>(`${server.url}/api/validate`, {
+        method: 'POST',
+      });
+
+      expect(response.status).toBe(401);
+      expect(response.body.ok).toBe(false);
+      expect(response.body.error).toContain('未认证');
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('POST /api/validate should return normalized result after auth', async () => {
+    const homeDir = join(TEST_ROOT, 'home-validate-after-auth');
+    process.env.HOME = homeDir;
+    process.env.USERPROFILE = homeDir;
+    writeConfig(homeDir, {
+      aliases: { same: { command: 'echo alias' } },
+      workflows: { same: { steps: [] } },
+    });
+
+    const server = await startWebAdminServer();
+    try {
+      const cookie = await authenticate(server.url, server.token);
       const response = await requestJson<{ ok: boolean; valid: boolean; errors: string[] }>(`${server.url}/api/validate`, {
         method: 'POST',
+        cookie,
       });
 
       expect(response.status).toBe(200);
@@ -216,6 +241,29 @@ describe.sequential('WebApiServer', () => {
       expect(response.body.valid).toBe(false);
       expect(Array.isArray(response.body.errors)).toBe(true);
       expect(response.body.errors.length).toBeGreaterThan(0);
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('POST /api/auth/verify should return 413 when body exceeds size limit', async () => {
+    const homeDir = join(TEST_ROOT, 'home-auth-verify-body-limit');
+    process.env.HOME = homeDir;
+    process.env.USERPROFILE = homeDir;
+    writeConfig(homeDir, { aliases: {}, workflows: {} });
+
+    const server = await startWebAdminServer();
+    try {
+      const overLimit = 'x'.repeat(1024 * 1024 + 1024);
+
+      const response = await requestJson<{ ok: boolean; error: string }>(`${server.url}/api/auth/verify`, {
+        method: 'POST',
+        body: { token: overLimit },
+      });
+
+      expect(response.status).toBe(413);
+      expect(response.body.ok).toBe(false);
+      expect(response.body.error).toContain('请求体过大');
     } finally {
       await server.close();
     }

@@ -187,6 +187,10 @@ export async function startWebAdminServer(
       }
 
       if (method === 'POST' && path === '/api/validate') {
+        if (!requireSession(req, res)) {
+          return;
+        }
+
         if (!store) {
           writeJson(res, 500, {
             ok: false,
