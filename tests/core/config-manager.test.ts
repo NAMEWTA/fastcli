@@ -144,5 +144,47 @@ describe('ConfigManager', () => {
       const result = validateConfig(config);
       expect(result.valid).toBe(true);
     });
+
+    it('应该在 option.provider 引用不存在时报错', () => {
+      const config: Config = {
+        aliases: {},
+        workflows: {
+          chat: {
+            steps: [
+              {
+                id: 'step1',
+                prompt: 'Select',
+                options: [{ name: 'Run', provider: 'missing' }],
+              },
+            ],
+          },
+        },
+      };
+
+      const result = validateConfig(config);
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((error) => error.includes('missing'))).toBe(true);
+    });
+
+    it('应该在 provider.envMapping 键值为空时报错', () => {
+      const config: Config = {
+        aliases: {},
+        workflows: {},
+        providers: {
+          codex: {
+            providerId: 'codex',
+            command: 'codex',
+            envMapping: {
+              '': 'token',
+              OPENAI_API_KEY: '',
+            },
+          },
+        },
+      };
+
+      const result = validateConfig(config);
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((error) => error.includes('envMapping'))).toBe(true);
+    });
   });
 });

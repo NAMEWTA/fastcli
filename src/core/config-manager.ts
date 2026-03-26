@@ -55,6 +55,16 @@ export function validateConfig(config: Config): ValidationResult {
   const providers = config.providers ?? {};
   const providerIds = new Set(Object.keys(providers));
 
+  for (const [providerId, provider] of Object.entries(providers)) {
+    if (provider.envMapping) {
+      for (const [envKey, valueKey] of Object.entries(provider.envMapping)) {
+        if (envKey.trim() === '' || valueKey.trim() === '') {
+          errors.push(`provider "${providerId}" 的 envMapping 包含空键或空值`);
+        }
+      }
+    }
+  }
+
   // 检查 aliases 和 workflows 名称冲突
   const aliasNames = Object.keys(config.aliases);
   const workflowNames = Object.keys(config.workflows);
