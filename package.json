@@ -22,7 +22,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "pnpm run build:web-admin && tsup",
+    "build:web-admin": "node scripts/build-web-admin.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -46,10 +47,15 @@
   "dependencies": {
     "@inquirer/prompts": "^8.3.2",
     "commander": "^14.0.3",
-    "picocolors": "^1.1.1"
+    "picocolors": "^1.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "esbuild": "^0.25.11",
     "tsup": "^8.5.1",
     "typescript": "^6.0.2",
     "vitest": "^4.1.1"

@@ -77,6 +77,45 @@ describe.sequential('WebApiServer', () => {
     rmSync(TEST_ROOT, { recursive: true, force: true });
   });
 
+  it('GET / should return web admin html', async () => {
+    const homeDir = join(TEST_ROOT, 'home-web-admin-index');
+    process.env.HOME = homeDir;
+    process.env.USERPROFILE = homeDir;
+    writeConfig(homeDir, { aliases: {}, workflows: {} });
+
+    const server = await startWebAdminServer();
+    try {
+      const response = await fetch(`${server.url}/`);
+      const html = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('content-type')).toContain('text/html');
+      expect(html).toContain('fastcli');
+      expect(html).toContain('/assets/app.js');
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('GET /assets/app.js should return frontend script', async () => {
+    const homeDir = join(TEST_ROOT, 'home-web-admin-assets');
+    process.env.HOME = homeDir;
+    process.env.USERPROFILE = homeDir;
+    writeConfig(homeDir, { aliases: {}, workflows: {} });
+
+    const server = await startWebAdminServer();
+    try {
+      const response = await fetch(`${server.url}/assets/app.js`);
+      const script = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('content-type')).toContain('javascript');
+      expect(script.length).toBeGreaterThan(0);
+    } finally {
+      await server.close();
+    }
+  });
+
   it('GET /api/config should require session and return working copy after auth', async () => {
     const homeDir = join(TEST_ROOT, 'home-config-ok');
     process.env.HOME = homeDir;

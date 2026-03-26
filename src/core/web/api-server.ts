@@ -1,4 +1,6 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { readFileSync, statSync } from 'node:fs';
+import { extname, join, resolve } from 'node:path';
 import { createConfigWorkingCopyStore, type ConfigWorkingCopyStoreWithDirty } from './config-working-copy.js';
 import { createWebSessionManager } from './token-session.js';
 
@@ -21,6 +23,48 @@ class RequestBodyTooLargeError extends Error {
 }
 
 const MAX_JSON_BODY_BYTES = 1024 * 1024;
+const WEB_ADMIN_DIST_DIR = resolve(process.cwd(), 'dist', 'web-admin');
+
+function getContentType(path: string): string {
+  const extension = extname(path).toLowerCase();
+  switch (extension) {
+    case '.html':
+      return 'text/html; charset=utf-8';
+    case '.css':
+      return 'text/css; charset=utf-8';
+    case '.js':
+      return 'text/javascript; charset=utf-8';
+    case '.json':
+    case '.map':
+      return 'application/json; charset=utf-8';
+    default:
+      return 'application/octet-stream';
+  }
+}
+
+function serveStaticFile(res: ServerResponse, relativePath: string): boolean {
+  const normalized = relativePath.replace(/\\/g, '/');
+  if (normalized.includes('..')) {
+    return false;
+  }
+
+  const absolutePath = join(WEB_ADMIN_DIST_DIR, normalized);
+
+  try {
+    const stats = statSync(absolutePath);
+    if (!stats.isFile()) {
+      return false;
+    }
+
+    const file = readFileSync(absolutePath);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', getContentType(absolutePath));
+    res.end(file);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function writeJson(
   res: ServerResponse,
@@ -113,6 +157,18 @@ export async function startWebAdminServer(
       const method = req.method ?? 'GET';
       const requestUrl = new URL(req.url ?? '/', `http://${host}`);
       const path = requestUrl.pathname;
+
+      if (method === 'GET' && path === '/') {
+        if (serveStaticFile(res, 'index.html')) {
+          return;
+        }
+      }
+
+      if (method === 'GET' && path.startsWith('/assets/')) {
+        if (serveStaticFile(res, path.slice(1))) {
+          return;
+        }
+      }
 
       if (method === 'GET' && path === '/api/config') {
         if (!requireSession(req, res)) {
