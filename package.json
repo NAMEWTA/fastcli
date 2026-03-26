@@ -1,6 +1,6 @@
 {
   "name": "@namewta/fastcli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "终端命令别名和交互式工作流管理工具",
   "type": "module",
   "author": {
