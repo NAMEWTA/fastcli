@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { configInit, configEdit, configShow } from './commands/config/index.js';
 import { aliasAdd, aliasRemove, aliasList } from './commands/alias/index.js';
 import { workflowList, workflowShow } from './commands/workflow/index.js';
+import { webStart } from './commands/web/index.js';
 import { run } from './commands/run.js';
 
 const program = new Command();
@@ -60,6 +61,12 @@ workflowCmd
   .command('show <name>')
   .description('显示工作流结构')
   .action(workflowShow);
+
+// web 命令
+program
+  .command('web')
+  .description('启动本地 Web 管理后台')
+  .action(webStart);
 
 // 默认命令：运行别名或工作流
 program
