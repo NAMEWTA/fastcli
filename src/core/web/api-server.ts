@@ -13,6 +13,15 @@ interface ErrorWithHint {
   hint: string;
 }
 
+class RequestBodyTooLargeError extends Error {
+  constructor() {
+    super('请求体过大');
+    this.name = 'RequestBodyTooLargeError';
+  }
+}
+
+const MAX_JSON_BODY_BYTES = 1024 * 1024;
+
 function writeJson(
   res: ServerResponse,
   statusCode: number,
@@ -50,9 +59,15 @@ function splitErrorWithHint(error: unknown): ErrorWithHint {
 
 async function readJsonBody(req: IncomingMessage): Promise<unknown> {
   const chunks: Buffer[] = [];
+  let totalBytes = 0;
 
   for await (const chunk of req) {
-    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    const normalized = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    totalBytes += normalized.length;
+    if (totalBytes > MAX_JSON_BODY_BYTES) {
+      throw new RequestBodyTooLargeError();
+    }
+    chunks.push(normalized);
   }
 
   const raw = Buffer.concat(chunks).toString('utf-8').trim();
@@ -80,6 +95,19 @@ export async function startWebAdminServer(
   const sessionManager = createWebSessionManager();
   const token = sessionManager.issueOneTimeToken();
 
+  const requireSession = (req: IncomingMessage, res: ServerResponse): boolean => {
+    const sessionId = parseCookie(req.headers.cookie, 'fastcli_session');
+    if (!sessionManager.isSessionValid(sessionId)) {
+      writeJson(res, 401, {
+        ok: false,
+        error: '未认证：请先完成口令验证',
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const server = createServer((req, res) => {
     void (async () => {
       const method = req.method ?? 'GET';
@@ -87,6 +115,10 @@ export async function startWebAdminServer(
       const path = requestUrl.pathname;
 
       if (method === 'GET' && path === '/api/config') {
+        if (!requireSession(req, res)) {
+          return;
+        }
+
         if (!store) {
           writeJson(res, 500, {
             ok: false,
@@ -108,7 +140,15 @@ export async function startWebAdminServer(
         let body: unknown;
         try {
           body = await readJsonBody(req);
-        } catch {
+        } catch (error) {
+          if (error instanceof RequestBodyTooLargeError) {
+            writeJson(res, 413, {
+              ok: false,
+              error: '请求体过大：请将请求体控制在 1MB 以内',
+            });
+            return;
+          }
+
           writeJson(res, 400, {
             ok: false,
             error: '请求体 JSON 格式错误',
@@ -166,12 +206,7 @@ export async function startWebAdminServer(
       }
 
       if (method === 'POST' && (path === '/api/save' || path === '/api/import')) {
-        const sessionId = parseCookie(req.headers.cookie, 'fastcli_session');
-        if (!sessionManager.isSessionValid(sessionId)) {
-          writeJson(res, 401, {
-            ok: false,
-            error: '未认证：请先完成口令验证',
-          });
+        if (!requireSession(req, res)) {
           return;
         }
 
@@ -202,7 +237,15 @@ export async function startWebAdminServer(
         let body: unknown;
         try {
           body = await readJsonBody(req);
-        } catch {
+        } catch (error) {
+          if (error instanceof RequestBodyTooLargeError) {
+            writeJson(res, 413, {
+              ok: false,
+              error: '请求体过大：请将请求体控制在 1MB 以内',
+            });
+            return;
+          }
+
           writeJson(res, 400, {
             ok: false,
             error: '请求体 JSON 格式错误',
@@ -235,6 +278,10 @@ export async function startWebAdminServer(
       }
 
       if (method === 'GET' && path === '/api/export') {
+        if (!requireSession(req, res)) {
+          return;
+        }
+
         if (!store) {
           writeJson(res, 500, {
             ok: false,

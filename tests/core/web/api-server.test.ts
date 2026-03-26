@@ -13,6 +13,20 @@ interface HttpJsonResponse<T = unknown> {
   headers: Headers;
 }
 
+async function authenticate(baseUrl: string, token: string): Promise<string> {
+  const auth = await requestJson<{ ok: boolean }>(`${baseUrl}/api/auth/verify`, {
+    method: 'POST',
+    body: { token },
+  });
+
+  expect(auth.status).toBe(200);
+  expect(auth.body.ok).toBe(true);
+
+  const cookie = auth.headers.get('set-cookie');
+  expect(cookie).toContain('fastcli_session=');
+  return cookie ?? '';
+}
+
 function writeConfig(homeDir: string, config: Config): void {
   const fastcliDir = join(homeDir, '.fastcli');
   mkdirSync(fastcliDir, { recursive: true });
@@ -63,7 +77,7 @@ describe.sequential('WebApiServer', () => {
     rmSync(TEST_ROOT, { recursive: true, force: true });
   });
 
-  it('GET /api/config should return working copy', async () => {
+  it('GET /api/config should require session and return working copy after auth', async () => {
     const homeDir = join(TEST_ROOT, 'home-config-ok');
     process.env.HOME = homeDir;
     process.env.USERPROFILE = homeDir;
@@ -75,7 +89,16 @@ describe.sequential('WebApiServer', () => {
 
     const server = await startWebAdminServer();
     try {
-      const response = await requestJson<{ ok: boolean; config: Config }>(`${server.url}/api/config`);
+      const unauthorized = await requestJson<{ ok: boolean; error: string }>(`${server.url}/api/config`);
+
+      expect(unauthorized.status).toBe(401);
+      expect(unauthorized.body.ok).toBe(false);
+      expect(unauthorized.body.error).toContain('未认证');
+
+      const cookie = await authenticate(server.url, server.token);
+      const response = await requestJson<{ ok: boolean; config: Config }>(`${server.url}/api/config`, {
+        cookie,
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.ok).toBe(true);
@@ -92,12 +115,40 @@ describe.sequential('WebApiServer', () => {
 
     const server = await startWebAdminServer();
     try {
-      const response = await requestJson<{ ok: boolean; error: string; hint: string }>(`${server.url}/api/config`);
+      const cookie = await authenticate(server.url, server.token);
+      const response = await requestJson<{ ok: boolean; error: string; hint: string }>(`${server.url}/api/config`, {
+        cookie,
+      });
 
       expect(response.status).toBe(500);
       expect(response.body.ok).toBe(false);
       expect(response.body.error).toContain('配置文件不存在');
       expect(response.body.hint).toContain('fastcli config init');
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('GET /api/config should return readable error and fix hint when config is corrupted', async () => {
+    const homeDir = join(TEST_ROOT, 'home-config-corrupted');
+    process.env.HOME = homeDir;
+    process.env.USERPROFILE = homeDir;
+
+    const fastcliDir = join(homeDir, '.fastcli');
+    mkdirSync(fastcliDir, { recursive: true });
+    writeFileSync(join(fastcliDir, 'config.json'), '{"aliases": ', 'utf-8');
+
+    const server = await startWebAdminServer();
+    try {
+      const cookie = await authenticate(server.url, server.token);
+      const response = await requestJson<{ ok: boolean; error: string; hint: string }>(`${server.url}/api/config`, {
+        cookie,
+      });
+
+      expect(response.status).toBe(500);
+      expect(response.body.ok).toBe(false);
+      expect(response.body.error).toContain('配置文件格式错误');
+      expect(response.body.hint).toContain('修复后重试');
     } finally {
       await server.close();
     }
@@ -111,15 +162,7 @@ describe.sequential('WebApiServer', () => {
 
     const server = await startWebAdminServer();
     try {
-      const auth = await requestJson<{ ok: boolean }>(`${server.url}/api/auth/verify`, {
-        method: 'POST',
-        body: { token: server.token },
-      });
-      const setCookie = auth.headers.get('set-cookie');
-
-      expect(auth.status).toBe(200);
-      expect(auth.body.ok).toBe(true);
-      expect(setCookie).toContain('fastcli_session=');
+      const setCookie = await authenticate(server.url, server.token);
 
       const save = await requestJson<{ ok: boolean }>(`${server.url}/api/save`, {
         method: 'POST',
@@ -186,11 +229,7 @@ describe.sequential('WebApiServer', () => {
 
     const server = await startWebAdminServer();
     try {
-      const auth = await requestJson<{ ok: boolean }>(`${server.url}/api/auth/verify`, {
-        method: 'POST',
-        body: { token: server.token },
-      });
-      const cookie = auth.headers.get('set-cookie') ?? undefined;
+      const cookie = await authenticate(server.url, server.token);
 
       const imported = {
         aliases: { same: { command: 'echo alias' } },
@@ -208,8 +247,35 @@ describe.sequential('WebApiServer', () => {
       expect(importResponse.body.valid).toBe(false);
       expect(importResponse.body.errors.length).toBeGreaterThan(0);
 
-      const getConfig = await requestJson<{ ok: boolean; config: Config }>(`${server.url}/api/config`);
+      const getConfig = await requestJson<{ ok: boolean; config: Config }>(`${server.url}/api/config`, {
+        cookie,
+      });
       expect(getConfig.body.config).toEqual(imported);
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('POST /api/import should return 413 when body exceeds size limit', async () => {
+    const homeDir = join(TEST_ROOT, 'home-import-body-limit');
+    process.env.HOME = homeDir;
+    process.env.USERPROFILE = homeDir;
+    writeConfig(homeDir, { aliases: {}, workflows: {} });
+
+    const server = await startWebAdminServer();
+    try {
+      const cookie = await authenticate(server.url, server.token);
+      const overLimit = 'x'.repeat(1024 * 1024 + 1024);
+
+      const response = await requestJson<{ ok: boolean; error: string }>(`${server.url}/api/import`, {
+        method: 'POST',
+        cookie,
+        body: { config: overLimit },
+      });
+
+      expect(response.status).toBe(413);
+      expect(response.body.ok).toBe(false);
+      expect(response.body.error).toContain('请求体过大');
     } finally {
       await server.close();
     }
@@ -223,11 +289,7 @@ describe.sequential('WebApiServer', () => {
 
     const server = await startWebAdminServer();
     try {
-      const auth = await requestJson<{ ok: boolean }>(`${server.url}/api/auth/verify`, {
-        method: 'POST',
-        body: { token: server.token },
-      });
-      const cookie = auth.headers.get('set-cookie') ?? undefined;
+      const cookie = await authenticate(server.url, server.token);
 
       await requestJson(`${server.url}/api/import`, {
         method: 'POST',
@@ -253,7 +315,9 @@ describe.sequential('WebApiServer', () => {
       expect(save.body.ok).toBe(false);
       expect(save.body.error).toContain('保存失败');
 
-      const config = await requestJson<{ ok: boolean; config: Config }>(`${server.url}/api/config`);
+      const config = await requestJson<{ ok: boolean; config: Config }>(`${server.url}/api/config`, {
+        cookie,
+      });
       expect(config.status).toBe(200);
       expect(config.body.config.aliases.gs.command).toBe('git status');
     } finally {
@@ -261,7 +325,26 @@ describe.sequential('WebApiServer', () => {
     }
   });
 
-  it('GET /api/export should download current config json', async () => {
+  it('GET /api/export should return 401 without session', async () => {
+    const homeDir = join(TEST_ROOT, 'home-export-unauthorized');
+    process.env.HOME = homeDir;
+    process.env.USERPROFILE = homeDir;
+    writeConfig(homeDir, { aliases: {}, workflows: {} });
+
+    const server = await startWebAdminServer();
+    try {
+      const response = await fetch(`${server.url}/api/export`);
+      const body = await response.json() as { ok: boolean; error: string };
+
+      expect(response.status).toBe(401);
+      expect(body.ok).toBe(false);
+      expect(body.error).toContain('未认证');
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('GET /api/export should download current config json after auth', async () => {
     const homeDir = join(TEST_ROOT, 'home-export');
     process.env.HOME = homeDir;
     process.env.USERPROFILE = homeDir;
@@ -273,7 +356,12 @@ describe.sequential('WebApiServer', () => {
 
     const server = await startWebAdminServer();
     try {
-      const response = await fetch(`${server.url}/api/export`);
+      const cookie = await authenticate(server.url, server.token);
+      const response = await fetch(`${server.url}/api/export`, {
+        headers: {
+          cookie,
+        },
+      });
       const contentType = response.headers.get('content-type');
       const disposition = response.headers.get('content-disposition');
       const jsonText = await response.text();
