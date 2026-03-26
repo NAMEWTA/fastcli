@@ -59,7 +59,11 @@ export function validateConfig(config: Config): ValidationResult {
     if (provider.envMapping) {
       for (const [envKey, valueKey] of Object.entries(provider.envMapping)) {
         if (envKey.trim() === '' || valueKey.trim() === '') {
-          errors.push(`provider "${providerId}" 的 envMapping 包含空键或空值`);
+          const envKeyLabel = envKey.trim() === '' ? '<empty-env-key>' : envKey;
+          const valueKeyLabel = valueKey.trim() === '' ? '<empty-value-key>' : valueKey;
+          errors.push(
+            `providers.${providerId}.envMapping.${envKeyLabel}: 映射值不能为空（当前值: ${valueKeyLabel}）`,
+          );
         }
       }
     }
@@ -71,7 +75,9 @@ export function validateConfig(config: Config): ValidationResult {
   const conflicts = aliasNames.filter((name) => workflowNames.includes(name));
 
   if (conflicts.length > 0) {
-    errors.push(`名称冲突: ${conflicts.join(', ')} 同时存在于 aliases 和 workflows 中`);
+    for (const name of conflicts) {
+      errors.push(`名称冲突: aliases.${name} 与 workflows.${name} 不能同名`);
+    }
   }
 
   // 检查工作流步骤引用是否有效
@@ -79,17 +85,23 @@ export function validateConfig(config: Config): ValidationResult {
     const stepIds = new Set(workflow.steps.map((s) => s.id));
 
     if (workflow.provider && !providerIds.has(workflow.provider)) {
-      errors.push(`工作流 "${name}" 引用了不存在的 provider "${workflow.provider}"`);
+      errors.push(
+        `workflows.${name}.provider: 引用了不存在的 provider "${workflow.provider}"`,
+      );
     }
 
     for (const step of workflow.steps) {
       for (const option of step.options) {
         if (option.provider && !providerIds.has(option.provider)) {
-          errors.push(`工作流 "${name}" 步骤 "${step.id}" 引用了不存在的 provider "${option.provider}"`);
+          errors.push(
+            `workflows.${name}.steps.${step.id}.options.${option.name}.provider: 引用了不存在的 provider "${option.provider}"`,
+          );
         }
 
         if (option.next && !stepIds.has(option.next)) {
-          errors.push(`工作流 "${name}" 步骤 "${step.id}" 引用了不存在的步骤 "${option.next}"`);
+          errors.push(
+            `workflows.${name}.steps.${step.id}.options.${option.name}.next: 引用了不存在的步骤 "${option.next}"`,
+          );
         }
       }
     }
