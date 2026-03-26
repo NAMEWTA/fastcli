@@ -81,4 +81,24 @@ describe('WebTokenSession', () => {
 
     expect(manager.isSessionValid(result.sessionId)).toBe(false);
   });
+
+  it('should throw for invalid tokenTtlMs values', () => {
+    const invalidValues = [0, -1, Number.NaN, Number.POSITIVE_INFINITY];
+
+    for (const ttl of invalidValues) {
+      expect(() => createWebSessionManager({ tokenTtlMs: ttl })).toThrow(
+        'tokenTtlMs must be a finite positive integer',
+      );
+    }
+  });
+
+  it('should throw for invalid sessionTtlMs values', () => {
+    const invalidValues = [0, -1, Number.NaN, Number.POSITIVE_INFINITY];
+
+    for (const ttl of invalidValues) {
+      expect(() => createWebSessionManager({ sessionTtlMs: ttl })).toThrow(
+        'sessionTtlMs must be a finite positive integer',
+      );
+    }
+  });
 });

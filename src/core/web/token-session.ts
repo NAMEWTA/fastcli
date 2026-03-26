@@ -11,6 +11,13 @@ const TOKEN_CHARSET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const DEFAULT_TOKEN_TTL_MS = 5 * 60 * 1000;
 const DEFAULT_SESSION_TTL_MS = 30 * 60 * 1000;
 
+function validateTtlOption(name: string, value: number): number {
+  if (!Number.isFinite(value) || !Number.isInteger(value) || value <= 0) {
+    throw new Error(`${name} must be a finite positive integer`);
+  }
+  return value;
+}
+
 function generateToken(): string {
   let token = '';
   for (let i = 0; i < TOKEN_LENGTH; i++) {
@@ -52,6 +59,8 @@ class InMemoryWebSessionManager implements WebSessionManager {
 
   issueOneTimeToken(): string {
     const now = Date.now();
+    this.cleanupExpiredTokens(now);
+
     let token = generateToken();
     while (this.activeTokens.has(token)) {
       token = generateToken();
@@ -102,8 +111,17 @@ class InMemoryWebSessionManager implements WebSessionManager {
 }
 
 export function createWebSessionManager(options?: WebSessionManagerOptions): WebSessionManager {
+  const tokenTtlMs =
+    options?.tokenTtlMs === undefined
+      ? DEFAULT_TOKEN_TTL_MS
+      : validateTtlOption('tokenTtlMs', options.tokenTtlMs);
+  const sessionTtlMs =
+    options?.sessionTtlMs === undefined
+      ? DEFAULT_SESSION_TTL_MS
+      : validateTtlOption('sessionTtlMs', options.sessionTtlMs);
+
   return new InMemoryWebSessionManager(
-    options?.tokenTtlMs ?? DEFAULT_TOKEN_TTL_MS,
-    options?.sessionTtlMs ?? DEFAULT_SESSION_TTL_MS,
+    tokenTtlMs,
+    sessionTtlMs,
   );
 }
