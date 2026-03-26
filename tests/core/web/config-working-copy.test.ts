@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -121,6 +121,34 @@ describe('ConfigWorkingCopyStore', () => {
     expect(store.getConfig()).toEqual(next);
   });
 
+  it('should reset dirty=false and persist working copy after successful save', () => {
+    mkdirSync(TEST_ROOT, { recursive: true });
+    writeFileSync(TEST_CONFIG_PATH, JSON.stringify({ aliases: {}, workflows: {} }), 'utf-8');
+
+    const store = createConfigWorkingCopyStore({ configPath: TEST_CONFIG_PATH });
+    const next: Config = {
+      aliases: { gs: { command: 'git status' } },
+      workflows: {
+        review: {
+          steps: [
+            {
+              id: 'start',
+              options: [{ name: 'ok', command: 'echo ok' }],
+            },
+          ],
+        },
+      },
+    };
+
+    store.patchConfig(next);
+    store.save();
+
+    expect(store.isDirty()).toBe(false);
+    const persisted = JSON.parse(readFileSync(TEST_CONFIG_PATH, 'utf-8')) as Config;
+    expect(persisted).toEqual(next);
+    expect(store.getConfig()).toEqual(next);
+  });
+
   it('should replace working copy entirely via importFromJson', () => {
     mkdirSync(TEST_ROOT, { recursive: true });
     const initial: Config = {
@@ -150,5 +178,33 @@ describe('ConfigWorkingCopyStore', () => {
     expect(result.valid).toBe(true);
     expect(store.getConfig()).toEqual(JSON.parse(raw));
     expect(store.isDirty()).toBe(true);
+  });
+
+  it('should return validation errors instead of throwing on invalid envMapping value types', () => {
+    mkdirSync(TEST_ROOT, { recursive: true });
+    writeFileSync(TEST_CONFIG_PATH, JSON.stringify({ aliases: {}, workflows: {} }), 'utf-8');
+
+    const store = createConfigWorkingCopyStore({ configPath: TEST_CONFIG_PATH });
+    const raw = JSON.stringify({
+      aliases: {},
+      workflows: {},
+      providers: {
+        openai: {
+          envMapping: {
+            API_KEY: 123,
+          },
+        },
+      },
+    });
+
+    const act = () => store.importFromJson(raw);
+
+    expect(act).not.toThrow();
+    const result = act();
+    expect(result.valid).toBe(false);
+    expect(
+      result.errors.some((err) => err.includes('providers.openai.envMapping.API_KEY')),
+    ).toBe(true);
+    expect(result.errors.some((err) => err.includes('映射值必须是字符串'))).toBe(true);
   });
 });

@@ -54,17 +54,49 @@ export function validateConfig(config: Config): ValidationResult {
   const errors: string[] = [];
   const providers = config.providers ?? {};
   const providerIds = new Set(Object.keys(providers));
+  const getTypeLabel = (value: unknown): string => {
+    if (value === null) {
+      return 'null';
+    }
+
+    if (Array.isArray(value)) {
+      return 'array';
+    }
+
+    return typeof value;
+  };
 
   for (const [providerId, provider] of Object.entries(providers)) {
-    if (provider.envMapping) {
-      for (const [envKey, valueKey] of Object.entries(provider.envMapping)) {
-        if (envKey.trim() === '' || valueKey.trim() === '') {
-          const envKeyLabel = envKey.trim() === '' ? '<empty-env-key>' : envKey;
-          const valueKeyLabel = valueKey.trim() === '' ? '<empty-value-key>' : valueKey;
-          errors.push(
-            `providers.${providerId}.envMapping.${envKeyLabel}: 映射值不能为空（当前值: ${valueKeyLabel}）`,
-          );
-        }
+    if (!provider || typeof provider !== 'object') {
+      continue;
+    }
+
+    const envMapping = (provider as { envMapping?: unknown }).envMapping;
+    if (!envMapping) {
+      continue;
+    }
+
+    if (typeof envMapping !== 'object' || Array.isArray(envMapping)) {
+      errors.push(
+        `providers.${providerId}.envMapping: 必须是对象（当前类型: ${getTypeLabel(envMapping)}）`,
+      );
+      continue;
+    }
+
+    for (const [envKey, valueKey] of Object.entries(envMapping as Record<string, unknown>)) {
+      if (typeof valueKey !== 'string') {
+        errors.push(
+          `providers.${providerId}.envMapping.${envKey}: 映射值必须是字符串（当前类型: ${getTypeLabel(valueKey)}）`,
+        );
+        continue;
+      }
+
+      if (envKey.trim() === '' || valueKey.trim() === '') {
+        const envKeyLabel = envKey.trim() === '' ? '<empty-env-key>' : envKey;
+        const valueKeyLabel = valueKey.trim() === '' ? '<empty-value-key>' : valueKey;
+        errors.push(
+          `providers.${providerId}.envMapping.${envKeyLabel}: 映射值不能为空（当前值: ${valueKeyLabel}）`,
+        );
       }
     }
   }
