@@ -52,6 +52,18 @@ export function ensureConfigExists(configPath: string = getConfigPath()): void {
  */
 export function validateConfig(config: Config): ValidationResult {
   const errors: string[] = [];
+  const providers = config.providers ?? {};
+  const providerIds = new Set(Object.keys(providers));
+
+  for (const [providerId, provider] of Object.entries(providers)) {
+    if (provider.envMapping) {
+      for (const [envKey, valueKey] of Object.entries(provider.envMapping)) {
+        if (envKey.trim() === '' || valueKey.trim() === '') {
+          errors.push(`provider "${providerId}" 的 envMapping 包含空键或空值`);
+        }
+      }
+    }
+  }
 
   // 检查 aliases 和 workflows 名称冲突
   const aliasNames = Object.keys(config.aliases);
@@ -65,8 +77,17 @@ export function validateConfig(config: Config): ValidationResult {
   // 检查工作流步骤引用是否有效
   for (const [name, workflow] of Object.entries(config.workflows)) {
     const stepIds = new Set(workflow.steps.map((s) => s.id));
+
+    if (workflow.provider && !providerIds.has(workflow.provider)) {
+      errors.push(`工作流 "${name}" 引用了不存在的 provider "${workflow.provider}"`);
+    }
+
     for (const step of workflow.steps) {
       for (const option of step.options) {
+        if (option.provider && !providerIds.has(option.provider)) {
+          errors.push(`工作流 "${name}" 步骤 "${step.id}" 引用了不存在的 provider "${option.provider}"`);
+        }
+
         if (option.next && !stepIds.has(option.next)) {
           errors.push(`工作流 "${name}" 步骤 "${step.id}" 引用了不存在的步骤 "${option.next}"`);
         }

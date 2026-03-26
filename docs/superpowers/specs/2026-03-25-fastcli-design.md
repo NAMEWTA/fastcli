@@ -394,9 +394,114 @@ pnpm dev        # 开发模式（watch）
 pnpm link -g    # 本地全局安装测试
 ```
 
+
 ## 未来扩展（不在本期范围）
 
 - 命令历史记录
 - 命令执行统计
 - 导入/导出配置
 - Shell 补全脚本
+
+# Copilot 交互式终端工作流设计（2026-03-25 增补）
+
+## 1. 目标
+
+为 fastcli 的交互式终端 workflow 提供通用启动能力，适用于 claude code、opencode、codex、copilot 等同类 CLI，核心体验如下：
+- 选择账号或凭据上下文（按配置注入环境变量）
+- 选择启动模式（如 new-session 或 resume，具体以目标 CLI 参数为准）
+- 在当前 shell 直接进入目标 CLI 的原生交互终端
+
+fastcli 的职责边界是 workflow 编排与环境注入。命令执行阶段采用子进程 I/O 透明透传（stdin/stdout/stderr），不做业务语义包装、不改写输入输出。
+
+## 2. 交互流程与数据流
+
+1. fastcli 读取 workflow、provider 与 credentials 配置，prompt 用户选择账号或凭据上下文
+2. fastcli 将步骤选择值视为 credentialId，按 envMapping 把对应凭据字段映射到目标环境变量，并合并到子进程 env
+3. prompt 用户选择启动模式（可选），并按 provider.modeArgs 解析为参数片段
+4. fastcli 组装最终 command 字符串（provider.command + modeArgs + workflow 上下文变量），并通过 child_process.spawn 启动目标 CLI
+5. fastcli 以 stdio='inherit' 透传 stdin/stdout/stderr，用户直接与目标 CLI 交互
+6. 目标 CLI 退出后，fastcli 以相同退出码结束
+
+数据流：
+- 用户输入 -> fastcli prompt -> workflow/provider 解析 -> env 注入 -> 组装 command -> spawn 子进程（继承 env）-> 用户与目标 CLI 原生交互
+
+## 3. 关键实现要点
+
+- 命令模型统一为 command（字符串），由 workflow/provider 共同决定最终启动参数
+- 兼容路径：保留现有 WorkflowOption.command 与 Executor.run(command: string) 契约；provider 模型仅负责产出或补全 command，最终仍走单字符串执行链路
+- 命令决策顺序：优先使用 option.command；当 option.command 缺失时回退到 provider.command + modeArgs 组装
+- 执行语义沿用现有 Executor 的 shell 执行模型（含转义与跨平台差异处理），避免 provider 层自行拼接平台特化逻辑
+- resume/new-session 属于可选模式，不作为核心协议，不同 CLI 可通过 modeArgs 扩展不同参数形态
+- 环境变量注入采用可配置 envMapping，不绑定单一变量名（如不固定为 COPILOT_GITHUB_TOKEN）
+- 执行前命令预览与透明透传并存：预览仅展示将执行的 command 及非敏感参数；进程启动后保持 stdin/stdout/stderr 原样透传
+- 通过 Node.js child_process.spawn 执行外部 CLI，stdio 使用 'inherit' 保证 I/O 透明透传
+- fastcli 仅负责流程编排与进程拉起，不对业务语义、提示词或输出内容做二次封装
+
+## 4. 兼容性与扩展性
+
+- 引入 provider 配置层，建议最小字段如下：
+  - providerId
+  - command
+  - modeArgs
+  - envMapping
+- provider 配置落点：增补到 config 根结构的 providers（例如 providers.<providerId>）
+- workflow 与 provider 绑定：在 workflow 增加可选扩展字段 provider（默认使用 workflow.provider，允许 option.provider 覆盖）
+- 新增或替换 CLI 时，仅需新增 provider 配置与 workflow 绑定关系，无需改动 fastcli 核心逻辑
+- 该模型适用于以命令行为主、支持交互式终端的同类工具
+
+配置扩展示意（增补字段，向后兼容）：
+
+```ts
+interface Config {
+  aliases: Record<string, Alias>;
+  workflows: Record<string, Workflow>;
+  credentials?: Record<string, CredentialConfig>; // 新增：凭据池（按 id 引用）
+  providers?: Record<string, ProviderConfig>; // 新增
+}
+
+interface CredentialConfig {
+  label?: string;
+  values: Record<string, string>; // 例如 { token: 'xxx', endpoint: 'yyy' }
+}
+
+interface Workflow {
+  description?: string;
+  provider?: string; // 新增：workflow 级绑定
+  steps: WorkflowStep[];
+}
+
+interface WorkflowOption {
+  name: string;
+  value?: string;
+  next?: string;
+  command?: string;
+  provider?: string; // 新增：option 级覆盖
+}
+
+interface ProviderConfig {
+  providerId: string;
+  command: string;
+  modeArgs?: Record<string, string[]>; // 例如 { resume: ['--resume'], 'new-session': ['--new'] }
+  envMapping?: Record<string, string>; // 例如 { COPILOT_GITHUB_TOKEN: 'token' }
+}
+
+字段绑定规则（增补约定）：
+- workflow 步骤中用于“选择账号/凭据”的 option.value 应为 credentialId
+- 运行时按 credentialId 读取 credentials[credentialId].values
+- provider.envMapping 采用“目标环境变量名 -> 凭据字段名”映射，缺失字段按第 5 节策略处理
+```
+
+## 5. 典型异常与错误处理
+
+- CLI 未安装或不在 PATH：捕获 spawn ENOENT，输出可诊断提示并返回非 0
+- 命令参数不兼容：目标 CLI 返回参数错误时，fastcli 原样透传 stderr 与退出码
+- credentialId 无效或不存在：启动前立即失败并提示可选 credentialId，不进入子进程执行
+- 必要 env 缺失：在启动前做最小校验并提示缺失项；若放行，则由目标 CLI 报错且 fastcli 透传
+- 命令预览信息安全：预览阶段不回显敏感 env 实值，仅展示变量名或脱敏占位（如 `***`）
+- 凭据存储安全边界：配置层应避免在日志中输出凭据明文；推荐通过文件权限限制读取范围
+- 用户 Ctrl+C：将中断信号传递给子进程，并按子进程最终状态退出
+- 子进程异常退出：fastcli 透传退出码（或信号语义），保证上层脚本可判定执行结果
+
+---
+
+本设计方案经用户确认后进入实现计划编写环节。

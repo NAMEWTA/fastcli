@@ -2,7 +2,19 @@ import { select } from '@inquirer/prompts';
 import { logger } from '../utils/logger.js';
 import { parseTemplate } from './template-engine.js';
 import { executeCommand } from './executor.js';
-import type { Workflow, WorkflowStep, WorkflowContext } from '../types/index.js';
+import {
+  resolveProviderId,
+  getProvider,
+  getCredentialValues,
+  resolveModeArgs,
+  buildProviderCommand,
+  buildInjectedEnv,
+} from './provider-runtime.js';
+import type { Workflow, WorkflowStep, WorkflowContext, Config } from '../types/index.js';
+
+export interface WorkflowRuntime {
+  config?: Config;
+}
 
 /**
  * 根据 ID 查找步骤
@@ -19,6 +31,29 @@ export function buildFinalCommand(
   context: Record<string, string>
 ): string {
   return parseTemplate(command, context);
+}
+
+export function decideFinalCommand(
+  optionCommand?: string,
+  providerCommand?: string
+): string | undefined {
+  return optionCommand ?? providerCommand;
+}
+
+export function resolveCredentialId(
+  selectedValue: string | undefined,
+  contextValues: Record<string, string>
+): string | undefined {
+  return (
+    contextValues['select-account'] ??
+    contextValues['select-credential'] ??
+    contextValues.credential ??
+    selectedValue
+  );
+}
+
+function resolveExecutionMode(contextValues: Record<string, string>): string | undefined {
+  return contextValues['select-mode'] ?? contextValues.mode;
 }
 
 /**
@@ -53,7 +88,11 @@ export function calculateTotalSteps(workflow: Workflow, startId: string): number
 /**
  * 运行工作流
  */
-export async function runWorkflow(workflow: Workflow, dryRun = false): Promise<void> {
+export async function runWorkflow(
+  workflow: Workflow,
+  dryRun = false,
+  runtime: WorkflowRuntime = {}
+): Promise<void> {
   if (workflow.steps.length === 0) {
     logger.error('工作流没有步骤');
     return;
@@ -88,14 +127,48 @@ export async function runWorkflow(workflow: Workflow, dryRun = false): Promise<v
       context.values[currentStep.id] = value;
       logger.choice(selected.name);
 
-      // 如果有 command，执行并结束
-      if (selected.command) {
-        const finalCommand = buildFinalCommand(selected.command, context.values);
+      let providerCommand: string | undefined;
+      let injectedEnv: NodeJS.ProcessEnv | undefined;
+
+      const providerId = resolveProviderId(selected.provider, workflow.provider);
+      const shouldExecuteProvider = Boolean(providerId) && !selected.command && !selected.next;
+
+      if (shouldExecuteProvider) {
+        if (!runtime.config) {
+          logger.error('缺少运行时配置，无法执行 provider 模式');
+          return;
+        }
+
+        const provider = getProvider(runtime.config, providerId!);
+        const credentialId = resolveCredentialId(selected.value, context.values);
+        if (!credentialId) {
+          logger.error('缺少 credentialId，请先选择账号或凭据');
+          return;
+        }
+
+        const credentialValues = getCredentialValues(runtime.config, credentialId);
+        const mode = resolveExecutionMode(context.values);
+        const modeArgs = resolveModeArgs(provider, mode);
+
+        providerCommand = buildProviderCommand(provider.command, modeArgs);
+        injectedEnv = buildInjectedEnv(process.env, provider.envMapping, credentialValues);
+      }
+
+      const optionCommand = selected.command
+        ? buildFinalCommand(selected.command, context.values)
+        : undefined;
+      const finalCommand = decideFinalCommand(optionCommand, providerCommand);
+
+      // 如果可决策出最终命令，执行并结束
+      if (finalCommand) {
         console.log();
         if (dryRun) {
           logger.preview(`将执行: ${finalCommand}`);
         } else {
-          await executeCommand(finalCommand);
+          await executeCommand(finalCommand, {
+            env: injectedEnv,
+            interactive: Boolean(providerCommand),
+          });
         }
         console.log();
         logger.success('工作流完成');
@@ -117,7 +190,12 @@ export async function runWorkflow(workflow: Workflow, dryRun = false): Promise<v
         logger.error('工作流配置错误：选项缺少 command 或 next');
         return;
       }
-    } catch {
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'ExitPromptError') {
+        logger.error(`工作流执行失败: ${error.message}`);
+        return;
+      }
+
       // 用户按 Ctrl+C 退出
       console.log();
       logger.warn('已取消');

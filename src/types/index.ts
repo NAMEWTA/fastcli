@@ -4,6 +4,20 @@
 export interface Config {
   aliases: Record<string, Alias>;
   workflows: Record<string, Workflow>;
+  credentials?: Record<string, CredentialConfig>;
+  providers?: Record<string, ProviderConfig>;
+}
+
+export interface CredentialConfig {
+  label?: string;
+  values: Record<string, string>;
+}
+
+export interface ProviderConfig {
+  providerId: string;
+  command: string;
+  modeArgs?: Record<string, string[]>;
+  envMapping?: Record<string, string>;
 }
 
 /**
@@ -19,6 +33,7 @@ export interface Alias {
  */
 export interface Workflow {
   description?: string;
+  provider?: string;
   steps: WorkflowStep[];
 }
 
@@ -39,6 +54,7 @@ export interface WorkflowOption {
   value?: string;
   next?: string;
   command?: string;
+  provider?: string;
 }
 
 /**
