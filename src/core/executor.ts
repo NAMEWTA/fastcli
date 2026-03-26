@@ -20,10 +20,11 @@ export async function executeCommand(
 
   return new Promise((resolve) => {
     const isWindows = process.platform === 'win32';
-    const shell = isWindows ? 'powershell.exe' : '/bin/sh';
-    const shellArg = isWindows ? '-Command' : '-c';
+    // Use cmd.exe on Windows to avoid PowerShell execution-policy failures on *.ps1 shims.
+    const shell = isWindows ? 'cmd.exe' : '/bin/sh';
+    const shellArgs = isWindows ? ['/d', '/s', '/c', command] : ['-c', command];
 
-    const child = spawn(shell, [shellArg, command], {
+    const child = spawn(shell, shellArgs, {
       stdio: options.interactive ? 'inherit' : ['inherit', 'pipe', 'pipe'],
       env: options.env ?? process.env,
     });

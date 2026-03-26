@@ -165,10 +165,14 @@ export async function runWorkflow(
         if (dryRun) {
           logger.preview(`将执行: ${finalCommand}`);
         } else {
-          await executeCommand(finalCommand, {
+          const execResult = await executeCommand(finalCommand, {
             env: injectedEnv,
             interactive: Boolean(providerCommand),
           });
+
+          if (!execResult.success) {
+            return;
+          }
         }
         console.log();
         logger.success('工作流完成');

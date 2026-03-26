@@ -47,6 +47,14 @@ describe('executor', () => {
     const result = await resultPromise;
 
     expect(spawnMock).toHaveBeenCalled();
+    const [shell, shellArgs] = spawnMock.mock.calls[0];
+    if (process.platform === 'win32') {
+      expect(shell).toBe('cmd.exe');
+      expect(shellArgs).toEqual(['/d', '/s', '/c', 'echo ok']);
+    } else {
+      expect(shell).toBe('/bin/sh');
+      expect(shellArgs).toEqual(['-c', 'echo ok']);
+    }
     const options = spawnMock.mock.calls[0][2];
     expect(options.stdio).toEqual(['inherit', 'pipe', 'pipe']);
     expect(result.success).toBe(true);

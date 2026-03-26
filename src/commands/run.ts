@@ -37,7 +37,7 @@ export async function run(name: string, options: RunOptions = {}): Promise<void>
     if (options.dryRun) {
       logger.preview(`将执行: ${result.data.command}`);
     } else {
-      await executeCommand(result.data.command);
+      await executeCommand(result.data.command, { interactive: true });
     }
   } else {
     await runWorkflow(result.data, options.dryRun, { config });

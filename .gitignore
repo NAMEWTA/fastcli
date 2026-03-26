@@ -3,5 +3,5 @@ dist/
 *.log
 .DS_Store
 coverage/
-__pycache__/**
+**/__pycache__/**
 .worktrees/
