@@ -44,7 +44,12 @@ export function resolveCredentialId(
   selectedValue: string | undefined,
   contextValues: Record<string, string>
 ): string | undefined {
-  return selectedValue ?? contextValues['select-account'];
+  return (
+    contextValues['select-account'] ??
+    contextValues['select-credential'] ??
+    contextValues.credential ??
+    selectedValue
+  );
 }
 
 function resolveExecutionMode(contextValues: Record<string, string>): string | undefined {
@@ -185,7 +190,12 @@ export async function runWorkflow(
         logger.error('工作流配置错误：选项缺少 command 或 next');
         return;
       }
-    } catch {
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'ExitPromptError') {
+        logger.error(`工作流执行失败: ${error.message}`);
+        return;
+      }
+
       // 用户按 Ctrl+C 退出
       console.log();
       logger.warn('已取消');

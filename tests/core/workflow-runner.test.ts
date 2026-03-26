@@ -67,12 +67,12 @@ describe('WorkflowRunner', () => {
   });
 
   describe('resolveCredentialId', () => {
-    it('应优先使用 option.value 作为 credentialId', () => {
-      expect(resolveCredentialId('work', { 'select-account': 'prod' })).toBe('work');
+    it('存在 select-account 上下文时应优先使用该 credentialId', () => {
+      expect(resolveCredentialId('resume', { 'select-account': 'work' })).toBe('work');
     });
 
-    it('option.value 缺失时应回退到 select-account', () => {
-      expect(resolveCredentialId(undefined, { 'select-account': 'prod' })).toBe('prod');
+    it('无 select-account 时可回退到当前选项值', () => {
+      expect(resolveCredentialId('work', {})).toBe('work');
     });
   });
 });
