@@ -20,10 +20,30 @@ describe('webStart', () => {
       openBrowser: openBrowserSpy,
     });
 
-    expect(infoSpy).toHaveBeenCalledWith(expect.stringContaining('http://127.0.0.1:'));
-    expect(infoSpy).toHaveBeenCalledWith(expect.stringContaining('一次性口令'));
+    expect(infoSpy).toHaveBeenCalledWith('Web 管理后台已启动: http://127.0.0.1:9527');
+    expect(infoSpy).toHaveBeenCalledWith('一次性口令: abc123');
     expect(openBrowserSpy).toHaveBeenCalledTimes(1);
+    expect(openBrowserSpy).toHaveBeenCalledWith('http://127.0.0.1:9527');
     expect(errorSpy).not.toHaveBeenCalled();
+  });
+
+  it('keeps process alive when browser open fails', async () => {
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {});
+
+    await expect(
+      webStart({
+        startServer: vi.fn().mockResolvedValue({
+          url: 'http://127.0.0.1:9527',
+          token: 'abc123',
+        }),
+        openBrowser: vi.fn().mockRejectedValue(new Error('open failed')),
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(infoSpy).toHaveBeenCalledWith('Web 管理后台已启动: http://127.0.0.1:9527');
+    expect(infoSpy).toHaveBeenCalledWith('一次性口令: abc123');
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('自动打开浏览器失败'));
   });
 
   it('prints error and exits safely when startup fails', async () => {

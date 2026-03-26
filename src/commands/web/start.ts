@@ -28,11 +28,20 @@ export async function openBrowser(url: string): Promise<void> {
   };
 
   const launcher = commandByPlatform[process.platform] ?? commandByPlatform.linux;
-  const child = spawn(launcher.command, launcher.args, {
-    detached: true,
-    stdio: 'ignore',
+  await new Promise<void>((resolve, reject) => {
+    try {
+      const child = spawn(launcher.command, launcher.args, {
+        detached: true,
+        stdio: 'ignore',
+      });
+
+      child.once('error', reject);
+      child.unref();
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
   });
-  child.unref();
 }
 
 export async function webStart(deps: WebStartDeps = {}): Promise<void> {
@@ -46,7 +55,12 @@ export async function webStart(deps: WebStartDeps = {}): Promise<void> {
     webLogger.info(`Web 管理后台已启动: ${url}`);
     webLogger.info(`一次性口令: ${token}`);
 
-    await browserOpener(url);
+    try {
+      await browserOpener(url);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      webLogger.error(`自动打开浏览器失败: ${message}`);
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     webLogger.error(`启动 Web 管理后台失败: ${message}`);
