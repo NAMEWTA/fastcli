@@ -63,7 +63,7 @@ describe('openBrowser', () => {
     await vi.advanceTimersByTimeAsync(1500);
 
     await rejection;
-    expect(child.unref).not.toHaveBeenCalled();
+    expect(child.unref).toHaveBeenCalledTimes(1);
     vi.useRealTimers();
   });
 });

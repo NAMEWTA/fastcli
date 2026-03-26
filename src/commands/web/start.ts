@@ -40,6 +40,11 @@ export async function openBrowser(url: string): Promise<void> {
       const timeout = setTimeout(() => {
         child.removeListener('spawn', onSpawn);
         child.removeListener('error', onError);
+        try {
+          child.unref();
+        } catch {
+          // Ignore cleanup failures and preserve timeout error as primary signal.
+        }
         reject(new Error(`openBrowser timeout: no spawn/error within ${BROWSER_OPEN_SETTLE_TIMEOUT_MS}ms`));
       }, BROWSER_OPEN_SETTLE_TIMEOUT_MS);
 
