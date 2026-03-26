@@ -72,11 +72,11 @@ export function validateConfig(config: Config): ValidationResult {
     }
 
     const envMapping = (provider as { envMapping?: unknown }).envMapping;
-    if (!envMapping) {
+    if (envMapping === undefined) {
       continue;
     }
 
-    if (typeof envMapping !== 'object' || Array.isArray(envMapping)) {
+    if (envMapping === null || typeof envMapping !== 'object' || Array.isArray(envMapping)) {
       errors.push(
         `providers.${providerId}.envMapping: 必须是对象（当前类型: ${getTypeLabel(envMapping)}）`,
       );

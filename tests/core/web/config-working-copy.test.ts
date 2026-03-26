@@ -207,4 +207,36 @@ describe('ConfigWorkingCopyStore', () => {
     ).toBe(true);
     expect(result.errors.some((err) => err.includes('映射值必须是字符串'))).toBe(true);
   });
+
+  it.each([
+    ['', 'string'],
+    [0, 'number'],
+    [false, 'boolean'],
+    [null, 'null'],
+  ])(
+    'should return structured validation error when provider.envMapping is %s',
+    (invalidEnvMapping, expectedType) => {
+      mkdirSync(TEST_ROOT, { recursive: true });
+      writeFileSync(TEST_CONFIG_PATH, JSON.stringify({ aliases: {}, workflows: {} }), 'utf-8');
+
+      const store = createConfigWorkingCopyStore({ configPath: TEST_CONFIG_PATH });
+      const raw = JSON.stringify({
+        aliases: {},
+        workflows: {},
+        providers: {
+          openai: {
+            envMapping: invalidEnvMapping,
+          },
+        },
+      });
+
+      const act = () => store.importFromJson(raw);
+
+      expect(act).not.toThrow();
+      const result = act();
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((err) => err.includes('providers.openai.envMapping'))).toBe(true);
+      expect(result.errors.some((err) => err.includes(`当前类型: ${expectedType}`))).toBe(true);
+    },
+  );
 });
