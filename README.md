@@ -123,6 +123,16 @@ fastcli <name> --dry-run # 预览命令但不执行
   - `next`：跳转到的下一个步骤 ID
   - `command`：终止命令（选择此项后执行命令并结束工作流）
 
+Provider 模型可选字段：
+
+- `workflow.provider`：工作流级 provider（可被 `option.provider` 覆盖）
+- `option.provider`：选项级 provider 覆盖
+
+配置根节点可选字段：
+
+- `providers`：定义外部交互式 CLI 的启动命令与模式参数
+- `credentials`：定义凭据池，运行时通过 `option.value` 选择凭据并映射到环境变量
+
 ### 变量替换
 
 在 `command` 中可以使用 `{{step-id}}` 引用之前步骤选择的值：
@@ -175,6 +185,64 @@ fastcli <name> --dry-run # 预览命令但不执行
 ```
 
 使用：`fastcli copilot`
+
+## 示例：Provider + Credentials 通用交互式 CLI
+
+```json
+{
+  "providers": {
+    "codex": {
+      "providerId": "codex",
+      "command": "codex",
+      "modeArgs": {
+        "resume": ["--resume"],
+        "new-session": ["--new"]
+      },
+      "envMapping": {
+        "OPENAI_API_KEY": "token"
+      }
+    }
+  },
+  "credentials": {
+    "work": {
+      "label": "工作账号",
+      "values": {
+        "token": "sk-live-***"
+      }
+    }
+  },
+  "workflows": {
+    "codex-chat": {
+      "description": "启动 Codex 交互会话",
+      "provider": "codex",
+      "steps": [
+        {
+          "id": "select-account",
+          "prompt": "选择凭据",
+          "options": [
+            { "name": "工作账号", "value": "work", "next": "select-mode" }
+          ]
+        },
+        {
+          "id": "select-mode",
+          "prompt": "选择启动模式",
+          "options": [
+            { "name": "恢复会话", "value": "resume" },
+            { "name": "新会话", "value": "new-session" }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+使用：
+
+```bash
+fastcli codex-chat
+fastcli codex-chat --dry-run
+```
 
 ## 开发
 
