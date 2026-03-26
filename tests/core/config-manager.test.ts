@@ -102,5 +102,47 @@ describe('ConfigManager', () => {
       expect(result.valid).toBe(false);
       expect(result.errors[0]).toContain('test');
     });
+
+    it('应该在 workflow.provider 引用不存在时报错', () => {
+      const config: Config = {
+        aliases: {},
+        workflows: {
+          chat: {
+            provider: 'codex',
+            steps: [
+              {
+                id: 'step1',
+                prompt: 'Select mode',
+                options: [{ name: 'Start', command: 'echo start' }],
+              },
+            ],
+          },
+        },
+      };
+
+      const result = validateConfig(config);
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((error) => error.includes('provider'))).toBe(true);
+    });
+
+    it('应该允许无 providers/credentials 的旧配置', () => {
+      const config: Config = {
+        aliases: { gp: { command: 'git push' } },
+        workflows: {
+          simple: {
+            steps: [
+              {
+                id: 'step1',
+                prompt: 'Select',
+                options: [{ name: 'Run', command: 'echo ok' }],
+              },
+            ],
+          },
+        },
+      };
+
+      const result = validateConfig(config);
+      expect(result.valid).toBe(true);
+    });
   });
 });
