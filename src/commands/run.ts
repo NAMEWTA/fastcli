@@ -40,6 +40,6 @@ export async function run(name: string, options: RunOptions = {}): Promise<void>
       await executeCommand(result.data.command);
     }
   } else {
-    await runWorkflow(result.data, options.dryRun);
+    await runWorkflow(result.data, options.dryRun, { config });
   }
 }

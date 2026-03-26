@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { findStepById, buildFinalCommand, calculateTotalSteps } from '../../src/core/workflow-runner.js';
+import {
+  findStepById,
+  buildFinalCommand,
+  calculateTotalSteps,
+  decideFinalCommand,
+  resolveCredentialId,
+} from '../../src/core/workflow-runner.js';
 import type { Workflow } from '../../src/types/index.js';
 
 const mockWorkflow: Workflow = {
@@ -45,6 +51,28 @@ describe('WorkflowRunner', () => {
     it('应该计算最短路径长度', () => {
       const total = calculateTotalSteps(mockWorkflow, 'step1');
       expect(total).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe('decideFinalCommand', () => {
+    it('option.command 存在时应优先使用 option.command', () => {
+      const result = decideFinalCommand('echo hi', 'codex --resume');
+      expect(result).toBe('echo hi');
+    });
+
+    it('option.command 不存在时应回退到 provider command', () => {
+      const result = decideFinalCommand(undefined, 'codex --resume');
+      expect(result).toBe('codex --resume');
+    });
+  });
+
+  describe('resolveCredentialId', () => {
+    it('应优先使用 option.value 作为 credentialId', () => {
+      expect(resolveCredentialId('work', { 'select-account': 'prod' })).toBe('work');
+    });
+
+    it('option.value 缺失时应回退到 select-account', () => {
+      expect(resolveCredentialId(undefined, { 'select-account': 'prod' })).toBe('prod');
     });
   });
 });
