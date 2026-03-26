@@ -168,6 +168,28 @@ p {
   gap: 12px;
 }
 
+.topbar__meta {
+  margin-top: 10px;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+.feedback {
+  border-radius: 16px;
+  padding: 14px 18px;
+  font-weight: 600;
+}
+
+.feedback--error {
+  background: rgba(198, 40, 40, 0.08);
+  color: var(--danger);
+}
+
+.feedback--success {
+  background: rgba(15, 91, 216, 0.08);
+  color: var(--primary);
+}
+
 .workspace {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr) 360px;

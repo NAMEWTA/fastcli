@@ -4,6 +4,7 @@ import {
   createInitialAppState,
   resolveLoginState,
 } from '../../src/web-admin/App.js';
+import { confirmImportBeforeApply } from '../../src/web-admin/components/AdminShell.js';
 import { createAdminStateStore } from '../../src/web-admin/lib/state.js';
 
 const EMPTY_CONFIG: Config = {
@@ -205,5 +206,84 @@ describe('WebAdmin admin working copy state', () => {
 
     await expect(store.saveAll()).rejects.toThrow(/校验失败/);
     expect(saveConfig).not.toHaveBeenCalled();
+  });
+
+  it('点击保存全部若遇到 IO 或权限错误，dirty 仍为 true 且编辑内容保持', async () => {
+    const validateConfig = vi.fn().mockResolvedValue({
+      valid: true,
+      errors: [],
+    });
+    const saveConfig = vi.fn().mockRejectedValue(new Error('保存失败：权限不足'));
+    const store = createAdminStateStore(FULL_CONFIG, {
+      validateConfig,
+      saveConfig,
+    });
+
+    store.updateField('aliases', 'gs', {
+      command: 'git diff',
+      description: '查看差异',
+    });
+    const beforeSave = store.getState().workingCopy;
+
+    await expect(store.saveAll()).rejects.toThrow(/保存失败/);
+    expect(store.getState().dirty).toBe(true);
+    expect(store.getState().workingCopy).toEqual(beforeSave);
+  });
+
+  it('导入时必须先经过二次确认', async () => {
+    const importAll = vi.fn();
+
+    const applied = await confirmImportBeforeApply('{"aliases":{}}', {
+      confirmReplace: () => false,
+      importAll,
+    });
+
+    expect(applied).toBe(false);
+    expect(importAll).not.toHaveBeenCalled();
+  });
+
+  it('导入后工作态被全量覆盖', async () => {
+    const validateConfig = vi.fn().mockResolvedValue({
+      valid: true,
+      errors: [],
+    });
+    const store = createAdminStateStore(FULL_CONFIG, {
+      validateConfig,
+    });
+
+    await store.importAll(
+      JSON.stringify({
+        aliases: {
+          gp: {
+            command: 'git push',
+          },
+        },
+        providers: {},
+        credentials: {},
+        workflows: {},
+      }),
+    );
+
+    expect(store.getState().workingCopy).toEqual({
+      aliases: {
+        gp: {
+          command: 'git push',
+        },
+      },
+      providers: {},
+      credentials: {},
+      workflows: {},
+    });
+  });
+
+  it('导出返回当前工作态 JSON', () => {
+    const store = createAdminStateStore(FULL_CONFIG);
+
+    store.updateField('aliases', 'gs', {
+      command: 'git diff',
+      description: '查看差异',
+    });
+
+    expect(JSON.parse(store.exportAll())).toEqual(store.getState().workingCopy);
   });
 });

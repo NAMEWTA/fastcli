@@ -3,7 +3,9 @@ import type { Config } from '../types/index.js';
 import { AdminShell } from './components/AdminShell.js';
 import { LoginPage } from './components/LoginPage.js';
 import {
+  downloadConfigJson,
   fetchConfig as fetchConfigFromApi,
+  saveWorkingCopy,
   validateWorkingCopy,
   verifyToken as verifyTokenFromApi,
   type VerifyTokenResult,
@@ -111,6 +113,7 @@ export function App({ api = defaultApi }: { api?: AppApi }) {
     const nextState = await resolveLoginState(api, token);
     if (nextState.mode === 'admin' && nextState.config) {
       const nextStore = createAdminStateStore(nextState.config, {
+        saveConfig: saveWorkingCopy,
         validateConfig: validateWorkingCopy,
       });
       const nextAdminState = nextStore.getState();
@@ -129,7 +132,26 @@ export function App({ api = defaultApi }: { api?: AppApi }) {
   }
 
   function syncAdminState(store: AdminStateStore) {
-    setAdminState(store.getState());
+    const nextAdminState = store.getState();
+    setAdminState(nextAdminState);
+
+    if (!selection) {
+      setSelection(findFirstEntry(nextAdminState.workingCopy));
+      return;
+    }
+
+    const currentModuleEntries =
+      selection.module === 'aliases'
+        ? nextAdminState.workingCopy.aliases
+        : selection.module === 'providers'
+          ? nextAdminState.workingCopy.providers
+          : selection.module === 'credentials'
+            ? nextAdminState.workingCopy.credentials
+            : nextAdminState.workingCopy.workflows;
+
+    if (!currentModuleEntries || !(selection.entryKey in currentModuleEntries)) {
+      setSelection(findFirstEntry(nextAdminState.workingCopy));
+    }
   }
 
   function handleSelect(module: ModuleKey, entryKey: string) {
@@ -158,10 +180,40 @@ export function App({ api = defaultApi }: { api?: AppApi }) {
     syncAdminState(adminStore);
   }
 
+  async function handleSaveAll(): Promise<void> {
+    if (!adminStore) {
+      return;
+    }
+
+    await adminStore.saveAll();
+    syncAdminState(adminStore);
+  }
+
+  async function handleImport(raw: string): Promise<void> {
+    if (!adminStore) {
+      return;
+    }
+
+    await adminStore.importAll(raw);
+    syncAdminState(adminStore);
+  }
+
+  function handleExport() {
+    if (!adminStore) {
+      return;
+    }
+
+    downloadConfigJson(adminStore.exportAll());
+  }
+
   if (state.mode === 'admin' && adminState) {
     return (
       <AdminShell
+        dirty={adminState.dirty}
         onCloseEditor={handleCloseEditor}
+        onExport={handleExport}
+        onImport={handleImport}
+        onSaveAll={handleSaveAll}
         onSelect={handleSelect}
         onUpdateEntry={handleUpdateEntry}
         onValidateJson={handleValidateJson}

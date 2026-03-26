@@ -76,3 +76,37 @@ export async function validateWorkingCopy(
     errors: body.errors ?? [],
   };
 }
+
+export async function saveWorkingCopy(config: Config): Promise<void> {
+  const validation = await validateWorkingCopy(config);
+  if (!validation.valid) {
+    throw new Error('校验失败：请先修复全部错误后再保存');
+  }
+
+  const response = await fetch('/api/save', {
+    method: 'POST',
+  });
+  const body = await readJsonBody<ApiErrorBody>(response);
+
+  if (!response.ok || body.ok === false) {
+    throw new Error(body.error ?? '保存失败');
+  }
+}
+
+export function downloadConfigJson(
+  rawJson: string,
+  filename: string = 'fastcli.config.json',
+): void {
+  const blob = new Blob([rawJson], {
+    type: 'application/json; charset=utf-8',
+  });
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = objectUrl;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(objectUrl);
+}
