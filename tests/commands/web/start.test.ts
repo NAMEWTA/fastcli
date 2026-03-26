@@ -52,6 +52,20 @@ describe('openBrowser', () => {
     await expect(promise).rejects.toThrow('spawn failed');
     expect(child.unref).not.toHaveBeenCalled();
   });
+
+  it('rejects when neither spawn nor error is emitted within timeout', async () => {
+    vi.useFakeTimers();
+    const child = new MockChildProcess();
+    spawnMock.mockReturnValue(child);
+
+    const rejection = expect(openBrowser('http://127.0.0.1:9527')).rejects.toThrow('openBrowser timeout');
+
+    await vi.advanceTimersByTimeAsync(1500);
+
+    await rejection;
+    expect(child.unref).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
 });
 
 describe('webStart', () => {
@@ -81,7 +95,7 @@ describe('webStart', () => {
 
   it('keeps process alive when browser open fails', async () => {
     const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => {});
-    const errorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(logger, 'warn').mockImplementation(() => {});
 
     await expect(
       webStart({
@@ -95,7 +109,33 @@ describe('webStart', () => {
 
     expect(infoSpy).toHaveBeenCalledWith('Web 管理后台已启动: http://127.0.0.1:9527');
     expect(infoSpy).toHaveBeenCalledWith('一次性口令: abc123');
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('自动打开浏览器失败'));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('自动打开浏览器失败'));
+  });
+
+  it('still resolves and logs warning when default openBrowser times out', async () => {
+    vi.useFakeTimers();
+    const child = new MockChildProcess();
+    spawnMock.mockReturnValue(child);
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(logger, 'warn').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {});
+
+    const promise = webStart({
+      startServer: vi.fn().mockResolvedValue({
+        url: 'http://127.0.0.1:9527',
+        token: 'abc123',
+      }),
+    });
+
+    await vi.advanceTimersByTimeAsync(1500);
+
+    await expect(promise).resolves.toBeUndefined();
+    expect(infoSpy).toHaveBeenCalledWith('Web 管理后台已启动: http://127.0.0.1:9527');
+    expect(infoSpy).toHaveBeenCalledWith('一次性口令: abc123');
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('自动打开浏览器失败'));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('openBrowser timeout'));
+    expect(errorSpy).not.toHaveBeenCalled();
+    vi.useRealTimers();
   });
 
   it('prints error and exits safely when startup fails', async () => {

@@ -10,8 +10,10 @@ export interface WebServerInfo {
 export interface WebStartDeps {
   startServer?: () => Promise<WebServerInfo>;
   openBrowser?: (url: string) => Promise<void> | void;
-  logger?: Pick<typeof logger, 'info' | 'error'>;
+  logger?: Pick<typeof logger, 'info' | 'error' | 'warn'>;
 }
+
+const BROWSER_OPEN_SETTLE_TIMEOUT_MS = 1500;
 
 async function startWebServer(): Promise<WebServerInfo> {
   return {
@@ -35,13 +37,21 @@ export async function openBrowser(url: string): Promise<void> {
         stdio: 'ignore',
       });
 
+      const timeout = setTimeout(() => {
+        child.removeListener('spawn', onSpawn);
+        child.removeListener('error', onError);
+        reject(new Error(`openBrowser timeout: no spawn/error within ${BROWSER_OPEN_SETTLE_TIMEOUT_MS}ms`));
+      }, BROWSER_OPEN_SETTLE_TIMEOUT_MS);
+
       const onSpawn = () => {
+        clearTimeout(timeout);
         child.removeListener('error', onError);
         child.unref();
         resolve();
       };
 
       const onError = (error: Error) => {
+        clearTimeout(timeout);
         child.removeListener('spawn', onSpawn);
         reject(error);
       };
@@ -69,7 +79,7 @@ export async function webStart(deps: WebStartDeps = {}): Promise<void> {
       await browserOpener(url);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      webLogger.error(`自动打开浏览器失败: ${message}`);
+      webLogger.warn(`自动打开浏览器失败: ${message}`);
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
