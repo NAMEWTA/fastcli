@@ -35,9 +35,19 @@ export async function openBrowser(url: string): Promise<void> {
         stdio: 'ignore',
       });
 
-      child.once('error', reject);
-      child.unref();
-      resolve();
+      const onSpawn = () => {
+        child.removeListener('error', onError);
+        child.unref();
+        resolve();
+      };
+
+      const onError = (error: Error) => {
+        child.removeListener('spawn', onSpawn);
+        reject(error);
+      };
+
+      child.once('spawn', onSpawn);
+      child.once('error', onError);
     } catch (error) {
       reject(error);
     }

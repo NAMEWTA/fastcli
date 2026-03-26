@@ -1,6 +1,58 @@
+import { EventEmitter } from 'node:events';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { logger } from '../../../src/utils/logger.js';
-import { webStart } from '../../../src/commands/web/start.js';
+
+const { spawnMock } = vi.hoisted(() => ({
+  spawnMock: vi.fn(),
+}));
+
+vi.mock('node:child_process', () => ({
+  spawn: spawnMock,
+}));
+
+import { openBrowser, webStart } from '../../../src/commands/web/start.js';
+
+class MockChildProcess extends EventEmitter {
+  unref = vi.fn();
+}
+
+describe('openBrowser', () => {
+  beforeEach(() => {
+    spawnMock.mockReset();
+  });
+
+  it('resolves only after child emits spawn', async () => {
+    const child = new MockChildProcess();
+    spawnMock.mockReturnValue(child);
+
+    let settled = false;
+    const promise = openBrowser('http://127.0.0.1:9527').then(() => {
+      settled = true;
+    });
+
+    await Promise.resolve();
+    expect(settled).toBe(false);
+
+    child.emit('spawn');
+    await promise;
+
+    expect(settled).toBe(true);
+    expect(child.unref).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects when child emits error before spawn', async () => {
+    const child = new MockChildProcess();
+    spawnMock.mockReturnValue(child);
+
+    const promise = openBrowser('http://127.0.0.1:9527');
+    const error = new Error('spawn failed');
+
+    child.emit('error', error);
+
+    await expect(promise).rejects.toThrow('spawn failed');
+    expect(child.unref).not.toHaveBeenCalled();
+  });
+});
 
 describe('webStart', () => {
   beforeEach(() => {
