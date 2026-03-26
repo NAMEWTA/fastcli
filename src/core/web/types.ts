@@ -7,3 +7,8 @@ export interface WebSessionManager {
   verifyOneTimeToken(token: string): OneTimeTokenVerifyResult;
   isSessionValid(sessionId: string | undefined): boolean;
 }
+
+export interface WebSessionManagerOptions {
+  tokenTtlMs?: number;
+  sessionTtlMs?: number;
+}
