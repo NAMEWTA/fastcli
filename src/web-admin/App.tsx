@@ -4,9 +4,17 @@ import { AdminShell } from './components/AdminShell.js';
 import { LoginPage } from './components/LoginPage.js';
 import {
   fetchConfig as fetchConfigFromApi,
+  validateWorkingCopy,
   verifyToken as verifyTokenFromApi,
   type VerifyTokenResult,
 } from './lib/api.js';
+import {
+  createAdminStateStore,
+  type AdminState,
+  type AdminStateStore,
+  type ModuleKey,
+  type ModuleValue,
+} from './lib/state.js';
 
 export interface AppState {
   mode: 'login' | 'admin';
@@ -18,6 +26,11 @@ export interface AppState {
 export interface AppApi {
   verifyToken(token: string): Promise<VerifyTokenResult>;
   fetchConfig(): Promise<Config>;
+}
+
+interface EntrySelection {
+  module: ModuleKey;
+  entryKey: string;
 }
 
 const DEFAULT_AUTH_ERROR = '认证失败：请检查一次性口令后重试';
@@ -64,8 +77,29 @@ const defaultApi: AppApi = {
   fetchConfig: fetchConfigFromApi,
 };
 
+function findFirstEntry(config: Config): EntrySelection | null {
+  const modules: Array<[ModuleKey, Record<string, unknown> | undefined]> = [
+    ['aliases', config.aliases],
+    ['providers', config.providers],
+    ['credentials', config.credentials],
+    ['workflows', config.workflows],
+  ];
+
+  for (const [module, record] of modules) {
+    const entryKey = record ? Object.keys(record)[0] : undefined;
+    if (entryKey) {
+      return { module, entryKey };
+    }
+  }
+
+  return null;
+}
+
 export function App({ api = defaultApi }: { api?: AppApi }) {
   const [state, setState] = useState<AppState>(() => createInitialAppState());
+  const [adminStore, setAdminStore] = useState<AdminStateStore | null>(null);
+  const [adminState, setAdminState] = useState<AdminState | null>(null);
+  const [selection, setSelection] = useState<EntrySelection | null>(null);
 
   async function handleLogin(token: string): Promise<void> {
     setState((current) => ({
@@ -75,11 +109,67 @@ export function App({ api = defaultApi }: { api?: AppApi }) {
     }));
 
     const nextState = await resolveLoginState(api, token);
+    if (nextState.mode === 'admin' && nextState.config) {
+      const nextStore = createAdminStateStore(nextState.config, {
+        validateConfig: validateWorkingCopy,
+      });
+      const nextAdminState = nextStore.getState();
+      const firstEntry = findFirstEntry(nextAdminState.workingCopy);
+
+      setAdminStore(nextStore);
+      setAdminState(nextAdminState);
+      setSelection(firstEntry);
+    } else {
+      setAdminStore(null);
+      setAdminState(null);
+      setSelection(null);
+    }
+
     setState(nextState);
   }
 
-  if (state.mode === 'admin' && state.config) {
-    return <AdminShell config={state.config} />;
+  function syncAdminState(store: AdminStateStore) {
+    setAdminState(store.getState());
+  }
+
+  function handleSelect(module: ModuleKey, entryKey: string) {
+    setSelection({ module, entryKey });
+  }
+
+  function handleCloseEditor() {
+    setSelection(null);
+  }
+
+  function handleUpdateEntry(nextValue: ModuleValue) {
+    if (!adminStore || !selection) {
+      return;
+    }
+
+    adminStore.updateField(selection.module, selection.entryKey, nextValue);
+    syncAdminState(adminStore);
+  }
+
+  async function handleValidateJson(raw: string): Promise<void> {
+    if (!adminStore || !selection) {
+      return;
+    }
+
+    await adminStore.updateJsonEntry(selection.module, selection.entryKey, raw);
+    syncAdminState(adminStore);
+  }
+
+  if (state.mode === 'admin' && adminState) {
+    return (
+      <AdminShell
+        onCloseEditor={handleCloseEditor}
+        onSelect={handleSelect}
+        onUpdateEntry={handleUpdateEntry}
+        onValidateJson={handleValidateJson}
+        selectedEntryKey={selection?.entryKey ?? null}
+        selectedModule={selection?.module ?? null}
+        state={adminState}
+      />
+    );
   }
 
   return (

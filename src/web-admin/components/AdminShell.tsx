@@ -1,17 +1,53 @@
-import type { Config } from '../../types/index.js';
+import type { AdminState, ModuleKey, ModuleValue } from '../lib/state.js';
+import { EditDrawer } from './EditDrawer.js';
+import { ModuleList } from './ModuleList.js';
+import { OverviewCards } from './OverviewCards.js';
 
 const TASK_NAV_ITEMS = ['配置总览', '配置校验', '导入配置', '导出配置'];
 const TYPE_NAV_ITEMS = ['Aliases', 'Providers', 'Credentials', 'Workflows'];
 
 export interface AdminShellProps {
-  config: Config;
+  state: AdminState;
+  selectedModule: ModuleKey | null;
+  selectedEntryKey: string | null;
+  onSelect(module: ModuleKey, entryKey: string): void;
+  onCloseEditor(): void;
+  onUpdateEntry(nextValue: ModuleValue): void;
+  onValidateJson(raw: string): Promise<void> | void;
 }
 
-function getCount(record: Record<string, unknown> | undefined): number {
-  return record ? Object.keys(record).length : 0;
+function getSelectedValue(
+  state: AdminState,
+  module: ModuleKey | null,
+  entryKey: string | null,
+): ModuleValue | null {
+  if (!module || !entryKey) {
+    return null;
+  }
+
+  switch (module) {
+    case 'aliases':
+      return state.workingCopy.aliases[entryKey] ?? null;
+    case 'providers':
+      return state.workingCopy.providers?.[entryKey] ?? null;
+    case 'credentials':
+      return state.workingCopy.credentials?.[entryKey] ?? null;
+    case 'workflows':
+      return state.workingCopy.workflows[entryKey] ?? null;
+  }
 }
 
-export function AdminShell({ config }: AdminShellProps) {
+export function AdminShell({
+  state,
+  selectedModule,
+  selectedEntryKey,
+  onSelect,
+  onCloseEditor,
+  onUpdateEntry,
+  onValidateJson,
+}: AdminShellProps) {
+  const selectedValue = getSelectedValue(state, selectedModule, selectedEntryKey);
+
   return (
     <div className="admin-shell">
       <header className="topbar">
@@ -62,29 +98,31 @@ export function AdminShell({ config }: AdminShellProps) {
             <p className="eyebrow">当前工作态</p>
             <h2>欢迎进入后台骨架</h2>
             <p>
-              任务 6 先搭建登录与后台框架，后续任务会继续补总览卡片、模块列表和抽屉编辑。
+              工作态变更只保留在前端内存里，保存前会走统一校验。右侧抽屉支持表单和 JSON 双模式编辑。
             </p>
           </section>
 
-          <section className="summary-grid">
-            <article className="summary-card">
-              <span>Aliases</span>
-              <strong>{getCount(config.aliases)}</strong>
-            </article>
-            <article className="summary-card">
-              <span>Providers</span>
-              <strong>{getCount(config.providers)}</strong>
-            </article>
-            <article className="summary-card">
-              <span>Credentials</span>
-              <strong>{getCount(config.credentials)}</strong>
-            </article>
-            <article className="summary-card">
-              <span>Workflows</span>
-              <strong>{getCount(config.workflows)}</strong>
-            </article>
-          </section>
+          <OverviewCards
+            config={state.workingCopy}
+            lastUpdated={state.lastUpdated}
+          />
+          <ModuleList
+            config={state.workingCopy}
+            onSelect={onSelect}
+            selectedEntryKey={selectedEntryKey}
+            selectedModule={selectedModule}
+          />
         </main>
+
+        <EditDrawer
+          entryKey={selectedEntryKey}
+          module={selectedModule}
+          onClose={onCloseEditor}
+          onUpdate={onUpdateEntry}
+          onValidateJson={onValidateJson}
+          validation={state.validation}
+          value={selectedValue}
+        />
       </div>
     </div>
   );

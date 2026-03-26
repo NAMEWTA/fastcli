@@ -10,6 +10,11 @@ interface ApiConfigBody extends ApiErrorBody {
   config?: Config;
 }
 
+interface ApiValidationBody extends ApiErrorBody {
+  valid?: boolean;
+  errors?: string[];
+}
+
 export interface VerifyTokenResult {
   ok: boolean;
   message?: string;
@@ -48,4 +53,26 @@ export async function fetchConfig(): Promise<Config> {
   }
 
   return body.config;
+}
+
+export async function validateWorkingCopy(
+  config: Config,
+): Promise<{ valid: boolean; errors: string[] }> {
+  const response = await fetch('/api/import', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ config }),
+  });
+  const body = await readJsonBody<ApiValidationBody>(response);
+
+  if (!response.ok || body.ok === false) {
+    throw new Error(body.error ?? '配置校验失败');
+  }
+
+  return {
+    valid: body.valid ?? false,
+    errors: body.errors ?? [],
+  };
 }
