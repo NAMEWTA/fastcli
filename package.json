@@ -22,10 +22,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm run build:web-admin && tsup",
+    "build": "tsup && pnpm run build:web-admin",
     "build:web-admin": "node scripts/build-web-admin.mjs",
     "dev": "tsup --watch",
-    "test": "vitest run",
+    "test": "pnpm run build:web-admin && vitest run",
     "test:watch": "vitest",
     "link": "pnpm build && pnpm link -g",
     "unlink": "pnpm unlink -g"

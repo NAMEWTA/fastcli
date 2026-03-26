@@ -1,6 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { readFileSync, statSync } from 'node:fs';
-import { extname, join, resolve } from 'node:path';
+import { dirname, extname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createConfigWorkingCopyStore, type ConfigWorkingCopyStoreWithDirty } from './config-working-copy.js';
 import { createWebSessionManager } from './token-session.js';
 
@@ -23,7 +24,12 @@ class RequestBodyTooLargeError extends Error {
 }
 
 const MAX_JSON_BODY_BYTES = 1024 * 1024;
-const WEB_ADMIN_DIST_DIR = resolve(process.cwd(), 'dist', 'web-admin');
+const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
+const PROJECT_ROOT = resolve(MODULE_DIR, '..', '..', '..');
+const WEB_ADMIN_DIST_DIRS = [
+  resolve(process.cwd(), 'dist', 'web-admin'),
+  resolve(PROJECT_ROOT, 'dist', 'web-admin'),
+];
 
 function getContentType(path: string): string {
   const extension = extname(path).toLowerCase();
@@ -48,22 +54,26 @@ function serveStaticFile(res: ServerResponse, relativePath: string): boolean {
     return false;
   }
 
-  const absolutePath = join(WEB_ADMIN_DIST_DIR, normalized);
+  for (const distDir of WEB_ADMIN_DIST_DIRS) {
+    const absolutePath = join(distDir, normalized);
 
-  try {
-    const stats = statSync(absolutePath);
-    if (!stats.isFile()) {
-      return false;
+    try {
+      const stats = statSync(absolutePath);
+      if (!stats.isFile()) {
+        continue;
+      }
+
+      const file = readFileSync(absolutePath);
+      res.statusCode = 200;
+      res.setHeader('Content-Type', getContentType(absolutePath));
+      res.end(file);
+      return true;
+    } catch {
+      continue;
     }
-
-    const file = readFileSync(absolutePath);
-    res.statusCode = 200;
-    res.setHeader('Content-Type', getContentType(absolutePath));
-    res.end(file);
-    return true;
-  } catch {
-    return false;
   }
+
+  return false;
 }
 
 function writeJson(

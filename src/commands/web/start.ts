@@ -1,5 +1,5 @@
-import { randomBytes } from 'node:crypto';
 import { spawn } from 'node:child_process';
+import { startWebAdminServer } from '../../core/web/api-server.js';
 import { logger } from '../../utils/logger.js';
 
 export interface WebServerInfo {
@@ -16,9 +16,11 @@ export interface WebStartDeps {
 const BROWSER_OPEN_SETTLE_TIMEOUT_MS = 1500;
 
 async function startWebServer(): Promise<WebServerInfo> {
+  const server = await startWebAdminServer();
+
   return {
-    url: 'http://127.0.0.1:5173',
-    token: randomBytes(6).toString('hex'),
+    url: server.url,
+    token: server.token,
   };
 }
 

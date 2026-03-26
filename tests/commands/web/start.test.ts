@@ -10,6 +10,14 @@ vi.mock('node:child_process', () => ({
   spawn: spawnMock,
 }));
 
+const { startWebAdminServerMock } = vi.hoisted(() => ({
+  startWebAdminServerMock: vi.fn(),
+}));
+
+vi.mock('../../../src/core/web/api-server.js', () => ({
+  startWebAdminServer: startWebAdminServerMock,
+}));
+
 import { openBrowser, webStart } from '../../../src/commands/web/start.js';
 
 class MockChildProcess extends EventEmitter {
@@ -71,6 +79,7 @@ describe('openBrowser', () => {
 describe('webStart', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    startWebAdminServerMock.mockReset();
   });
 
   it('prints URL and one-time token, and opens browser once', async () => {
@@ -90,6 +99,28 @@ describe('webStart', () => {
     expect(infoSpy).toHaveBeenCalledWith('一次性口令: abc123');
     expect(openBrowserSpy).toHaveBeenCalledTimes(1);
     expect(openBrowserSpy).toHaveBeenCalledWith('http://127.0.0.1:9527');
+    expect(errorSpy).not.toHaveBeenCalled();
+  });
+
+  it('uses the local web admin server as the default startup path', async () => {
+    const infoSpy = vi.spyOn(logger, 'info').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {});
+    const openBrowserSpy = vi.fn().mockResolvedValue(undefined);
+
+    startWebAdminServerMock.mockResolvedValue({
+      url: 'http://127.0.0.1:9911',
+      token: 'server-token',
+      close: vi.fn(),
+    });
+
+    await webStart({
+      openBrowser: openBrowserSpy,
+    });
+
+    expect(startWebAdminServerMock).toHaveBeenCalledTimes(1);
+    expect(infoSpy).toHaveBeenCalledWith('Web 管理后台已启动: http://127.0.0.1:9911');
+    expect(infoSpy).toHaveBeenCalledWith('一次性口令: server-token');
+    expect(openBrowserSpy).toHaveBeenCalledWith('http://127.0.0.1:9911');
     expect(errorSpy).not.toHaveBeenCalled();
   });
 
