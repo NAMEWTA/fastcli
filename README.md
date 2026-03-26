@@ -68,7 +68,9 @@ fastcli <name> --dry-run # 预览命令但不执行
 
 ## 配置文件
 
-配置文件位于 `~/.fastcli/config.json`：
+配置文件位于 `~/.fastcli/config.json`。
+
+根目录已提供完整模板：`config.temp.json`（内容与下方一致）。
 
 ```json
 {
@@ -82,7 +84,46 @@ fastcli <name> --dry-run # 预览命令但不执行
       "description": "暂存所有更改"
     },
     "gp": {
-      "command": "git push"
+      "command": "git push",
+      "description": "推送到远程"
+    }
+  },
+  "providers": {
+    "codex": {
+      "providerId": "codex",
+      "command": "codex",
+      "modeArgs": {
+        "resume": ["--resume"],
+        "new-session": ["--new"]
+      },
+      "envMapping": {
+        "OPENAI_API_KEY": "token"
+      }
+    },
+    "copilot": {
+      "providerId": "copilot",
+      "command": "copilot",
+      "modeArgs": {
+        "resume": ["--resume"],
+        "new-session": []
+      },
+      "envMapping": {
+        "COPILOT_GITHUB_TOKEN": "token"
+      }
+    }
+  },
+  "credentials": {
+    "work": {
+      "label": "工作账号",
+      "values": {
+        "token": "REPLACE_WITH_WORK_TOKEN"
+      }
+    },
+    "personal": {
+      "label": "个人账号",
+      "values": {
+        "token": "REPLACE_WITH_PERSONAL_TOKEN"
+      }
     }
   },
   "workflows": {
@@ -103,6 +144,49 @@ fastcli <name> --dry-run # 预览命令但不执行
           "options": [
             { "name": "feat: 新功能", "command": "git add . && git commit -m \"feat: {{commit-type}}\"" },
             { "name": "fix: 修复", "command": "git add . && git commit -m \"fix: {{commit-type}}\"" }
+          ]
+        }
+      ]
+    },
+    "codex-chat": {
+      "description": "启动 Codex 交互会话",
+      "provider": "codex",
+      "steps": [
+        {
+          "id": "select-account",
+          "prompt": "选择凭据",
+          "options": [
+            { "name": "工作账号", "value": "work", "next": "select-mode" },
+            { "name": "个人账号", "value": "personal", "next": "select-mode" }
+          ]
+        },
+        {
+          "id": "select-mode",
+          "prompt": "选择启动模式",
+          "options": [
+            { "name": "恢复会话", "value": "resume" },
+            { "name": "新会话", "value": "new-session" }
+          ]
+        }
+      ]
+    },
+    "copilot-chat": {
+      "description": "启动 Copilot 交互会话",
+      "provider": "copilot",
+      "steps": [
+        {
+          "id": "select-account",
+          "prompt": "选择凭据",
+          "options": [
+            { "name": "工作账号", "value": "work", "next": "select-mode" }
+          ]
+        },
+        {
+          "id": "select-mode",
+          "prompt": "选择启动模式",
+          "options": [
+            { "name": "恢复会话", "value": "resume" },
+            { "name": "新会话", "value": "new-session" }
           ]
         }
       ]
