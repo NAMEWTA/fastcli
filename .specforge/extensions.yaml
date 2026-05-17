@@ -1,0 +1,35 @@
+# SpecForge 扩展钩子
+#
+# 触发方式：在命令 preamble 中调用
+#   specforge run-hook --phase requirements --stage before
+#
+# 字段说明：
+#   name      ：可读名称
+#   command   ：要执行的 shell 命令（项目根作为 cwd）
+#   enabled   ：是否启用，默认 true；改为 false 可临时关闭
+#   optional  ：失败是否阻断；true=失败仅 warn 不影响整体退出码
+#   timeoutMs ：超时时间，默认 30000ms
+#
+# 命名约定：键名形如 before_<phase> / after_<phase>，
+#   <phase> ∈ {foundation, requirements, design, planning, implementation, quality, release, evolution}
+#
+# 取消注释下方示例以启用相应钩子：
+hooks:
+  # before_requirements:
+  #   - name: 加载项目上下文
+  #     command: echo "loading project context..."
+  #     enabled: true
+  #     optional: false
+  #
+  # after_implementation:
+  #   - name: 运行测试套件
+  #     command: <test-command>   # 参见 skills/workflow-steps/language-adapters
+  #     enabled: true
+  #     optional: false
+  #     timeoutMs: 120000
+  #
+  # before_release:
+  #   - name: 安全审计
+  #     command: <audit-command>  # 参见 language-adapters：pnpm audit / pip-audit / govulncheck / cargo audit
+  #     enabled: true
+  #     optional: true

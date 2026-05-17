@@ -1,0 +1,263 @@
+schema: specforge-templates/v1
+
+# ----------------------------------------------------------------
+# Profile
+# - 决定 init 时生成哪些 workflow command 目录、status 阶段顺序
+# - 三个内置 profile：
+#     minimal  : foundation, requirements, implementation, quality, release（5 阶段）
+#     standard : 8 阶段全启（默认）
+#     custom   : 由 enabledPhases 显式声明
+# - 优先级：specforge/config.yaml > .specforge/config.yaml > 内置默认
+# ----------------------------------------------------------------
+profile:
+  name: standard
+  # 仅 name=custom 时使用：
+  # enabledPhases: [foundation, requirements, implementation, quality, release]
+
+
+# ============================================================
+# SpecForge 框架级配置（模板机器源）
+#
+# 目标：
+# - 统一管理 context / rules / errors / handoffs
+# - 供 workflow/tools commands 与 skills 通过“引用编号”保持一致
+#
+# 优先级（仅约定，具体合并逻辑由 CLI 实现）：
+# 1) 项目级：specforge/config.yaml（覆盖/追加）
+# 2) 框架级：.specforge/config.yaml（默认）
+# ============================================================
+
+# ----------------------------------------------------------------
+# 全局上下文（可被 AI 直接加载）
+# ----------------------------------------------------------------
+context: |
+  你正在使用 SpecForge（规格驱动开发）工作流。
+
+  方法论 vs 实现：
+  - SpecForge **是方法论框架，编程语言无关**。所有命令与技能正文以语言无关方式描述工作流（"运行测试 / Lint / 构建 / 同步版本号"），具体技术栈命令请参考 `skills/workflow-steps/language-adapters/`。
+  - 当前覆盖：Node、Python、Java/Spring Boot (Maven/Gradle)、Go、Rust、.NET。新增语言时优先扩展 language-adapters，再回到主流程。
+
+  目录模型：
+  - `.specforge/`：框架资产（commands、skills、模板）。可被 update 重新生成。
+  - `specforge/`：用户资产（事实来源：项目上下文、规格、变更、沉淀）。框架不应自动覆盖。
+
+  8 个生命周期阶段：
+  - foundation → requirements → design → planning → implementation → quality → release → evolution
+
+  运维（runbook/监控/告警/回滚）语义已合并进 release 阶段的产物与门禁，不再作为独立阶段。
+
+  关键理念：
+  - 产物依赖：上游产物是下游输入；缺前置产物必须阻断（HARD-GATE）。
+  - 渐进式披露：三级显式契约（见 rules.global.progressiveDisclosure）。
+  - 验证证据：无新验证证据，禁止声称完成。
+
+# ----------------------------------------------------------------
+# 规则库（commands/skills 可引用）
+# ----------------------------------------------------------------
+rules:
+  global:
+    naming:
+      commandName:
+        - "命令名使用 kebab-case：小写字母、数字、连字符；以字母开头。"
+        - "workflow command 建议命名：<阶段>-<动词>，如 requirements-clarify。"
+        - "tool command 建议命名：<能力> 或 <动词>，如 debugging、worktree。"
+      skillName:
+        - "技能目录名使用 kebab-case；SKILL.md frontmatter 的 name 与目录名一致。"
+    metadata:
+      - "所有 command/skill 模板必须包含 YAML frontmatter：name/type/description/version/author。"
+      - "description 必须包含触发场景（自然语言/英文关键词）以利发现。"
+    progressiveDisclosure:
+      level1_alwaysLoaded:
+        - "始终加载：YAML frontmatter（name + type + description）。"
+        - "description 必须包含触发场景与触发词；总长度建议 ≤ 200 字符（约 100 词）。"
+        - "frontmatter 中不得包含 SOP/流程/示例代码——这些属于 Level 2。"
+      level2_onTrigger:
+        - "命中触发后加载：SKILL.md / command.md 主体。建议 ≤ 500 行。"
+        - "主体只放本技能/命令的关键流程、Iron Law、自检清单；详细背景与长示例放 Level 3。"
+        - "超过 500 行必须拆分到 references/，主体保留导航与摘要。"
+      level3_onDemand:
+        - "按需加载：references/、scripts/、templates/ 等捆绑资源。"
+        - "references/ 文件必须从 SKILL.md/command.md 直接链接，不允许深层嵌套依赖。"
+        - "大段背景材料、跨语言适配表、长 prompt、参考清单应放在 Level 3。"
+      # L3 加载预算（首轮消息加载 references/ 文件总行数上限）
+      level3_loadBudget:
+        firstRoundTotalLinesMax: 150
+        mustBeReferencedFromL2: true
+      # 路由声明六要素（workflow command preamble 必须输出）
+      routingStatement:
+        required: true
+        elements:
+          - route          # 路由（当前命令名）
+          - changeId       # Change-ID
+          - loaded         # 已加载（文件 + 行数/起止行）
+          - notLoaded      # 未加载（后续备选）
+          - firstAction    # 第一动作
+          - tokenBudget    # Token 预算估算
+      enforcement:
+        - "doctor --check-disclosure 校验：description 长度、SKILL.md 行数、references 是否被引用。"
+        - "违反任一条触发 E005_contextOverload。"
+
+  foundation:
+    constitution:
+      - "如果项目存在宪法（project rules），所有阶段都必须遵循；冲突时必须回到 requirements/planning 调整。"
+      - "宪法条款应可执行：能转为检查清单或门禁问题，而非口号。"
+
+  requirements:
+    hardGates:
+      - "方案未批准（或缺少最小需求基线）禁止进入 design/implementation。"
+    artifacts:
+      proposal:
+        requiredSections:
+          - "目标（Goals）"
+          - "非目标（Non-Goals）"
+          - "用户故事/用例"
+          - "范围边界（in/out）"
+          - "验收标准（可度量）"
+          - "风险与未知项（最多 5 条待确认）"
+
+  design:
+    hardGates:
+      - "没有接口契约与错误策略，禁止进入 planning/implementation。"
+    artifacts:
+      design:
+        requiredSections:
+          - "架构概览（模块职责）"
+          - "接口契约（输入/输出/约束）"
+          - "错误分类与错误码策略"
+          - "数据流/状态机（如适用）"
+          - "测试策略（单元/集成/E2E 分层）"
+
+  planning:
+    hardGates:
+      - "任务列表缺少依赖关系或验收口径，禁止进入 implementation。"
+    artifacts:
+      tasks:
+        requiredFields:
+          - "每个任务必须有：目标、范围、依赖、验收方式（命令或检查点）。"
+          - "可并行任务用 [P] 标记；必须说明并行安全前提。"
+        complexity:
+          - "对高复杂度任务必须做复杂度拆分，单任务建议 ≤ 2 小时。"
+
+  implementation:
+    hardGates:
+      - "TDD：禁止在测试之前编写生产代码（除非明确豁免并记录理由）。"
+      - "禁止跳过：实现 → 规格审查 → 代码质量审查 的闭环。"
+
+  quality:
+    hardGates:
+      - "无新验证证据，禁止声称完成。"
+    verification:
+      - "验证证据必须是你亲自运行的命令输出 PASS（或等价可审计日志）。"
+      - "linter 通过、agent 自述、'改动很小' 不算验证证据。"
+
+  release:
+    hardGates:
+      - "未完成质量门禁禁止发布；必须可追溯到 proposal/design/tasks 的验收标准。"
+      - "没有 runbook（部署/回滚/监控/告警说明）禁止发布上线。运维移交文档是 release 的必需产物之一。"
+
+  evolution:
+    hardGates:
+      - "复盘必须产出：摩擦点→根因→改进项→落地位置（context/rules/skills/commands）。"
+
+# ----------------------------------------------------------------
+# 错误字典（统一编号，便于引用）
+# ----------------------------------------------------------------
+errors:
+  E001_missingPrerequisiteArtifact:
+    title: "缺少前置产物"
+    signals:
+      - "status --check-requires 失败"
+      - "下游阶段引用的文档不存在或为空"
+    diagnosis:
+      - "确认当前 change 目录是否选择正确。"
+      - "列出缺失的产物 ID（proposal/design/tasks 等）。"
+    fix:
+      - "返回上游阶段生成缺失产物。"
+      - "如产物存在但路径不一致，修正 artifacts 记录或文件位置。"
+  E002_unapprovedSolution:
+    title: "方案未批准（HARD-GATE）"
+    signals:
+      - "需求文档存在 [NEEDS CLARIFICATION] 且未闭环"
+      - "无法给出可度量验收标准"
+    fix:
+      - "回到 requirements：补齐待确认项并做方案对比矩阵，形成批准结论。"
+  E003_contractMissing:
+    title: "接口契约/错误策略缺失（HARD-GATE）"
+    signals:
+      - "设计文档没有输入/输出/错误分类"
+      - "实现阶段频繁在接口细节上返工"
+    fix:
+      - "回到 design：补齐契约、错误码、边界情况与测试策略。"
+  E004_noVerificationEvidence:
+    title: "缺少新验证证据"
+    signals:
+      - "仅声明“已完成/已修复”，但没有测试命令输出"
+    fix:
+      - "运行并粘贴测试/检查命令输出；补齐缺失用例后再声称完成。"
+  E005_contextOverload:
+    title: "上下文过载（违反渐进式披露）"
+    signals:
+      - "SKILL.md 超过 500 行且混入大量参考材料"
+    fix:
+      - "把长内容移动到 references/，SKILL.md 只保留导航与关键流程。"
+  E009_scopeBoundaryViolation:
+    title: "任务 read/write 边界被违反"
+    signals:
+      - "git diff --name-only 结果包含 write_files 未声明文件"
+    diagnosis:
+      - "检查 TASKS.md 中该任务的 write_files 字段是否完整"
+      - "确认越界文件是否属于当前任务本应触碰的范围"
+    fix:
+      - "回滚越界改动；或显式扩 write_files 并获用户确认"
+  E010_repeatedFailurePattern:
+    title: '同一根因重复失败未声明差异（违反 P9）'
+    signals:
+      - '同类错误（同一错误消息/同一堆栈顶）连续出现 ≥ 2 次'
+      - '下一次尝试方案与 PROGRESS「已排除方案」近似但未声明差异'
+    diagnosis:
+      - '检查 specforge/changes/<change-id>/progress/<task-id>-PROGRESS.md 是否存在'
+      - '若存在，核对本次尝试是否落入「已排除方案」'
+      - '若落入，AI 必须书面回答差异或停下反问'
+    fix:
+      - '暂停重试；按 P9 书面回答与第 N 次失败的差异'
+      - '若无法回答差异，必须触发 context-reset-protocol skill 反问用户'
+
+# ----------------------------------------------------------------
+# 阶段衔接（handoffs）
+# - 用于 commands 在完成时提示“下一步做什么”
+# ----------------------------------------------------------------
+handoffs:
+  foundation-init:
+    next:
+      - command: requirements-clarify
+        reason: "初始化完成后进入需求澄清与方案探索。"
+        loadSkills:
+          - "workflow-steps/git-commit-template"
+  requirements-clarify:
+    next:
+      - command: design-explore
+        reason: "需求与方案批准后进入设计。"
+        loadSkills:
+          - "domain-rules/chinese-code-review"
+  design-explore:
+    next:
+      - command: planning-breakdown
+        reason: "契约与错误策略明确后进入任务拆解。"
+  planning-breakdown:
+    next:
+      - command: implementation-build
+        reason: "任务依赖与验收口径清晰后进入实现。"
+  implementation-build:
+    next:
+      - command: quality-verify
+        reason: "实现完成后进入测试审查与验证闭环。"
+  quality-verify:
+    next:
+      - command: release-deploy
+        reason: "质量门禁通过后进入发布。"
+  release-deploy:
+    next:
+      - command: evolution-retrospect
+        reason: "发布上线后进入复盘沉淀，运维观察与迭代改进在 evolution 阶段统一处理。"
+  evolution-retrospect:
+    next: []

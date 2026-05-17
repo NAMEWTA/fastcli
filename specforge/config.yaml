@@ -1,0 +1,56 @@
+schema: specforge-project/v1
+
+# ============================================================
+# SpecForge 项目级配置（模板机器源）
+#
+# 这是用户资产 `specforge/` 的核心机器可读入口。
+# 项目初始化后应在 `specforge/config.yaml` 中维护真实内容。
+#
+# 优先级约定：
+# - 该文件中的 rules/errors/context 覆盖/追加 `.specforge/config.yaml`
+# ============================================================
+
+context: |
+  项目名称：fastcli
+
+  请在这里维护“对当前项目真实且稳定”的上下文：
+  - 技术栈（语言/运行时/框架/包管理器/测试框架）
+  - 架构约束（单体/微服务、模块边界、部署形态）
+  - 领域术语（链接到 specforge/context/glossary.md，如有）
+  - 关键非功能需求（性能、安全、合规、可用性）
+  - 仓库约定（分支策略、提交规范、CI 命令）
+
+rules:
+  project:
+    - "本项目的规则在此维护；必要时可覆盖框架默认规则。"
+    - "所有新增规则必须可执行（可转化为检查清单问题）。"
+
+errors:
+  P001_projectSpecific:
+    title: "项目特定错误占位"
+    signals:
+      - "当某类错误在本项目中反复出现时，将其沉淀为编号错误。"
+    fix:
+      - "给出可重复执行的修复步骤，并指出应该更新哪条规则/哪个技能。"
+  E009_scopeBoundaryViolation:
+    title: "任务 read/write 边界被违反"
+    signals:
+      - "git diff --name-only 结果包含 write_files 未声明文件"
+    diagnosis:
+      - "检查 TASKS.md 中该任务的 write_files 字段是否完整"
+      - "确认越界文件是否属于当前任务本应触碰的范围"
+    fix:
+      - "回滚越界改动；或显式扩 write_files 并获用户确认"
+  E010_repeatedFailurePattern:
+    title: '同一根因重复失败未声明差异（违反 P9）'
+    signals:
+      - '同类错误（同一错误消息/同一堆栈顶）连续出现 ≥ 2 次'
+      - '下一次尝试方案与 PROGRESS「已排除方案」近似但未声明差异'
+    diagnosis:
+      - '检查 specforge/changes/<change-id>/progress/<task-id>-PROGRESS.md 是否存在'
+      - '若存在，核对本次尝试是否落入「已排除方案」'
+      - '若落入，AI 必须书面回答差异或停下反问'
+    fix:
+      - '暂停重试；按 P9 书面回答与第 N 次失败的差异'
+      - '若无法回答差异，必须触发 context-reset-protocol skill 反问用户'
+
