@@ -15,8 +15,7 @@
 - `packages/web`：Vite + React 构建的浏览器编辑器前端。
 - `tests`：Vitest 测试，覆盖 CLI、core、config、utils 和 web-server。
 - `.github/workflows`：CI 与 tag 发布流水线。
-- `.agents/docs-sync`：基于 git diff 同步对外文档的技能、契约与 state 模板。
-- `specforge`：项目元数据、规则、架构和长期知识。
+- `.agents/skills`：基于 git diff 同步对外文档、commit / release / tag 编排的技能资产。
 
 ## Common Commands
 
@@ -80,5 +79,5 @@
 - 用户推广和使用文档以 [README.md](README.md) 为主。
 - 发布历史记录在 [CHANGELOG.md](CHANGELOG.md) 中。
 - AI 代理协作规则在 [AGENTS.md](AGENTS.md) 中。
-- SpecForge 项目记忆在 [specforge/project.md](specforge/project.md)、[specforge/context/context.md](specforge/context/context.md)、[specforge/context/architecture.md](specforge/context/architecture.md) 和 [specforge/context/lessons.md](specforge/context/lessons.md)。
+- AI 代理技能在 [.agents/skills/docs-sync/SKILL.md](.agents/skills/docs-sync/SKILL.md) 和 [.agents/skills/npm-cicd-release/SKILL.md](.agents/skills/npm-cicd-release/SKILL.md)。
 - docs-sync 状态文件位于 `.docs-sync-state.json`，应与这些公开文档保持一致。

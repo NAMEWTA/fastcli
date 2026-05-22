@@ -356,8 +356,7 @@ src/web-server   本地 Web API 服务
 src/builtin      内置工具模板
 packages/web     Vite 构建的浏览器编辑器前端
 tests            Vitest 单元测试与集成测试
-.agents          AI 代理技能与文档同步工作流
-specforge        项目元数据、规则、架构和长期知识
+.agents/skills   AI 代理技能与发布编排
 ```
 
 ## 发布
@@ -385,7 +384,8 @@ specforge        项目元数据、规则、架构和长期知识
 
 - [CHANGELOG.md](CHANGELOG.md)：版本变更记录。
 - [AGENTS.md](AGENTS.md)：AI 代理协作手册。
-- [specforge/project.md](specforge/project.md)：项目元数据与长期上下文。
+- [.agents/skills/docs-sync/SKILL.md](.agents/skills/docs-sync/SKILL.md)：基于 git diff 的文档同步技能。
+- [.agents/skills/npm-cicd-release/SKILL.md](.agents/skills/npm-cicd-release/SKILL.md)：commit / docs-sync / release / tag 编排技能。
 
 ## License
 
