@@ -9,6 +9,14 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
+## [3.0.1] - 2026-05-23
+
+### 变更
+
+- **Docs**：重写 `README.md`，补充 fastcli 的核心痛点、项目重点、典型场景和推广摘要。
+
+---
+
 ## [3.0.0] - 2026-05-22
 
 ### 新增
@@ -41,7 +49,8 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## 版本链接
 
-- [Unreleased](https://github.com/NAMEWTA/fastcli/compare/v3.0.0...HEAD)
+- [Unreleased](https://github.com/NAMEWTA/fastcli/compare/v3.0.1...HEAD)
+- [3.0.1](https://github.com/NAMEWTA/fastcli/releases/tag/v3.0.1)
 - [3.0.0](https://github.com/NAMEWTA/fastcli/releases/tag/v3.0.0)
 - [2.0.0](https://github.com/NAMEWTA/fastcli/releases/tag/v2.0.0)
 - [1.0.5](https://github.com/NAMEWTA/fastcli/releases/tag/v1.0.5)
