@@ -5,26 +5,17 @@
   "tracked_docs": [
     "README.md",
     "AGENTS.md",
-    "CHANGELOG.md",
-    "specforge/project.md",
-    "specforge/context/context.md",
-    "specforge/context/architecture.md",
-    "specforge/context/lessons.md"
+    "CHANGELOG.md"
   ],
-  "last_sync_sha": "c53f30695291e6750a3219316caebe2745fdf06b",
-  "last_sync_short": "c53f306",
-  "last_sync_commit_subject": "feat(docs-sync): add README sync contract and state schema documentation",
-  "last_sync_commit_date": "2026-05-22T11:11:22+08:00",
-  "last_sync_run_at": "2026-05-22T03:22:07Z",
-  "previous_sync_sha": "144d8495bf92e398cb97b96be9373dfa4cb525b3",
-  "total_syncs": 2,
+  "last_sync_sha": "a15aa95b755af251a72b880ddc230ac568027cbb",
+  "last_sync_short": "a15aa95",
+  "last_sync_commit_subject": "chore(release): v3.0.0",
+  "last_sync_commit_date": "2026-05-22T12:05:33+08:00",
+  "last_sync_run_at": "2026-05-22T04:07:18Z",
+  "previous_sync_sha": "c53f30695291e6750a3219316caebe2745fdf06b",
+  "total_syncs": 3,
   "synced_docs": [
     "README.md",
-    "AGENTS.md",
-    "CHANGELOG.md",
-    "specforge/project.md",
-    "specforge/context/context.md",
-    "specforge/context/architecture.md",
-    "specforge/context/lessons.md"
+    "AGENTS.md"
   ]
 }
