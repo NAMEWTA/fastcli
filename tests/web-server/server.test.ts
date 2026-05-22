@@ -149,6 +149,61 @@ describe('web API tools', () => {
     expect(body.etag).toBeTruthy();
     expect(body.tools).toBeTruthy();
   });
+
+  it('POST /api/tools 省略 id 时根据 name 自动生成 id', async () => {
+    const res = await request(`/api/tools?token=${TOKEN}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'My Tool',
+        commands: { install: ['echo ok'] },
+      }),
+    });
+
+    expect(res.status).toBe(201);
+    await expect(res.json()).resolves.toMatchObject({
+      id: 'my-tool',
+      name: 'My Tool',
+      source: 'user',
+    });
+  });
+
+  it('POST /api/tools 拒绝重复 name', async () => {
+    const res = await request(`/api/tools?token=${TOKEN}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'Claude Code',
+        commands: { install: ['echo ok'] },
+      }),
+    });
+
+    expect(res.status).toBe(409);
+    await expect(res.json()).resolves.toMatchObject({
+      message: 'Tool name "Claude Code" already exists',
+    });
+  });
+
+  it('PUT /api/tools/:id 拒绝改成重复 name', async () => {
+    const list = await request(`/api/tools?token=${TOKEN}`);
+    const etag = list.headers.get('ETag')!;
+
+    const res = await request('/api/tools/aider', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        'If-Match': etag,
+      },
+      body: JSON.stringify({
+        id: 'aider',
+        name: 'Claude Code',
+        commands: { deploy: ['echo next'] },
+      }),
+    });
+
+    expect(res.status).toBe(409);
+    await expect(res.json()).resolves.toMatchObject({
+      message: 'Tool name "Claude Code" already exists',
+    });
+  });
 });
 
 describe('web API config language', () => {

@@ -20,8 +20,8 @@ export const SCHEMA_VERSION = '2' as const;
 /**
  * 工具上的命令链集合。
  *
- * - `install` / `update` / `uninstall` 是约定的语义操作，会在 `list` / TUI 中
- *   优先排序展示，但同样是可选的
+ * - `install` / `danger` / `uninstall` 是内置工具约定的语义操作，会在 TUI 中
+ *   优先排序展示；`update` 等其它 operation 仍可由用户自定义
  * - 通过索引签名允许任意自定义操作名（例如 `docs`、`login` 等）
  * - 所有字段都是 `string[] | undefined`，缺失代表「该操作未配置」
  * - 单条命令也使用单元素数组表示，避免运行时兼容两种形状

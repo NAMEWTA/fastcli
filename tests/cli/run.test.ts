@@ -103,6 +103,19 @@ describe('fastcli run - dry-run 正常路径', () => {
   it('退出码 0，stdout 含完整命令', async () => {
     const r = await runCli(['run', 'claude', 'install', '--dry-run']);
     expect(r.code).toBe(0);
-    expect(r.stdout).toContain('volta install @anthropic-ai/claude-code');
+    expect(r.stdout).toContain('volta install @anthropic-ai/claude-code@latest');
+  });
+
+  it('内置工具不再提供独立 update 操作', async () => {
+    const r = await runCli(['run', 'claude', 'update', '--dry-run']);
+    expect(r.code).toBe(1);
+    expect(r.stderr).toContain('has no');
+    expect(r.stderr).toContain('install');
+  });
+
+  it('内置工具提供 danger 全权限快捷启动操作', async () => {
+    const r = await runCli(['run', 'claude', 'danger', '--dry-run']);
+    expect(r.code).toBe(0);
+    expect(r.stdout).toContain('claude --dangerously-skip-permissions');
   });
 });

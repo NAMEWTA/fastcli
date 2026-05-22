@@ -8,8 +8,9 @@ import { buildBuiltinCommands } from '../../src/core/builtin-templates.js';
  *
  * 覆盖：
  * - `BUILTIN_TOOLS` 长度与 id/npmPackage 严格匹配 PRD §3.1.1
- * - `buildBuiltinCommands('volta', pkg)` 输出与 PRD §3.1.2 的 volta 模板字面量一致
- * - `buildBuiltinCommands('npm', pkg)` 输出与 PRD §3.1.2 的 npm 模板字面量一致
+ * - `buildBuiltinCommands('volta', pkg)` 输出合并后的 install/uninstall 模板
+ * - `buildBuiltinCommands('npm', pkg)` 输出合并后的 install/uninstall 模板
+ * - 指定内置工具额外生成 danger 全权限启动命令
  *
  * Validates: Requirements 1.1, 1.2, 1.3
  * PBT: Property 1（命令模板）、Property 2（内置工具数量与 id 集稳定）
@@ -24,6 +25,14 @@ const EXPECTED_BUILTINS: ReadonlyArray<{ id: string; npmPackage: string }> = [
   { id: 'opencode', npmPackage: 'opencode' },
   { id: 'pi-coding-agent', npmPackage: '@earendil-works/pi-coding-agent' },
 ];
+
+const EXPECTED_DANGER: Readonly<Partial<Record<string, string>>> = {
+  claude: 'claude --dangerously-skip-permissions',
+  codex: 'codex --dangerously-bypass-approvals-and-sandbox',
+  copilot: 'copilot --autopilot --yolo',
+  gemini: 'gemini --yolo',
+  opencode: 'opencode run --dangerously-skip-permissions',
+};
 
 describe('BUILTIN_TOOLS 元数据', () => {
   it('内置工具数量与期望清单一致', () => {
@@ -50,10 +59,13 @@ describe('buildBuiltinCommands - volta 模板', () => {
       const commands = buildBuiltinCommands('volta', npmPackage);
 
       expect(commands).toEqual({
-        install: [`volta install ${npmPackage}`],
-        update: [`volta install ${npmPackage}@latest`],
+        install: [`volta install ${npmPackage}@latest`],
         uninstall: [`volta uninstall ${npmPackage}`],
+        ...(EXPECTED_DANGER[id] === undefined
+          ? {}
+          : { danger: [EXPECTED_DANGER[id]] }),
       });
+      expect(commands.update).toBeUndefined();
     });
   }
 });
@@ -65,9 +77,12 @@ describe('buildBuiltinCommands - npm 模板', () => {
 
       expect(commands).toEqual({
         install: [`npm install -g ${npmPackage}`],
-        update: [`npm update -g ${npmPackage}`],
         uninstall: [`npm uninstall -g ${npmPackage}`],
+        ...(EXPECTED_DANGER[id] === undefined
+          ? {}
+          : { danger: [EXPECTED_DANGER[id]] }),
       });
+      expect(commands.update).toBeUndefined();
     });
   }
 });

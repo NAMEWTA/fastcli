@@ -116,15 +116,16 @@ function toolToDraft(tool?: ToolEntry): ToolDraft {
   };
 }
 
-function draftToTool(draft: ToolDraft): Omit<ToolEntry, 'source'> {
+type ToolPayload = Omit<ToolEntry, 'source' | 'id'> & { id?: string };
+
+function draftToTool(draft: ToolDraft): ToolPayload {
   const commands: Record<string, string[]> = {};
   for (const op of draft.operations) {
     const name = op.name.trim();
     if (name.length === 0) continue;
     commands[name] = op.commands.map((command) => command.trim());
   }
-  return {
-    id: draft.id.trim(),
+  const tool = {
     name: draft.name.trim(),
     description: draft.description.trim() || undefined,
     tags: draft.tags
@@ -133,6 +134,9 @@ function draftToTool(draft: ToolDraft): Omit<ToolEntry, 'source'> {
       .filter(Boolean),
     commands,
   };
+  return draft.id.trim().length > 0
+    ? { ...tool, id: draft.id.trim() }
+    : tool;
 }
 
 async function api<T>(
@@ -268,8 +272,9 @@ function App() {
     });
   }
 
-  function validateDraft(draft: ToolDraft): string | undefined {
-    if (!/^[a-z0-9][a-z0-9-]*$/.test(draft.id.trim())) {
+  function validateDraft(state: ToolFormState): string | undefined {
+    const { draft } = state;
+    if (state.mode === 'edit' && !/^[a-z0-9][a-z0-9-]*$/.test(draft.id.trim())) {
       return t('idInvalid');
     }
     if (draft.name.trim().length === 0) return t('nameRequired');
@@ -290,7 +295,7 @@ function App() {
 
   async function submitToolForm(overrideEtag?: string) {
     if (form === null) return;
-    const validation = validateDraft(form.draft);
+    const validation = validateDraft(form);
     if (validation !== undefined) {
       setForm({ ...form, error: validation });
       return;
@@ -298,11 +303,13 @@ function App() {
 
     const payload = draftToTool(form.draft);
     try {
+      let savedId = form.draft.id;
       if (form.mode === 'create') {
-        await api<ToolEntry>('/api/tools', {
+        const result = await api<ToolEntry>('/api/tools', {
           method: 'POST',
           body: JSON.stringify(payload),
         });
+        savedId = result.data.id;
       } else {
         await api<ToolEntry>(`/api/tools/${form.draft.id}`, {
           method: 'PUT',
@@ -312,7 +319,7 @@ function App() {
       }
       setForm(null);
       setLastSaved(new Date().toLocaleString());
-      await loadTools(payload.id);
+      await loadTools(savedId);
     } catch (err) {
       if (err instanceof ApiError && err.status === 409 && form.mode === 'edit') {
         setConflict({
@@ -673,14 +680,12 @@ function ToolForm(props: {
           </div>
         )}
         <div className="grid gap-3 md:grid-cols-2">
-          <label className="text-sm">
-            <span className="mb-1 block text-zinc-600">id</span>
-            <Field
-              value={draft.id}
-              disabled={form.mode === 'edit'}
-              onChange={(event) => updateDraft({ ...draft, id: event.target.value })}
-            />
-          </label>
+          {form.mode === 'edit' && (
+            <label className="text-sm">
+              <span className="mb-1 block text-zinc-600">id</span>
+              <Field value={draft.id} disabled />
+            </label>
+          )}
           <label className="text-sm">
             <span className="mb-1 block text-zinc-600">name</span>
             <Field

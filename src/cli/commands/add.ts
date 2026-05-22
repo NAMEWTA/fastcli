@@ -4,14 +4,13 @@
  * 用 clack 串联式询问完成新增用户工具：
  *
  *   工具名称（必填）
- *   工具 ID（留空 → toSlug(name) + uniqueSlug 去重）
+ *   工具 ID（由 name 自动生成）
  *   描述（可选）
- *   install / update / uninstall 命令（各自可空）
  *   是否添加自定义操作 → 是 → 循环（操作名 + 命令；末尾「继续添加？」）
  *
  * 校验：
- * - id 正则 `^[a-z0-9][a-z0-9-]*$`，长度 1–64
- * - id 不得与 builtin / 现有 user 工具冲突
+ * - name 不得与 builtin / 现有 user 工具重复
+ * - id 由 name 生成，并避开 builtin / 现有 user 工具冲突
  * - 至少一个 commands 字段非空（避免完全空壳条目）
  *
  * Validates: Requirements 2.4, 3.6, 6.7
@@ -29,12 +28,9 @@ import type {
 } from '../../config/schema.js';
 import { loadRegistry } from '../../core/registry.js';
 import { toSlug, uniqueSlug } from '../../utils/slug.js';
+import { hasToolName } from '../../utils/tool-name.js';
 import { manageCommandsForNewTool } from './operation-editor.js';
 import { t, type Language } from '../../i18n.js';
-
-/** id 合法性校验。 */
-const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
-const ID_MAX = 64;
 
 function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   if (isCancel(value)) {
@@ -42,20 +38,6 @@ function exitIfCanceled<T>(value: T | symbol, language: Language): T {
     process.exit(130);
   }
   return value;
-}
-
-function validateId(
-  input: string,
-  existing: Set<string>,
-  language: Language,
-): string | undefined {
-  if (input.length === 0) return t('add.idRequired', {}, language);
-  if (input.length > ID_MAX) return t('add.idTooLong', { max: ID_MAX }, language);
-  if (!ID_RE.test(input)) {
-    return t('add.idInvalid', {}, language);
-  }
-  if (existing.has(input)) return t('add.idExists', { id: input }, language);
-  return undefined;
 }
 
 export default defineCommand({
@@ -70,7 +52,8 @@ export default defineCommand({
 
     // 加载现有工具集合，用于 id 去重
     const registry = await loadRegistry({ appConfig });
-    const existingIds = new Set(registry.list().map((t) => t.id));
+    const existingTools = registry.list();
+    const existingIds = new Set(existingTools.map((tool) => tool.id));
 
     // 1. 工具名称（必填）
     const nameRaw = await text({
@@ -79,24 +62,16 @@ export default defineCommand({
         if (typeof v !== 'string' || v.trim().length === 0) {
           return t('add.nameRequired', {}, language);
         }
+        if (hasToolName(existingTools, v)) {
+          return t('add.nameExists', { name: v.trim() }, language);
+        }
         return undefined;
       },
     });
     const name = exitIfCanceled<string>(nameRaw, language).trim();
 
-    // 2. 工具 ID（留空 → 自动生成）
-    const baseSlug = uniqueSlug(toSlug(name), existingIds);
-    const idRaw = await text({
-      message: t('add.idPrompt', { id: baseSlug }, language),
-      placeholder: baseSlug,
-      validate(v) {
-        if (typeof v !== 'string') return t('add.idInvalidInput', {}, language);
-        if (v.length === 0) return undefined; // 允许留空走默认
-        return validateId(v, existingIds, language);
-      },
-    });
-    const idInput = exitIfCanceled<string>(idRaw, language).trim();
-    const id = idInput.length > 0 ? idInput : baseSlug;
+    // 2. 工具 ID 自动生成，不再要求用户填写。
+    const id = uniqueSlug(toSlug(name), existingIds);
 
     // 3. 描述（可选）
     const descRaw = await text({

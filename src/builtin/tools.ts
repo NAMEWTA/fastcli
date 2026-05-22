@@ -5,7 +5,7 @@
  * 也不会读取它（满足 Requirement 1.4）。每个条目仅声明纯元数据：`id`、`name`、
  * `description`、`npmPackage` 与 `tags`。
  *
- * 真正的命令字符串（`install` / `update` / `uninstall`）不在这里硬编码，而是由
+ * 真正的命令字符串（`install` / `uninstall` / `danger`）不在这里硬编码，而是由
  * `src/core/builtin-templates.ts` 在运行时根据用户配置的 `packageManager`（volta 或
  * npm）按需生成；这样切换包管理器时不需要改这份清单。
  *

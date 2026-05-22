@@ -4,7 +4,7 @@
  * 注册中心是命令解析与 TUI 菜单的入口数据源。它负责：
  *
  * - 把 {@link BUILTIN_TOOLS} 中的纯元数据，配合当前 {@link AppConfig.packageManager}，
- *   通过 {@link buildBuiltinCommands} 生成具体的 install / update / uninstall
+ *   通过 {@link buildBuiltinCommands} 生成具体的 install / uninstall / danger
  *   命令字符串，构造出 `source: 'builtin'` 的 {@link ToolEntry}
  * - 把 `~/.fastcli/tools.json` 中读到的用户工具列表统一标记为 `source: 'user'`
  *   （即便文件中字段缺失或写错，也强制覆盖，避免下游误判来源）

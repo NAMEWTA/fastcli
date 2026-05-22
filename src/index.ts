@@ -29,7 +29,7 @@ import infoCommand from './cli/commands/info.js';
 import listCommand from './cli/commands/list.js';
 import removeCommand from './cli/commands/remove.js';
 import runCommand from './cli/commands/run.js';
-import webCommand from './cli/commands/web.js';
+import viewCommand from './cli/commands/view.js';
 import { runFirstRunIfNeeded } from './cli/first-run.js';
 import { runInteractiveMenu } from './cli/menu.js';
 import { t } from './i18n.js';
@@ -56,7 +56,7 @@ const main = defineCommand({
     add: addCommand,
     edit: editCommand,
     remove: removeCommand,
-    web: webCommand,
+    view: viewCommand,
     config: configCommand,
   },
   async run() {
@@ -80,6 +80,11 @@ const main = defineCommand({
  * - 其它错误：原样抛出由 citty 默认处理（堆栈对开发者友好）。
  */
 try {
+  const subCommand = process.argv.slice(2).find((arg) => !arg.startsWith('-'));
+  if (subCommand === 'web') {
+    console.error('Unknown command `web`');
+    process.exit(1);
+  }
   await runMain(main);
 } catch (err) {
   if (err instanceof ConfigCorruptError) {

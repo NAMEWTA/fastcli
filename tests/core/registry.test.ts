@@ -80,7 +80,11 @@ describe('loadRegistry - 合并语义', () => {
     });
     const claudeVolta = registryVolta.findById('claude');
     expect(claudeVolta?.commands.install).toEqual([
-      'volta install @anthropic-ai/claude-code',
+      'volta install @anthropic-ai/claude-code@latest',
+    ]);
+    expect(claudeVolta?.commands.update).toBeUndefined();
+    expect(claudeVolta?.commands.danger).toEqual([
+      'claude --dangerously-skip-permissions',
     ]);
 
     const registryNpm = await loadRegistry({

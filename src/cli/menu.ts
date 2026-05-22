@@ -1,8 +1,8 @@
 /**
  * 主交互菜单循环。
  *
- * 流程：装载 registry → 「选择工具」分组列表（builtin / user）→
- * 「选择操作」（已配置非空，install/update/uninstall 优先）→
+ * 流程：装载 registry → 「选择分类」（系统内置 / 自定义 / 可视化配置）→
+ * 「选择工具」→「选择操作」（已配置非空，install/danger/uninstall 优先）→
  * 显示完整命令 → `confirmBeforeRun ? clack.confirm` →
  * executor.executeCommand → 显示退出码 → 按回车返回菜单。
  *
@@ -31,6 +31,7 @@ import {
 } from '../core/executor.js';
 import type { ToolEntry } from '../config/schema.js';
 import { t, type Language } from '../i18n.js';
+import { startViewEditor } from './commands/view.js';
 
 /** 菜单中描述截断字符宽度。 */
 const DESC_TRUNC = 40;
@@ -45,9 +46,11 @@ function truncate(s: string | undefined, width: number): string {
   return `${s.slice(0, width - 1)}…`;
 }
 
-/** 已配置（值不为 undefined）的操作名，install/update/uninstall 优先,其他按字母序。 */
+type MenuSection = 'builtin' | 'user' | 'view';
+
+/** 已配置（值不为 undefined）的操作名，install/danger/uninstall 优先,其他按字母序。 */
 function listOps(tool: ToolEntry): string[] {
-  const PRIORITY = ['install', 'update', 'uninstall'];
+  const PRIORITY = ['install', 'danger', 'uninstall'];
   const all = Object.keys(tool.commands).filter(
     (k) => tool.commands[k] !== undefined,
   );
@@ -64,83 +67,52 @@ function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   return value;
 }
 
-/**
- * 选择工具：把 builtin / user 分两组展示。clack.select 不原生支持分组,
- * 这里用「分隔行（hint='──── 分组 ────'，value 占位）」的近似方案,
- * 并把分隔行设为不可选（通过过滤选择结果）。
- *
- * 改进版：直接把分组拼接成单一 options 列表，分组之间用 label 标识但
- * 不可选；用户选完后我们用 toolId 反查工具。
- */
+async function pickSection(language: Language): Promise<MenuSection> {
+  const ans = await select({
+    message: t('menu.pickSection', {}, language),
+    options: [
+      { value: 'builtin', label: t('menu.builtinSection', {}, language) },
+      { value: 'user', label: t('menu.userSection', {}, language) },
+      { value: 'view', label: t('menu.viewSection', {}, language) },
+    ],
+  });
+  return exitIfCanceled<MenuSection>(ans, language);
+}
+
+/** 选择指定来源的工具；展示名只使用 name，id 仅作为内部值。 */
 async function pickTool(
   registry: Registry,
+  source: 'builtin' | 'user',
   language: Language,
 ): Promise<ToolEntry | null> {
-  const builtin = registry
-    .list({ source: 'builtin' })
-    .sort((a, b) => a.name.localeCompare(b.name));
-  const user = registry
-    .list({ source: 'user' })
+  const tools = registry
+    .list({ source })
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  if (builtin.length === 0 && user.length === 0) {
+  if (tools.length === 0) {
     log.warn(t('menu.noTools', {}, language));
     return null;
   }
 
   type Option = { value: string; label: string; hint?: string };
-  const options: Option[] = [];
+  const options: Option[] = tools.map((tool) => {
+    const ops = Object.values(tool.commands).filter((v) => v !== undefined).length;
+    return {
+      value: tool.id,
+      label: tool.name,
+      hint: t('menu.configuredOpsHint', {
+        desc: truncate(tool.description, DESC_TRUNC),
+        count: ops,
+      }, language),
+    };
+  });
 
-  if (builtin.length > 0) {
-    options.push({
-      value: '__builtin_header',
-      label: `── ${t('common.builtinTools', {}, language)} ──`,
-      hint: t('menu.headerHint', {}, language),
-    });
-    for (const tool of builtin) {
-      const ops = Object.values(tool.commands).filter((v) => v !== undefined).length;
-      options.push({
-        value: tool.id,
-        label: `${tool.name} (${tool.id})`,
-        hint: t('menu.configuredOpsHint', {
-          desc: truncate(tool.description, DESC_TRUNC),
-          count: ops,
-        }, language),
-      });
-    }
-  }
-
-  if (user.length > 0) {
-    options.push({
-      value: '__user_header',
-      label: `── ${t('common.userTools', {}, language)} ──`,
-      hint: t('menu.headerHint', {}, language),
-    });
-    for (const tool of user) {
-      const ops = Object.values(tool.commands).filter((v) => v !== undefined).length;
-      options.push({
-        value: tool.id,
-        label: `${tool.name} (${tool.id})`,
-        hint: t('menu.configuredOpsHint', {
-          desc: truncate(tool.description, DESC_TRUNC),
-          count: ops,
-        }, language),
-      });
-    }
-  }
-
-  while (true) {
-    const ans = await select({
-      message: t('menu.pickTool', {}, language),
-      options,
-    });
-    const choice = exitIfCanceled<string>(ans, language);
-    if (choice === '__builtin_header' || choice === '__user_header') {
-      // 分组标题不可选；继续询问
-      continue;
-    }
-    return registry.findById(choice) ?? null;
-  }
+  const ans = await select({
+    message: t('menu.pickTool', {}, language),
+    options,
+  });
+  const choice = exitIfCanceled<string>(ans, language);
+  return registry.findById(choice) ?? null;
 }
 
 /** 选择操作；返回 op name 或 null（用户取消返回上一层）。 */
@@ -163,16 +135,28 @@ async function pickOp(tool: ToolEntry, language: Language): Promise<string | nul
 export async function runInteractiveMenu(): Promise<void> {
   intro('fastcli');
 
-  const appConfig = await loadAppConfig();
-  const language = appConfig.language;
-  const registry = await loadRegistry({ appConfig });
+  let appConfig = await loadAppConfig();
+  let language = appConfig.language;
+  let registry = await loadRegistry({ appConfig });
 
-  // 主循环：选工具 → 选操作 → 执行 → 回到选工具
+  async function reloadMenuState(): Promise<void> {
+    appConfig = await loadAppConfig();
+    language = appConfig.language;
+    registry = await loadRegistry({ appConfig });
+  }
+
+  // 主循环：选分类 → 选工具 → 选操作 → 执行 → 回到分类
   while (true) {
-    const tool = await pickTool(registry, language);
+    const section = await pickSection(language);
+    if (section === 'view') {
+      await startViewEditor();
+      await reloadMenuState();
+      continue;
+    }
+
+    const tool = await pickTool(registry, section, language);
     if (tool === null) {
-      outro(t('menu.goodbye', {}, language));
-      return;
+      continue;
     }
 
     const op = await pickOp(tool, language);

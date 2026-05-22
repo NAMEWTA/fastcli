@@ -26,6 +26,7 @@ import { saveToolsFile } from '../../config/writer.js';
 import type { ToolEntry, ToolsFile } from '../../config/schema.js';
 import { loadRegistry } from '../../core/registry.js';
 import { suggestToolId } from '../../utils/fuzzy.js';
+import { hasToolName } from '../../utils/tool-name.js';
 import {
   editCommandChain,
   formatOpPreview,
@@ -67,6 +68,7 @@ export default defineCommand({
 
     const registry = await loadRegistry({ appConfig });
     const target = registry.findById(toolId);
+    const existingTools = registry.list();
 
     if (target === undefined) {
       const candidates = registry.list().map((t) => t.id);
@@ -134,9 +136,18 @@ export default defineCommand({
           message: t('common.name', {}, language),
           placeholder: entry.name,
           defaultValue: entry.name,
+          validate(v) {
+            if (typeof v !== 'string' || v.trim().length === 0) {
+              return t('add.nameRequired', {}, language);
+            }
+            if (hasToolName(existingTools, v, entry.id)) {
+              return t('add.nameExists', { name: v.trim() }, language);
+            }
+            return undefined;
+          },
         });
         const newName = exitIfCanceled<string>(newNameRaw, language).trim();
-        if (newName.length > 0) entry.name = newName;
+        entry.name = newName;
 
         const newDescRaw = await text({
           message: t('edit.descPrompt', {}, language),

@@ -11,18 +11,20 @@
     "specforge/context/architecture.md",
     "specforge/context/lessons.md"
   ],
-  "last_sync_sha": "144d8495bf92e398cb97b96be9373dfa4cb525b3",
-  "last_sync_short": "144d849",
-  "last_sync_commit_subject": "ci(release): build before tests",
-  "last_sync_commit_date": "2026-05-22T10:35:59+08:00",
-  "last_sync_run_at": "2026-05-22T03:08:41Z",
-  "previous_sync_sha": null,
-  "total_syncs": 1,
+  "last_sync_sha": "c53f30695291e6750a3219316caebe2745fdf06b",
+  "last_sync_short": "c53f306",
+  "last_sync_commit_subject": "feat(docs-sync): add README sync contract and state schema documentation",
+  "last_sync_commit_date": "2026-05-22T11:11:22+08:00",
+  "last_sync_run_at": "2026-05-22T03:22:07Z",
+  "previous_sync_sha": "144d8495bf92e398cb97b96be9373dfa4cb525b3",
+  "total_syncs": 2,
   "synced_docs": [
+    "README.md",
     "AGENTS.md",
     "CHANGELOG.md",
     "specforge/project.md",
     "specforge/context/context.md",
-    "specforge/context/architecture.md"
+    "specforge/context/architecture.md",
+    "specforge/context/lessons.md"
   ]
 }

@@ -25,6 +25,8 @@ import { saveAppConfig, saveToolsFile } from '../config/writer.js';
 import { loadRegistry } from '../core/registry.js';
 import { resolveCommand } from '../core/resolver.js';
 import { normalizeLanguage, t, type Language } from '../i18n.js';
+import { toSlug, uniqueSlug } from '../utils/slug.js';
+import { hasToolName } from '../utils/tool-name.js';
 
 const TOOL_ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 
@@ -43,7 +45,7 @@ interface WebServerOptions {
 }
 
 interface ValidatedToolInput {
-  id: string;
+  id?: string;
   name: string;
   description?: string;
   tags?: string[];
@@ -173,7 +175,13 @@ function validateToolInput(
     return t('common.invalidBody', {}, language);
   }
   const obj = body as Record<string, unknown>;
-  if (typeof obj.id !== 'string' || !TOOL_ID_RE.test(obj.id)) {
+  if (expectedId !== undefined && typeof obj.id !== 'string') {
+    return t('api.idInvalid', {}, language);
+  }
+  if (
+    obj.id !== undefined &&
+    (typeof obj.id !== 'string' || !TOOL_ID_RE.test(obj.id))
+  ) {
     return t('api.idInvalid', {}, language);
   }
   if (expectedId !== undefined && obj.id !== expectedId) {
@@ -190,7 +198,7 @@ function validateToolInput(
     : undefined;
 
   return {
-    id: obj.id,
+    id: typeof obj.id === 'string' ? obj.id : undefined,
     name: obj.name.trim(),
     description: typeof obj.description === 'string' && obj.description.trim().length > 0
       ? obj.description.trim()
@@ -268,18 +276,28 @@ export function createWebApp(options: WebServerOptions): express.Express {
 
     await enqueueWrite(async () => {
       const registry = await loadRegistry({ appConfig });
-      const existing = registry.findById(input.id);
+      const existingTools = registry.list();
+      if (hasToolName(existingTools, input.name)) {
+        sendError(res, 409, 'conflict', t('api.nameExists', { name: input.name }, language));
+        return;
+      }
+
+      const id = input.id ?? uniqueSlug(
+        toSlug(input.name),
+        existingTools.map((tool) => tool.id),
+      );
+      const existing = registry.findById(id);
       if (existing?.source === 'builtin') {
         sendError(res, 409, 'conflict', t('cli.builtin.readonly.modify', {}, language));
         return;
       }
       if (existing !== undefined) {
-        sendError(res, 409, 'conflict', t('api.toolExists', { id: input.id }, language));
+        sendError(res, 409, 'conflict', t('api.toolExists', { id }, language));
         return;
       }
 
       const toolsFile = await loadToolsFile();
-      const entry: ToolEntry = { ...input, source: 'user' };
+      const entry: ToolEntry = { ...input, id, source: 'user' };
       await saveToolsFile({
         ...toolsFile,
         tools: [...toolsFile.tools, entry],
@@ -323,9 +341,13 @@ export function createWebApp(options: WebServerOptions): express.Express {
         sendError(res, 404, 'not_found', t('cli.notFound.tool', { toolId: req.params.id }, language));
         return;
       }
+      if (hasToolName(registry.list(), input.name, req.params.id)) {
+        sendError(res, 409, 'conflict', t('api.nameExists', { name: input.name }, language));
+        return;
+      }
 
       const toolsFile = await loadToolsFile();
-      const entry: ToolEntry = { ...input, source: 'user' };
+      const entry: ToolEntry = { ...input, id: req.params.id, source: 'user' };
       await saveToolsFile({
         ...toolsFile,
         tools: toolsFile.tools.map((tool) =>
@@ -516,7 +538,7 @@ export async function listenOnAvailablePort(
   host = '127.0.0.1',
 ): Promise<{ server: Server; port: number }> {
   if (host !== '127.0.0.1') {
-    throw new Error(t('web.localOnlyBind'));
+    throw new Error(t('view.localOnlyBind'));
   }
 
   for (let port = startPort; port <= endPort; port += 1) {
@@ -535,6 +557,6 @@ export async function listenOnAvailablePort(
   }
 
   throw new Error(
-    t('web.portBusy', { startPort }),
+    t('view.portBusy', { startPort }),
   );
 }
