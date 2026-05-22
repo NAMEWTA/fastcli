@@ -22,10 +22,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup && pnpm run build:web-admin",
-    "build:web-admin": "node scripts/build-web-admin.mjs",
+    "build": "tsup && pnpm --filter @namewta/fastcli-web build",
     "dev": "tsup --watch",
-    "test": "pnpm run build:web-admin && vitest run",
+    "test": "vitest run",
     "test:watch": "vitest",
     "link": "pnpm build && pnpm link -g",
     "unlink": "pnpm unlink -g"
@@ -45,17 +44,15 @@
   "license": "MIT",
   "packageManager": "pnpm@10.29.2",
   "dependencies": {
-    "@inquirer/prompts": "^8.3.2",
-    "commander": "^14.0.3",
-    "picocolors": "^1.1.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "@clack/prompts": "^0.9.0",
+    "citty": "^0.1.6",
+    "express": "^5.2.1",
+    "fuse.js": "^7.0.0",
+    "open": "^11.0.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
-    "esbuild": "^0.25.11",
     "tsup": "^8.5.1",
     "typescript": "^6.0.2",
     "vitest": "^4.1.1"

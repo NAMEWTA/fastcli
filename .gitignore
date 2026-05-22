@@ -5,3 +5,5 @@ dist/
 coverage/
 **/__pycache__/**
 .worktrees/
+.specforge/
+specforge/

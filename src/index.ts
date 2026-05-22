@@ -1,83 +1,98 @@
-import { Command } from 'commander';
-import { configInit, configEdit, configShow } from './commands/config/index.js';
-import { aliasAdd, aliasRemove, aliasList } from './commands/alias/index.js';
-import { workflowList, workflowShow } from './commands/workflow/index.js';
-import { webStart } from './commands/web/index.js';
-import { run } from './commands/run.js';
+/**
+ * fastcli 顶层入口。
+ *
+ * shebang 由 tsup 在构建时注入（tsup.config.ts 的 banner），源码这里不写。
+ *
+ * 用 citty 把所有子命令挂载在主命令下；当 `argv.slice(2).length === 0` 时
+ * 进入交互式主菜单（先跑首次运行引导，再进菜单循环）。
+ *
+ * 顶层异常拦截：把 `ConfigCorruptError` / `ConfigVersionTooNewError` 转成
+ * 友好中文提示并以退出码 1 退出，避免把堆栈直接抛给用户。
+ *
+ * Validates: Requirements 3.11, 6.2
+ */
 
-const program = new Command();
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-program
-  .name('fastcli')
-  .description('终端命令别名和交互式工作流管理工具')
-  .version('1.0.0');
+import { defineCommand, runMain } from 'citty';
 
-// config 命令组
-const configCmd = program.command('config').description('配置管理');
+import {
+  ConfigCorruptError,
+  ConfigVersionTooNewError,
+} from './config/reader.js';
+import addCommand from './cli/commands/add.js';
+import configCommand from './cli/commands/config.js';
+import editCommand from './cli/commands/edit.js';
+import infoCommand from './cli/commands/info.js';
+import listCommand from './cli/commands/list.js';
+import removeCommand from './cli/commands/remove.js';
+import runCommand from './cli/commands/run.js';
+import webCommand from './cli/commands/web.js';
+import { runFirstRunIfNeeded } from './cli/first-run.js';
+import { runInteractiveMenu } from './cli/menu.js';
 
-configCmd
-  .command('init')
-  .description('初始化配置文件')
-  .action(configInit);
+/** 从 package.json 读取版本号；编译产物在 dist/，源 package.json 在 ../package.json。 */
+function readPackageVersion(): string {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const pkgPath = join(here, '..', 'package.json');
+  const raw = readFileSync(pkgPath, 'utf8');
+  const pkg = JSON.parse(raw) as { version?: unknown };
+  return typeof pkg.version === 'string' ? pkg.version : '0.0.0';
+}
 
-configCmd
-  .command('edit')
-  .description('编辑配置文件')
-  .action(configEdit);
-
-configCmd
-  .command('show')
-  .description('显示配置内容')
-  .action(configShow);
-
-// alias 命令组
-const aliasCmd = program.command('alias').description('别名管理');
-
-aliasCmd
-  .command('add <name> <command>')
-  .description('添加新别名')
-  .option('-d, --description <desc>', '别名描述')
-  .action(aliasAdd);
-
-aliasCmd
-  .command('rm <name>')
-  .description('删除别名')
-  .action(aliasRemove);
-
-aliasCmd
-  .command('ls')
-  .description('列出所有别名')
-  .action(aliasList);
-
-// workflow 命令组
-const workflowCmd = program.command('workflow').description('工作流管理');
-
-workflowCmd
-  .command('ls')
-  .description('列出所有工作流')
-  .action(workflowList);
-
-workflowCmd
-  .command('show <name>')
-  .description('显示工作流结构')
-  .action(workflowShow);
-
-// web 命令
-program
-  .command('web')
-  .description('启动本地 Web 管理后台')
-  .action(webStart);
-
-// 默认命令：运行别名或工作流
-program
-  .argument('[name]', '别名或工作流名称')
-  .option('--dry-run', '预览命令但不执行')
-  .action(async (name: string | undefined, options: { dryRun?: boolean }) => {
-    if (!name) {
-      program.help();
-      return;
+const main = defineCommand({
+  meta: {
+    name: 'fastcli',
+    version: readPackageVersion(),
+    description: '统一管理 AI CLI 工具的命令行管家',
+  },
+  subCommands: {
+    run: runCommand,
+    list: listCommand,
+    info: infoCommand,
+    add: addCommand,
+    edit: editCommand,
+    remove: removeCommand,
+    web: webCommand,
+    config: configCommand,
+  },
+  async run() {
+    // 顶层 run：在 argv 无子命令时进入交互菜单。
+    // citty 在匹配到 subCommand 时不会调用此 run；走到这里就意味着用户
+    // 仅输入了 `fastcli`（或带 --help / --version 这类被 citty 自身处理的旗标）。
+    if (process.argv.slice(2).length === 0) {
+      await runFirstRunIfNeeded();
+      await runInteractiveMenu();
     }
-    await run(name, { dryRun: options.dryRun });
-  });
+  },
+});
 
-program.parse();
+/**
+ * 顶层异常拦截。
+ *
+ * - {@link ConfigCorruptError}：输出 `配置文件损坏：<path>` 并提示运行
+ *   `fastcli config edit` 修复（Requirement 6.2）。
+ * - {@link ConfigVersionTooNewError}：输出版本过新提示，建议升级
+ *   fastcli（Requirement 4.6）。
+ * - 其它错误：原样抛出由 citty 默认处理（堆栈对开发者友好）。
+ */
+try {
+  await runMain(main);
+} catch (err) {
+  if (err instanceof ConfigCorruptError) {
+    console.error(err.message);
+    if (err.message !== `配置文件损坏：${err.path}`) {
+      console.error(`文件位置：${err.path}`);
+    }
+    console.error('建议：运行 `fastcli config edit` 修复，或检查文件 JSON 是否合法。');
+    process.exit(1);
+  }
+  if (err instanceof ConfigVersionTooNewError) {
+    console.error(`配置文件版本过新（${err.version}），请升级 fastcli。`);
+    console.error(`文件位置：${err.path}`);
+    process.exit(1);
+  }
+  throw err;
+}
