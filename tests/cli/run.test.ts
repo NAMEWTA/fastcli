@@ -35,6 +35,7 @@ beforeEach(async () => {
     editor: '',
     confirmBeforeRun: false,
     firstRun: false,
+    language: 'en',
   };
   await fs.writeFile(
     path.join(tmpDir, 'config.json'),
@@ -70,19 +71,29 @@ async function runCli(
 }
 
 describe('fastcli run - 找不到工具', () => {
-  it('退出码 1，stderr 含「找不到工具」与 fuzzy 建议', async () => {
+  it('退出码 1，stderr 含英文 not-found 与 fuzzy 建议', async () => {
+    const r = await runCli(['run', 'clade', 'install', '--dry-run']);
+    expect(r.code).toBe(1);
+    expect(r.stderr).toContain('not found');
+    expect(r.stderr).toContain('claude'); // fuzzy 建议
+  });
+
+  it('language=zh-CN 时 stderr 含中文 not-found', async () => {
+    const raw = JSON.parse(await fs.readFile(path.join(tmpDir, 'config.json'), 'utf8'));
+    raw.language = 'zh-CN';
+    await fs.writeFile(path.join(tmpDir, 'config.json'), JSON.stringify(raw, null, 2), 'utf8');
+
     const r = await runCli(['run', 'clade', 'install', '--dry-run']);
     expect(r.code).toBe(1);
     expect(r.stderr).toContain('找不到工具');
-    expect(r.stderr).toContain('claude'); // fuzzy 建议
   });
 });
 
 describe('fastcli run - op 未配置', () => {
-  it('退出码 1，stderr 含「未配置」', async () => {
+  it('退出码 1，stderr 含英文 unconfigured 提示', async () => {
     const r = await runCli(['run', 'claude', 'login', '--dry-run']);
     expect(r.code).toBe(1);
-    expect(r.stderr).toContain('未配置');
+    expect(r.stderr).toContain('has no');
     // 列出已有操作
     expect(r.stderr).toContain('install');
   });

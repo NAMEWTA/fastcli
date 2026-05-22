@@ -10,15 +10,16 @@
 import { cancel, confirm, isCancel, outro } from '@clack/prompts';
 import { defineCommand } from 'citty';
 
-import { loadToolsFile } from '../../config/reader.js';
+import { loadAppConfig, loadToolsFile } from '../../config/reader.js';
 import { saveToolsFile } from '../../config/writer.js';
 import type { ToolsFile } from '../../config/schema.js';
 import { loadRegistry } from '../../core/registry.js';
 import { suggestToolId } from '../../utils/fuzzy.js';
+import { t, type Language } from '../../i18n.js';
 
-function exitIfCanceled<T>(value: T | symbol): T {
+function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   if (isCancel(value)) {
-    cancel('已取消');
+    cancel(t('common.cancelled', {}, language));
     process.exit(130);
   }
   return value;
@@ -27,49 +28,51 @@ function exitIfCanceled<T>(value: T | symbol): T {
 export default defineCommand({
   meta: {
     name: 'remove',
-    description: '删除用户工具',
+    description: t('remove.description'),
   },
   args: {
     'tool-id': {
       type: 'positional',
-      description: '工具 ID',
+      description: t('cli.toolId.description'),
       required: true,
     },
     yes: {
       type: 'boolean',
-      description: '跳过二次确认',
+      description: t('remove.yes.description'),
       default: false,
     },
   },
   async run({ args }) {
     const toolId = String(args['tool-id']);
     const skipConfirm = args.yes === true;
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
 
-    const registry = await loadRegistry();
+    const registry = await loadRegistry({ appConfig });
     const target = registry.findById(toolId);
 
     if (target === undefined) {
       const candidates = registry.list().map((t) => t.id);
       const hint = suggestToolId(toolId, candidates);
-      console.error(`找不到工具 "${toolId}"`);
+      console.error(t('cli.notFound.tool', { toolId }, language));
       if (hint !== undefined) {
-        console.error(`你是否想要：${hint}？`);
+        console.error(t('cli.notFound.hint', { hint }, language));
       }
       process.exit(1);
     }
 
     if (target.source === 'builtin') {
-      console.error(`内置工具不可删除：${toolId}`);
+      console.error(t('cli.builtin.readonly.delete', { toolId }, language));
       process.exit(1);
     }
 
     if (!skipConfirm) {
       const yes = await confirm({
-        message: `确认删除工具 "${toolId}"？此操作不可撤销。`,
+        message: t('remove.confirm', { toolId }, language),
         initialValue: false,
       });
-      if (!exitIfCanceled<boolean>(yes)) {
-        outro('已取消');
+      if (!exitIfCanceled<boolean>(yes, language)) {
+        outro(t('common.cancelled', {}, language));
         return;
       }
     }
@@ -80,6 +83,6 @@ export default defineCommand({
       tools: toolsFile.tools.filter((t) => t.id !== toolId),
     };
     await saveToolsFile(updated);
-    outro(`已删除工具 "${toolId}"`);
+    outro(t('remove.done', { toolId }, language));
   },
 });

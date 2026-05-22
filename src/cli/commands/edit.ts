@@ -21,7 +21,7 @@ import {
 } from '@clack/prompts';
 import { defineCommand } from 'citty';
 
-import { loadToolsFile } from '../../config/reader.js';
+import { loadAppConfig, loadToolsFile } from '../../config/reader.js';
 import { saveToolsFile } from '../../config/writer.js';
 import type { ToolEntry, ToolsFile } from '../../config/schema.js';
 import { loadRegistry } from '../../core/registry.js';
@@ -33,10 +33,11 @@ import {
   promptNewOperationName,
   promptRenameOperationName,
 } from './operation-editor.js';
+import { t, type Language } from '../../i18n.js';
 
-function exitIfCanceled<T>(value: T | symbol): T {
+function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   if (isCancel(value)) {
-    cancel('已取消');
+    cancel(t('common.cancelled', {}, language));
     process.exit(130);
   }
   return value;
@@ -50,44 +51,46 @@ function findUserToolIndex(toolsFile: ToolsFile, id: string): number {
 export default defineCommand({
   meta: {
     name: 'edit',
-    description: '编辑用户工具',
+    description: t('edit.description'),
   },
   args: {
     'tool-id': {
       type: 'positional',
-      description: '工具 ID',
+      description: t('cli.toolId.description'),
       required: true,
     },
   },
   async run({ args }) {
     const toolId = String(args['tool-id']);
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
 
-    const registry = await loadRegistry();
+    const registry = await loadRegistry({ appConfig });
     const target = registry.findById(toolId);
 
     if (target === undefined) {
       const candidates = registry.list().map((t) => t.id);
       const hint = suggestToolId(toolId, candidates);
-      console.error(`找不到工具 "${toolId}"`);
+      console.error(t('cli.notFound.tool', { toolId }, language));
       if (hint !== undefined) {
-        console.error(`你是否想要：${hint}？`);
+        console.error(t('cli.notFound.hint', { hint }, language));
       }
       process.exit(1);
     }
 
     if (target.source === 'builtin') {
-      console.error(`内置工具不可编辑：${toolId}`);
+      console.error(t('cli.builtin.readonly.edit', { toolId }, language));
       process.exit(1);
     }
 
-    intro(`编辑工具：${target.id}（${target.name}）`);
+    intro(t('edit.intro', { id: target.id, name: target.name }, language));
 
     // 直接从 tools.json 读取最新条目（避免 registry 上的潜在副本差异）
     const toolsFile = await loadToolsFile();
     const idx = findUserToolIndex(toolsFile, toolId);
     if (idx < 0) {
       // 理论上不会到这里：registry 命中 user 但 tools.json 中找不到
-      console.error(`tools.json 中不存在条目：${toolId}`);
+      console.error(t('edit.missingInTools', { toolId }, language));
       process.exit(1);
     }
     const entry: ToolEntry = { ...toolsFile.tools[idx]! };
@@ -97,19 +100,19 @@ export default defineCommand({
     let dirty = false;
     while (true) {
       const action = await select({
-        message: '选择操作',
+        message: t('edit.actionPrompt', {}, language),
         options: [
-          { value: 'basic', label: '修改基本信息（name / description）' },
-          { value: 'ops', label: '管理操作' },
-          { value: 'save', label: '保存并退出' },
-          { value: 'discard', label: '放弃修改并退出' },
+          { value: 'basic', label: t('edit.basic', {}, language) },
+          { value: 'ops', label: t('edit.ops', {}, language) },
+          { value: 'save', label: t('edit.saveExit', {}, language) },
+          { value: 'discard', label: t('edit.discardExit', {}, language) },
         ],
       });
-      const choice = exitIfCanceled<string>(action);
+      const choice = exitIfCanceled<string>(action, language);
 
       if (choice === 'save') {
         if (!dirty) {
-          outro('没有改动，退出');
+          outro(t('edit.noChanges', {}, language));
           return;
         }
         const updated: ToolsFile = {
@@ -117,75 +120,79 @@ export default defineCommand({
           tools: toolsFile.tools.map((t, i) => (i === idx ? entry : t)),
         };
         await saveToolsFile(updated);
-        outro(`已保存工具 "${entry.id}"`);
+        outro(t('edit.saved', { id: entry.id }, language));
         return;
       }
 
       if (choice === 'discard') {
-        outro('已放弃修改');
+        outro(t('edit.discarded', {}, language));
         return;
       }
 
       if (choice === 'basic') {
         const newNameRaw = await text({
-          message: '工具名称',
+          message: t('common.name', {}, language),
           placeholder: entry.name,
           defaultValue: entry.name,
         });
-        const newName = exitIfCanceled<string>(newNameRaw).trim();
+        const newName = exitIfCanceled<string>(newNameRaw, language).trim();
         if (newName.length > 0) entry.name = newName;
 
         const newDescRaw = await text({
-          message: '描述（可选；输入空字符串即清空）',
+          message: t('edit.descPrompt', {}, language),
           placeholder: entry.description ?? '',
           defaultValue: entry.description ?? '',
         });
-        const newDesc = exitIfCanceled<string>(newDescRaw).trim();
+        const newDesc = exitIfCanceled<string>(newDescRaw, language).trim();
         entry.description = newDesc.length > 0 ? newDesc : undefined;
         dirty = true;
         continue;
       }
 
       if (choice === 'ops') {
-        const changed = await manageToolOperations(entry);
+        const changed = await manageToolOperations(entry, language);
         dirty = dirty || changed;
       }
     }
   },
 });
 
-async function manageToolOperations(entry: ToolEntry): Promise<boolean> {
+async function manageToolOperations(
+  entry: ToolEntry,
+  language: Language,
+): Promise<boolean> {
   let dirty = false;
   while (true) {
     const ops = listConfiguredOps(entry.commands);
     const selected = await select({
       message: ops.length === 0
-        ? '管理操作（该工具暂无已配置操作）'
-        : '管理操作',
+        ? t('edit.manageOpsEmpty', {}, language)
+        : t('edit.manageOps', {}, language),
       options: [
         ...ops.map((op) => ({
           value: `op:${op}`,
-          label: formatOpPreview(op, entry.commands[op]!),
+          label: formatOpPreview(op, entry.commands[op]!, language),
         })),
-        { value: 'add', label: '[+ 添加新操作]' },
-        { value: 'back', label: '[← 返回]' },
+        { value: 'add', label: t('edit.addOperation', {}, language) },
+        { value: 'back', label: t('edit.back', {}, language) },
       ],
     });
 
-    const choice = exitIfCanceled<string>(selected);
+    const choice = exitIfCanceled<string>(selected, language);
     if (choice === 'back') return dirty;
     if (choice === 'add') {
       const op = await promptNewOperationName(
         entry.commands,
-        '操作名称（如 install、docs）',
+        language,
+        t('op.nameExample', {}, language),
       );
-      entry.commands[op] = await editCommandChain(undefined, op);
+      entry.commands[op] = await editCommandChain(undefined, op, language);
       dirty = true;
       continue;
     }
 
     const op = choice.slice('op:'.length);
-    const changed = await manageSingleOperation(entry, op);
+    const changed = await manageSingleOperation(entry, op, language);
     dirty = dirty || changed;
   }
 }
@@ -193,27 +200,28 @@ async function manageToolOperations(entry: ToolEntry): Promise<boolean> {
 async function manageSingleOperation(
   entry: ToolEntry,
   op: string,
+  language: Language,
 ): Promise<boolean> {
   const selected = await select({
-    message: `编辑操作 "${op}"`,
+    message: t('edit.singlePrompt', { op }, language),
     options: [
-      { value: 'commands', label: '修改命令' },
-      { value: 'rename', label: '重命名操作' },
-      { value: 'delete', label: '删除操作' },
-      { value: 'back', label: '返回' },
+      { value: 'commands', label: t('edit.modifyCommands', {}, language) },
+      { value: 'rename', label: t('edit.renameOperation', {}, language) },
+      { value: 'delete', label: t('edit.deleteOperation', {}, language) },
+      { value: 'back', label: t('edit.backPlain', {}, language) },
     ],
   });
-  const choice = exitIfCanceled<string>(selected);
+  const choice = exitIfCanceled<string>(selected, language);
 
   if (choice === 'back') return false;
 
   if (choice === 'commands') {
-    entry.commands[op] = await editCommandChain(entry.commands[op], op);
+    entry.commands[op] = await editCommandChain(entry.commands[op], op, language);
     return true;
   }
 
   if (choice === 'rename') {
-    const next = await promptRenameOperationName(entry.commands, op);
+    const next = await promptRenameOperationName(entry.commands, op, language);
     entry.commands[next] = entry.commands[op];
     delete entry.commands[op];
     return true;
@@ -221,10 +229,10 @@ async function manageSingleOperation(
 
   if (choice === 'delete') {
     const yes = await confirm({
-      message: `确认删除操作 "${op}"？`,
+      message: t('edit.confirmDeleteOperation', { op }, language),
       initialValue: false,
     });
-    if (exitIfCanceled<boolean>(yes)) {
+    if (exitIfCanceled<boolean>(yes, language)) {
       delete entry.commands[op];
       return true;
     }

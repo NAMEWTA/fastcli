@@ -15,6 +15,7 @@ import type * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import './styles.css';
+import { normalizeLanguage, wt, type Language } from './i18n';
 
 type Source = 'builtin' | 'user';
 
@@ -38,6 +39,7 @@ interface AppConfig {
   editor: string;
   confirmBeforeRun: boolean;
   firstRun: boolean;
+  language: Language;
 }
 
 interface ConfigPayload {
@@ -60,7 +62,7 @@ class ApiError extends Error {
     public readonly data: Record<string, unknown>,
     public readonly etag: string,
   ) {
-    super(String(data.message ?? '请求失败'));
+    super(String(data.message ?? 'Request failed'));
   }
 }
 
@@ -188,7 +190,10 @@ function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedTool, setSelectedTool] = useState<ToolEntry | null>(null);
   const [search, setSearch] = useState('');
-  const [lastSaved, setLastSaved] = useState('尚未保存');
+  const [language, setLanguage] = useState<Language>('en');
+  const t = (key: string, params: Record<string, string | number | boolean | undefined> = {}) =>
+    wt(key, params, language);
+  const [lastSaved, setLastSaved] = useState('');
   const [form, setForm] = useState<ToolFormState | null>(null);
   const [configOpen, setConfigOpen] = useState(false);
   const [configDraft, setConfigDraft] = useState<AppConfig | null>(null);
@@ -219,14 +224,16 @@ function App() {
 
   async function loadConfig() {
     const result = await api<ConfigPayload>('/api/config');
+    const nextLanguage = normalizeLanguage(result.data.config.language);
+    setLanguage(nextLanguage);
     setConfigPayload(result.data);
     setConfigEtag(result.etag);
-    setConfigDraft(result.data.config);
+    setConfigDraft({ ...result.data.config, language: nextLanguage });
   }
 
   useEffect(() => {
     Promise.all([loadTools(null), loadConfig()]).catch((err) => {
-      setGlobalError(err instanceof Error ? err.message : '加载失败');
+      setGlobalError(err instanceof Error ? err.message : t('loadFailed'));
     });
   }, []);
 
@@ -263,19 +270,19 @@ function App() {
 
   function validateDraft(draft: ToolDraft): string | undefined {
     if (!/^[a-z0-9][a-z0-9-]*$/.test(draft.id.trim())) {
-      return 'id 必须匹配 ^[a-z0-9][a-z0-9-]*$';
+      return t('idInvalid');
     }
-    if (draft.name.trim().length === 0) return 'name 不能为空';
-    if (draft.operations.length === 0) return '至少需要一个操作';
+    if (draft.name.trim().length === 0) return t('nameRequired');
+    if (draft.operations.length === 0) return t('operationRequired');
     const names = new Set<string>();
     for (const op of draft.operations) {
       const name = op.name.trim();
-      if (name.length === 0) return '操作名不能为空';
-      if (names.has(name)) return `操作 "${name}" 重复`;
+      if (name.length === 0) return t('operationNameRequired');
+      if (names.has(name)) return t('operationDuplicate', { name });
       names.add(name);
-      if (op.commands.length === 0) return `操作 "${name}" 至少需要一条命令`;
+      if (op.commands.length === 0) return t('commandRequired', { name });
       if (op.commands.some((command) => command.trim().length === 0)) {
-        return `操作 "${name}" 包含空命令`;
+        return t('commandEmpty', { name });
       }
     }
     return undefined;
@@ -309,14 +316,14 @@ function App() {
     } catch (err) {
       if (err instanceof ApiError && err.status === 409 && form.mode === 'edit') {
         setConflict({
-          message: 'tools.json 已被外部修改，是否覆盖、放弃本次修改、还是基于最新内容重做？',
+          message: t('toolsModified'),
           abandon: async () => {
             setConflict(null);
             setForm(null);
             await loadTools(selectedId);
           },
           overwrite: async () => {
-            const yes = window.confirm('确认用本次修改覆盖最新 tools.json？');
+            const yes = window.confirm(t('overwriteTools'));
             if (!yes) return;
             const fresh = await api<ToolEntry>(`/api/tools/${form.draft.id}`);
             setConflict(null);
@@ -327,13 +334,13 @@ function App() {
       }
       setForm({
         ...form,
-        error: err instanceof Error ? err.message : '保存失败',
+        error: err instanceof Error ? err.message : t('saveFailed'),
       });
     }
   }
 
   async function deleteTool(tool: ToolEntry, overrideEtag?: string) {
-    const yes = overrideEtag !== undefined || window.confirm(`确认删除工具 "${tool.id}"？`);
+    const yes = overrideEtag !== undefined || window.confirm(t('deleteConfirm', { id: tool.id }));
     if (!yes) return;
     try {
       const fresh = overrideEtag === undefined ? await loadTool(tool.id) : null;
@@ -346,13 +353,13 @@ function App() {
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) {
         setConflict({
-          message: 'tools.json 已被外部修改，是否覆盖、放弃本次修改、还是基于最新内容重做？',
+          message: t('toolsModified'),
           abandon: async () => {
             setConflict(null);
             await loadTools(null);
           },
           overwrite: async () => {
-            const yesOverwrite = window.confirm('确认基于最新版本继续删除？');
+            const yesOverwrite = window.confirm(t('continueDelete'));
             if (!yesOverwrite) return;
             const fresh = await api<ToolEntry>(`/api/tools/${tool.id}`);
             setConflict(null);
@@ -361,7 +368,7 @@ function App() {
         });
         return;
       }
-      setGlobalError(err instanceof Error ? err.message : '删除失败');
+      setGlobalError(err instanceof Error ? err.message : t('deleteFailed'));
     }
   }
 
@@ -376,9 +383,11 @@ function App() {
           packageManager: configDraft.packageManager,
           editor: configDraft.editor,
           confirmBeforeRun: configDraft.confirmBeforeRun,
+          language: configDraft.language,
         }),
       });
       setConfigOpen(false);
+      setLanguage(normalizeLanguage(result.data.config.language));
       setConfigPayload((current) =>
         current === null ? current : { ...current, config: result.data.config },
       );
@@ -386,12 +395,12 @@ function App() {
       await loadConfig();
       await loadTools(selectedId);
     } catch (err) {
-      setConfigError(err instanceof Error ? err.message : '保存失败');
+      setConfigError(err instanceof Error ? err.message : t('saveFailed'));
     }
   }
 
   async function previewOperation(tool: ToolEntry, op: string) {
-    const version = window.prompt('版本号（可留空）') ?? undefined;
+    const version = window.prompt(t('versionPrompt')) ?? undefined;
     const body: { op: string; version?: string } = { op };
     if (version !== undefined && version.length > 0) body.version = version;
     const result = await api<{ commands: string[] }>(`/api/tools/${tool.id}/dry-run`, {
@@ -412,9 +421,9 @@ function App() {
             </div>
           </div>
           <div className="flex items-center gap-2 text-xs text-zinc-600">
-            <span>最后保存时间：{lastSaved}</span>
-            <Button onClick={() => setConfigOpen(true)} title="配置">
-              <Settings size={16} /> 配置
+            <span>{t('lastSaved')}{lastSaved || t('unsaved')}</span>
+            <Button onClick={() => setConfigOpen(true)} title={t('config')}>
+              <Settings size={16} /> {t('config')}
             </Button>
           </div>
         </div>
@@ -435,36 +444,39 @@ function App() {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 className="h-10 w-full rounded-md border border-zinc-300 bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-600"
-                placeholder="搜索工具"
+                placeholder={t('searchTools')}
               />
             </label>
-            <IconButton onClick={openCreateForm} title="新增工具">
+            <IconButton onClick={openCreateForm} title={t('addTool')}>
               <Plus size={16} />
             </IconButton>
           </div>
           <ToolGroup
-            title="内置工具"
+            title={t('builtinTools')}
             tools={filtered.builtin}
             selectedId={selectedId}
             onSelect={(id) => loadTool(id).catch(console.error)}
+            language={language}
           />
           <ToolGroup
-            title="自定义工具"
+            title={t('customTools')}
             tools={filtered.user}
             selectedId={selectedId}
             onSelect={(id) => loadTool(id).catch(console.error)}
+            language={language}
           />
         </aside>
 
         <section className="px-6 py-5">
           {selectedTool === null ? (
-            <div className="text-sm text-zinc-500">暂无工具</div>
+            <div className="text-sm text-zinc-500">{t('noTools')}</div>
           ) : (
             <ToolDetail
               tool={selectedTool}
               onEdit={() => openEditForm(selectedTool).catch(console.error)}
               onDelete={() => deleteTool(selectedTool).catch(console.error)}
               onPreview={(op) => previewOperation(selectedTool, op).catch(console.error)}
+              language={language}
             />
           )}
         </section>
@@ -475,6 +487,7 @@ function App() {
           form={form}
           setForm={setForm}
           onSubmit={() => submitToolForm().catch(console.error)}
+          language={language}
         />
       )}
 
@@ -486,11 +499,12 @@ function App() {
           error={configError}
           onClose={() => setConfigOpen(false)}
           onSubmit={() => submitConfig().catch(console.error)}
+          language={language}
         />
       )}
 
       {preview !== null && (
-        <Modal title={preview.title} onClose={() => setPreview(null)}>
+        <Modal title={preview.title} onClose={() => setPreview(null)} language={language}>
           <pre className="max-h-[55vh] overflow-auto rounded-md bg-zinc-950 p-3 text-sm text-zinc-50">
             {preview.commands.map((command, index) =>
               `[${index + 1}/${preview.commands.length}] $ ${command}`,
@@ -500,16 +514,16 @@ function App() {
       )}
 
       {conflict !== null && (
-        <Modal title="写入冲突" onClose={() => setConflict(null)}>
+        <Modal title={t('conflictTitle')} onClose={() => setConflict(null)} language={language}>
           <p className="mb-4 text-sm text-zinc-700">{conflict.message}</p>
           <div className="flex flex-wrap justify-end gap-2">
             <Button onClick={() => conflict.abandon().catch(console.error)}>
-              放弃本次修改并刷新
+              {t('discardRefresh')}
             </Button>
             <Button onClick={() => conflict.overwrite().catch(console.error)}>
-              用本次修改覆盖
+              {t('overwrite')}
             </Button>
-            <Button onClick={() => setConflict(null)}>关闭对话框</Button>
+            <Button onClick={() => setConflict(null)}>{t('closeDialog')}</Button>
           </div>
         </Modal>
       )}
@@ -522,6 +536,7 @@ function ToolGroup(props: {
   tools: ToolEntry[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  language: Language;
 }) {
   return (
     <div className="mb-5">
@@ -530,7 +545,9 @@ function ToolGroup(props: {
       </div>
       <div className="space-y-1">
         {props.tools.length === 0 ? (
-          <div className="rounded-md px-2 py-2 text-sm text-zinc-400">（无）</div>
+          <div className="rounded-md px-2 py-2 text-sm text-zinc-400">
+            {wt('empty', {}, props.language)}
+          </div>
         ) : (
           props.tools.map((tool) => (
             <button
@@ -560,31 +577,34 @@ function ToolDetail(props: {
   onEdit: () => void;
   onDelete: () => void;
   onPreview: (op: string) => void;
+  language: Language;
 }) {
   const disabled = props.tool.source === 'builtin';
+  const t = (key: string, params: Record<string, string | number | boolean | undefined> = {}) =>
+    wt(key, params, props.language);
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="text-xs font-semibold uppercase text-zinc-500">
-            {props.tool.source === 'builtin' ? '内置工具' : '自定义工具'}
+            {props.tool.source === 'builtin' ? t('builtinTools') : t('customTools')}
           </div>
           <h1 className="mt-1 text-2xl font-semibold">{props.tool.name}</h1>
           <div className="mt-1 text-sm text-zinc-600">{props.tool.id}</div>
         </div>
         <div className="flex gap-2">
-          <Button disabled={disabled} onClick={props.onEdit} title={disabled ? '内置工具不可修改' : '编辑'}>
-            <Pencil size={16} /> 编辑
+          <Button disabled={disabled} onClick={props.onEdit} title={disabled ? t('builtinReadonly') : t('edit')}>
+            <Pencil size={16} /> {t('edit')}
           </Button>
-          <Button disabled={disabled} onClick={props.onDelete} title={disabled ? '内置工具不可修改' : '删除'}>
-            <Trash2 size={16} /> 删除
+          <Button disabled={disabled} onClick={props.onDelete} title={disabled ? t('builtinReadonly') : t('delete')}>
+            <Trash2 size={16} /> {t('delete')}
           </Button>
         </div>
       </div>
 
       <div className="mb-6 grid gap-4 text-sm md:grid-cols-2">
-        <InfoRow label="description" value={props.tool.description ?? '（无）'} />
-        <InfoRow label="tags" value={props.tool.tags?.join(', ') || '（无）'} />
+        <InfoRow label="description" value={props.tool.description ?? t('empty')} />
+        <InfoRow label="tags" value={props.tool.tags?.join(', ') || t('empty')} />
         <InfoRow label="source" value={props.tool.source} />
       </div>
 
@@ -594,7 +614,7 @@ function ToolDetail(props: {
             <div className="mb-3 flex items-center justify-between gap-2">
               <h2 className="text-base font-semibold">{op}</h2>
               <Button onClick={() => props.onPreview(op)}>
-                <Eye size={16} /> 预览命令
+                <Eye size={16} /> {t('previewCommand')}
               </Button>
             </div>
             <div className="space-y-2">
@@ -626,8 +646,11 @@ function ToolForm(props: {
   form: ToolFormState;
   setForm: (form: ToolFormState | null) => void;
   onSubmit: () => void;
+  language: Language;
 }) {
   const { form, setForm } = props;
+  const t = (key: string, params: Record<string, string | number | boolean | undefined> = {}) =>
+    wt(key, params, props.language);
   const updateDraft = (draft: ToolDraft) => setForm({ ...form, draft, error: undefined });
   const draft = form.draft;
 
@@ -639,8 +662,9 @@ function ToolForm(props: {
 
   return (
     <Modal
-      title={form.mode === 'create' ? '新增工具' : '编辑工具'}
+      title={form.mode === 'create' ? t('createTool') : t('editTool')}
       onClose={() => setForm(null)}
+      language={props.language}
     >
       <div className="grid max-h-[72vh] gap-4 overflow-auto pr-1">
         {form.error && (
@@ -682,7 +706,7 @@ function ToolForm(props: {
         </div>
 
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold">操作</h3>
+          <h3 className="text-base font-semibold">{t('operation')}</h3>
           <Button
             onClick={() =>
               updateDraft({
@@ -691,7 +715,7 @@ function ToolForm(props: {
               })
             }
           >
-            <Plus size={16} /> 添加操作
+            <Plus size={16} /> {t('addOperation')}
           </Button>
         </div>
 
@@ -704,10 +728,10 @@ function ToolForm(props: {
                   onChange={(event) =>
                     updateOperation(opIndex, { ...op, name: event.target.value })
                   }
-                  placeholder="操作名"
+                  placeholder={t('operationName')}
                 />
                 <IconButton
-                  title="删除操作"
+                  title={t('deleteOperation')}
                   onClick={() =>
                     updateDraft({
                       ...draft,
@@ -728,10 +752,10 @@ function ToolForm(props: {
                         commands[commandIndex] = event.target.value;
                         updateOperation(opIndex, { ...op, commands });
                       }}
-                      placeholder="命令"
+                      placeholder={t('command')}
                     />
                     <IconButton
-                      title="上移"
+                      title={t('moveUp')}
                       disabled={commandIndex === 0}
                       onClick={() => {
                         const commands = [...op.commands];
@@ -745,7 +769,7 @@ function ToolForm(props: {
                       <ArrowUp size={16} />
                     </IconButton>
                     <IconButton
-                      title="下移"
+                      title={t('moveDown')}
                       disabled={commandIndex === op.commands.length - 1}
                       onClick={() => {
                         const commands = [...op.commands];
@@ -759,7 +783,7 @@ function ToolForm(props: {
                       <ArrowDown size={16} />
                     </IconButton>
                     <IconButton
-                      title="删除命令"
+                      title={t('deleteCommand')}
                       onClick={() =>
                         updateOperation(opIndex, {
                           ...op,
@@ -778,7 +802,7 @@ function ToolForm(props: {
                   updateOperation(opIndex, { ...op, commands: [...op.commands, ''] })
                 }
               >
-                <Plus size={16} /> 添加命令
+                <Plus size={16} /> {t('addCommand')}
               </Button>
             </div>
           ))}
@@ -786,10 +810,10 @@ function ToolForm(props: {
       </div>
       <div className="mt-5 flex justify-end gap-2">
         <Button onClick={() => setForm(null)}>
-          <X size={16} /> 取消
+          <X size={16} /> {t('cancel')}
         </Button>
         <Button onClick={props.onSubmit}>
-          <Save size={16} /> 保存
+          <Save size={16} /> {t('save')}
         </Button>
       </div>
     </Modal>
@@ -803,9 +827,12 @@ function ConfigDialog(props: {
   error: string;
   onClose: () => void;
   onSubmit: () => void;
+  language: Language;
 }) {
+  const t = (key: string, params: Record<string, string | number | boolean | undefined> = {}) =>
+    wt(key, params, props.language);
   return (
-    <Modal title="配置" onClose={props.onClose}>
+    <Modal title={t('config')} onClose={props.onClose} language={props.language}>
       <div className="grid gap-4">
         {props.error && (
           <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -840,6 +867,22 @@ function ConfigDialog(props: {
             }
           />
         </label>
+        <label className="text-sm">
+          <span className="mb-1 block text-zinc-600">{t('language')}</span>
+          <select
+            value={props.draft.language}
+            onChange={(event) =>
+              props.setDraft({
+                ...props.draft,
+                language: normalizeLanguage(event.target.value),
+              })
+            }
+            className="h-10 w-full rounded-md border border-zinc-300 bg-white px-3 outline-none focus:border-emerald-600"
+          >
+            <option value="en">English</option>
+            <option value="zh-CN">中文</option>
+          </select>
+        </label>
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
@@ -858,10 +901,10 @@ function ConfigDialog(props: {
       </div>
       <div className="mt-5 flex justify-end gap-2">
         <Button onClick={props.onClose}>
-          <X size={16} /> 取消
+          <X size={16} /> {t('cancel')}
         </Button>
         <Button onClick={props.onSubmit}>
-          <Save size={16} /> 保存
+          <Save size={16} /> {t('save')}
         </Button>
       </div>
     </Modal>
@@ -872,13 +915,15 @@ function Modal(props: {
   title: string;
   children: React.ReactNode;
   onClose: () => void;
+  language?: Language;
 }) {
+  const language = props.language ?? 'en';
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/35 p-4">
       <div className="w-full max-w-3xl rounded-md bg-white p-5 shadow-xl">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">{props.title}</h2>
-          <IconButton onClick={props.onClose} title="关闭">
+          <IconButton onClick={props.onClose} title={wt('close', {}, language)}>
             <X size={16} />
           </IconButton>
         </div>

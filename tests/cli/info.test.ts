@@ -32,6 +32,7 @@ beforeEach(async () => {
     editor: '',
     confirmBeforeRun: false,
     firstRun: false,
+    language: 'en',
   };
   await fs.writeFile(
     path.join(tmpDir, 'config.json'),
@@ -77,13 +78,13 @@ describe('fastcli info - 工具不存在', () => {
   it('退出码 1，stderr 含 fuzzy 建议', async () => {
     const r = await runCli(['info', 'clade']);
     expect(r.code).toBe(1);
-    expect(r.stderr).toContain('找不到工具');
+    expect(r.stderr).toContain('not found');
     expect(r.stderr).toContain('claude');
   });
 
   it('完全不相似时仅有 not-found 提示', async () => {
     const r = await runCli(['info', 'xyzzy']);
     expect(r.code).toBe(1);
-    expect(r.stderr).toContain('找不到工具');
+    expect(r.stderr).toContain('not found');
   });
 });

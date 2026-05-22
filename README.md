@@ -130,6 +130,7 @@ fastcli config edit   # 用编辑器打开
   "packageManager": "volta",
   "editor": "",
   "confirmBeforeRun": true,
+  "language": "en",
   "firstRun": false
 }
 ```
@@ -140,7 +141,10 @@ fastcli config edit   # 用编辑器打开
 | packageManager    | `'volta' \| 'npm'` | 决定内置工具命令模板的生成方式                    |
 | editor            | string            | `config edit` 优先使用的编辑器；为空则回退 $EDITOR |
 | confirmBeforeRun  | boolean           | 执行命令前是否需要二次确认                        |
+| language          | `'en' \| 'zh-CN'` | CLI 与 Web 界面语言                               |
 | firstRun          | boolean           | 是否首次运行；引导完成后置为 false                |
+
+Web 编辑器会跟随 `config.json` 里的 `language` 自动切换界面语言。
 
 ### `~/.fastcli/tools.json`
 

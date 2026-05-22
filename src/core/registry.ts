@@ -21,6 +21,7 @@ import { BUILTIN_TOOLS } from '../builtin/tools.js';
 import { loadAppConfig, loadToolsFile } from '../config/reader.js';
 import type { AppConfig, ToolEntry, ToolsFile } from '../config/schema.js';
 import { buildBuiltinCommands } from './builtin-templates.js';
+import { t } from '../i18n.js';
 
 /**
  * `Registry.list()` 的过滤条件。
@@ -125,7 +126,7 @@ export async function loadRegistry(
   for (const entry of buildUserEntries(toolsFile)) {
     if (merged.has(entry.id)) {
       // Requirement 1.5：用户工具覆盖同名内置工具时给一次性 warn。
-      console.warn(`用户工具 "${entry.id}" 覆盖了同名内置工具`);
+      console.warn(t('registry.override', { id: entry.id }, appConfig.language));
     }
     merged.set(entry.id, entry);
   }

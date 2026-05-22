@@ -8,6 +8,7 @@ import {
   type AppConfig,
   type ToolsFile,
 } from './schema.js';
+import { normalizeLanguage, t } from '../i18n.js';
 
 /**
  * 当 `config.json` / `tools.json` 不是合法 JSON、或解析结果不是对象时抛出。
@@ -21,7 +22,7 @@ export class ConfigCorruptError extends Error {
   public readonly path: string;
 
   constructor(path: string, detail?: string) {
-    super(detail === undefined ? `配置文件损坏：${path}` : detail);
+    super(detail === undefined ? t('reader.corrupt', { path }) : detail);
     this.name = 'ConfigCorruptError';
     this.path = path;
     // 修正基于原型链的 instanceof 行为（TS 编译为 ES5 时尤其需要，这里也加上以防降级目标）。
@@ -42,7 +43,7 @@ export class ConfigVersionTooNewError extends Error {
   public readonly version: string;
 
   constructor(path: string, version: string) {
-    super(`配置文件版本过新（${version}），请升级 fastcli：${path}`);
+    super(t('reader.tooNew', { version, path }));
     this.name = 'ConfigVersionTooNewError';
     this.path = path;
     this.version = version;
@@ -101,7 +102,7 @@ async function backupAndWriteDefault<T>(
   await rename(path, backupPath);
   await writeJsonFile(path, defaultValue);
   console.warn(
-    `检测到旧版配置文件，已备份为 ${backupPath} 并写入默认值。`,
+    t('reader.oldBackup', { backupPath }),
   );
   return defaultValue;
 }
@@ -117,14 +118,14 @@ function validateCommandArray(
   value: unknown,
 ): string[] {
   if (!Array.isArray(value)) {
-    rejectCorrupt(path, `操作值必须是字符串数组：${toolId}.${op}`);
+    rejectCorrupt(path, t('reader.commandArray', { toolId, op }));
   }
   if (value.length < 1) {
-    rejectCorrupt(path, `操作值必须是非空字符串数组：${toolId}.${op}`);
+    rejectCorrupt(path, t('reader.commandArrayNonEmpty', { toolId, op }));
   }
   for (const item of value) {
     if (typeof item !== 'string' || item.trim().length === 0) {
-      rejectCorrupt(path, `操作值必须是非空字符串数组：${toolId}.${op}`);
+      rejectCorrupt(path, t('reader.commandArrayNonEmpty', { toolId, op }));
     }
   }
   return value;
@@ -267,9 +268,10 @@ export async function loadAppConfig(): Promise<AppConfig> {
     const migrated = {
       ...parsed,
       version: SCHEMA_VERSION,
+      language: normalizeLanguage(parsed.language),
     } as AppConfig;
     await writeJsonFile(path, migrated);
-    console.warn('已自动升级 config.json 至 schema v2');
+    console.warn(t('reader.configUpgraded', {}, migrated.language));
     return migrated;
   }
 
@@ -277,7 +279,10 @@ export async function loadAppConfig(): Promise<AppConfig> {
     throw new ConfigCorruptError(path);
   }
 
-  return parsed as AppConfig;
+  return {
+    ...(parsed as AppConfig),
+    language: normalizeLanguage(parsed.language),
+  };
 }
 
 /**
@@ -296,9 +301,7 @@ export async function loadToolsFile(): Promise<ToolsFile> {
   if (parsed.version === '1') {
     const migrated = migrateToolsFileV1(path, parsed);
     await writeJsonFile(path, migrated);
-    console.warn(
-      '已自动升级 tools.json 至 schema v2（操作值从字符串升级为字符串数组）',
-    );
+    console.warn(t('reader.toolsUpgraded'));
     return migrated;
   }
 

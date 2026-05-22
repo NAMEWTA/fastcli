@@ -154,11 +154,85 @@ describe('loadAppConfig - v1 自动升级', () => {
 
     const result = await loadAppConfig();
 
-    expect(result).toEqual({ ...v1Config, version: '2' });
+    expect(result).toEqual({ ...v1Config, version: '2', language: 'en' });
     expect(JSON.parse(await readFile(filePath, 'utf8'))).toEqual({
       ...v1Config,
       version: '2',
+      language: 'en',
     });
+  });
+});
+
+describe('loadAppConfig - language 兼容', () => {
+  it('v2 缺少 language 时默认 en 且不崩溃', async () => {
+    const filePath = path.join(tmpDir, 'config.json');
+    await writeFile(
+      filePath,
+      JSON.stringify({
+        version: '2',
+        packageManager: 'volta',
+        editor: '',
+        confirmBeforeRun: false,
+        firstRun: false,
+      }),
+      'utf8',
+    );
+
+    await expect(loadAppConfig()).resolves.toMatchObject({ language: 'en' });
+  });
+
+  it('保留有效 language=en', async () => {
+    const filePath = path.join(tmpDir, 'config.json');
+    await writeFile(
+      filePath,
+      JSON.stringify({
+        version: '2',
+        packageManager: 'volta',
+        editor: '',
+        confirmBeforeRun: false,
+        firstRun: false,
+        language: 'en',
+      }),
+      'utf8',
+    );
+
+    await expect(loadAppConfig()).resolves.toMatchObject({ language: 'en' });
+  });
+
+  it('保留有效 language=zh-CN', async () => {
+    const filePath = path.join(tmpDir, 'config.json');
+    await writeFile(
+      filePath,
+      JSON.stringify({
+        version: '2',
+        packageManager: 'volta',
+        editor: '',
+        confirmBeforeRun: false,
+        firstRun: false,
+        language: 'zh-CN',
+      }),
+      'utf8',
+    );
+
+    await expect(loadAppConfig()).resolves.toMatchObject({ language: 'zh-CN' });
+  });
+
+  it('非法 language 回退到 en', async () => {
+    const filePath = path.join(tmpDir, 'config.json');
+    await writeFile(
+      filePath,
+      JSON.stringify({
+        version: '2',
+        packageManager: 'volta',
+        editor: '',
+        confirmBeforeRun: false,
+        firstRun: false,
+        language: 'fr',
+      }),
+      'utf8',
+    );
+
+    await expect(loadAppConfig()).resolves.toMatchObject({ language: 'en' });
   });
 });
 
@@ -213,7 +287,7 @@ describe('loadToolsFile - v2 严格校验', () => {
     );
 
     await expect(loadToolsFile()).rejects.toMatchObject({
-      message: '操作值必须是字符串数组：aider.install',
+      message: 'Operation value must be a string array: aider.install',
     });
   });
 

@@ -19,14 +19,16 @@ import {
 } from '../../config/paths.js';
 import { loadAppConfig } from '../../config/reader.js';
 import { saveAppConfig } from '../../config/writer.js';
+import { t } from '../../i18n.js';
 
 const editCommand = defineCommand({
   meta: {
     name: 'edit',
-    description: '使用编辑器打开 config.json',
+    description: t('config.edit.description'),
   },
   async run() {
     const config = await loadAppConfig();
+    const language = config.language;
     const path = getAppConfigPath();
 
     // 如果配置文件还没落盘（首次使用），先把默认值写下去再打开。
@@ -38,7 +40,7 @@ const editCommand = defineCommand({
       .filter((s): s is string => typeof s === 'string' && s.length > 0);
 
     if (candidates.length === 0) {
-      console.error('未找到可用的编辑器。请设置 config.editor 或 $EDITOR 环境变量。');
+      console.error(t('config.noEditor', {}, language));
       process.exit(1);
     }
 
@@ -49,10 +51,10 @@ const editCommand = defineCommand({
       child.on('error', (err) => {
         const code = (err as NodeJS.ErrnoException).code;
         if (code === 'ENOENT') {
-          console.error(`未找到编辑器：${editor}`);
-          console.error('请设置 config.editor 或 $EDITOR 环境变量为可用编辑器。');
+          console.error(t('config.editorNotFound', { editor }, language));
+          console.error(t('config.setEditorHint', {}, language));
         } else {
-          console.error(`启动编辑器失败：${err.message}`);
+          console.error(t('config.editorFailed', { message: err.message }, language));
         }
         process.exit(1);
       });
@@ -60,7 +62,7 @@ const editCommand = defineCommand({
         // 编辑器以非 0 退出时也算「正常关闭」（vim :q! 会返回 0）；
         // 仅打印提示，不强行失败。
         if (code !== 0 && code !== null) {
-          console.warn(`编辑器以退出码 ${code} 关闭`);
+          console.warn(t('config.editorExit', { code }, language));
         }
         resolve();
       });
@@ -71,16 +73,17 @@ const editCommand = defineCommand({
 export default defineCommand({
   meta: {
     name: 'config',
-    description: '查看或编辑 fastcli 配置',
+    description: t('config.description'),
   },
   subCommands: {
     edit: editCommand,
   },
   async run() {
     const config = await loadAppConfig();
-    console.error(`配置目录：${getConfigDir()}`);
-    console.error(`config.json：${getAppConfigPath()}`);
-    console.error(`tools.json：${getToolsPath()}`);
+    const language = config.language;
+    console.error(t('config.dir', { path: getConfigDir() }, language));
+    console.error(t('config.file', { path: getAppConfigPath() }, language));
+    console.error(t('config.toolsFile', { path: getToolsPath() }, language));
     // PRD §6.1：JSON 格式化输出，2 空格缩进
     console.log(JSON.stringify(config, null, 2));
   },

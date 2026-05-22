@@ -24,6 +24,7 @@ beforeEach(async () => {
         editor: '',
         confirmBeforeRun: false,
         firstRun: false,
+        language: 'en',
       },
       null,
       2,
@@ -45,9 +46,23 @@ describe('fastcli config', () => {
     expect(JSON.parse(stdout)).toMatchObject({
       version: '2',
       packageManager: 'volta',
+      language: 'en',
     });
+    expect(stderr).toContain(`Config directory: ${tmpDir}`);
+    expect(stderr).toContain(`config.json: ${path.join(tmpDir, 'config.json')}`);
+    expect(stderr).toContain(`tools.json: ${path.join(tmpDir, 'tools.json')}`);
+  });
+
+  it('language=zh-CN 时 stderr 输出中文配置路径', async () => {
+    const raw = JSON.parse(await fs.readFile(path.join(tmpDir, 'config.json'), 'utf8'));
+    raw.language = 'zh-CN';
+    await fs.writeFile(path.join(tmpDir, 'config.json'), JSON.stringify(raw, null, 2), 'utf8');
+
+    const { stdout, stderr } = await execFileP('node', [DIST, 'config'], {
+      env: { ...process.env, FASTCLI_HOME: tmpDir },
+    });
+
+    expect(JSON.parse(stdout)).toMatchObject({ language: 'zh-CN' });
     expect(stderr).toContain(`配置目录：${tmpDir}`);
-    expect(stderr).toContain(`config.json：${path.join(tmpDir, 'config.json')}`);
-    expect(stderr).toContain(`tools.json：${path.join(tmpDir, 'tools.json')}`);
   });
 });

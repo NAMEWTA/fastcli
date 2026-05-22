@@ -20,7 +20,7 @@
 import { cancel, intro, isCancel, outro, text } from '@clack/prompts';
 import { defineCommand } from 'citty';
 
-import { loadToolsFile } from '../../config/reader.js';
+import { loadAppConfig, loadToolsFile } from '../../config/reader.js';
 import { saveToolsFile } from '../../config/writer.js';
 import type {
   ToolCommands,
@@ -30,80 +30,87 @@ import type {
 import { loadRegistry } from '../../core/registry.js';
 import { toSlug, uniqueSlug } from '../../utils/slug.js';
 import { manageCommandsForNewTool } from './operation-editor.js';
+import { t, type Language } from '../../i18n.js';
 
 /** id 合法性校验。 */
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 const ID_MAX = 64;
 
-function exitIfCanceled<T>(value: T | symbol): T {
+function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   if (isCancel(value)) {
-    cancel('已取消');
+    cancel(t('common.cancelled', {}, language));
     process.exit(130);
   }
   return value;
 }
 
-function validateId(input: string, existing: Set<string>): string | undefined {
-  if (input.length === 0) return '工具 ID 不能为空';
-  if (input.length > ID_MAX) return `工具 ID 长度不能超过 ${ID_MAX}`;
+function validateId(
+  input: string,
+  existing: Set<string>,
+  language: Language,
+): string | undefined {
+  if (input.length === 0) return t('add.idRequired', {}, language);
+  if (input.length > ID_MAX) return t('add.idTooLong', { max: ID_MAX }, language);
   if (!ID_RE.test(input)) {
-    return '工具 ID 只能包含小写字母、数字、连字符，且首字符为字母或数字';
+    return t('add.idInvalid', {}, language);
   }
-  if (existing.has(input)) return `工具 ID "${input}" 已存在`;
+  if (existing.has(input)) return t('add.idExists', { id: input }, language);
   return undefined;
 }
 
 export default defineCommand({
   meta: {
     name: 'add',
-    description: '交互式添加用户工具',
+    description: t('add.description'),
   },
   async run() {
-    intro('添加新工具');
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
+    intro(t('add.intro', {}, language));
 
     // 加载现有工具集合，用于 id 去重
-    const registry = await loadRegistry();
+    const registry = await loadRegistry({ appConfig });
     const existingIds = new Set(registry.list().map((t) => t.id));
 
     // 1. 工具名称（必填）
     const nameRaw = await text({
-      message: '工具名称（必填）',
+      message: t('add.namePrompt', {}, language),
       validate(v) {
         if (typeof v !== 'string' || v.trim().length === 0) {
-          return '工具名称不能为空';
+          return t('add.nameRequired', {}, language);
         }
         return undefined;
       },
     });
-    const name = exitIfCanceled<string>(nameRaw).trim();
+    const name = exitIfCanceled<string>(nameRaw, language).trim();
 
     // 2. 工具 ID（留空 → 自动生成）
     const baseSlug = uniqueSlug(toSlug(name), existingIds);
     const idRaw = await text({
-      message: `工具 ID（留空使用「${baseSlug}」）`,
+      message: t('add.idPrompt', { id: baseSlug }, language),
       placeholder: baseSlug,
       validate(v) {
-        if (typeof v !== 'string') return '请输入合法的工具 ID';
+        if (typeof v !== 'string') return t('add.idInvalidInput', {}, language);
         if (v.length === 0) return undefined; // 允许留空走默认
-        return validateId(v, existingIds);
+        return validateId(v, existingIds, language);
       },
     });
-    const idInput = exitIfCanceled<string>(idRaw).trim();
+    const idInput = exitIfCanceled<string>(idRaw, language).trim();
     const id = idInput.length > 0 ? idInput : baseSlug;
 
     // 3. 描述（可选）
     const descRaw = await text({
-      message: '描述（可选）',
-      placeholder: '一句话描述',
+      message: t('add.descPrompt', {}, language),
+      placeholder: t('add.descPlaceholder', {}, language),
     });
-    const desc = exitIfCanceled<string>(descRaw).trim();
+    const desc = exitIfCanceled<string>(descRaw, language).trim();
 
     const commands: ToolCommands = {};
-    await manageCommandsForNewTool(commands);
+    await manageCommandsForNewTool(commands, language);
 
     // 5. 至少一个非空命令
     if (Object.keys(commands).length === 0) {
-      cancel('至少需要配置一个命令，已放弃添加');
+      cancel(t('add.noCommands', {}, language));
       process.exit(1);
     }
 
@@ -122,6 +129,6 @@ export default defineCommand({
     };
     await saveToolsFile(updated);
 
-    outro(`已添加工具 "${id}"`);
+    outro(t('add.done', { id }, language));
   },
 });

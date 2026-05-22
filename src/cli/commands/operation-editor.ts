@@ -7,12 +7,13 @@ import {
 } from '@clack/prompts';
 
 import type { ToolCommands } from '../../config/schema.js';
+import { t, type Language } from '../../i18n.js';
 
 const PREVIEW_LIMIT = 60;
 
-function exitIfCanceled<T>(value: T | symbol): T {
+function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   if (isCancel(value)) {
-    cancel('已取消');
+    cancel(t('common.cancelled', {}, language));
     process.exit(130);
   }
   return value;
@@ -29,9 +30,17 @@ export function listConfiguredOps(commands: ToolCommands): string[] {
     .sort();
 }
 
-export function formatOpPreview(op: string, commands: readonly string[]): string {
+export function formatOpPreview(
+  op: string,
+  commands: readonly string[],
+  language: Language,
+): string {
   const first = commands[0] ?? '';
-  return `${op} → [${commands.length} 条] ${truncate(first)}`;
+  return t('op.preview', {
+    op,
+    count: commands.length,
+    command: truncate(first),
+  }, language);
 }
 
 function printCommandEntries(commands: readonly string[]): void {
@@ -42,25 +51,27 @@ function printCommandEntries(commands: readonly string[]): void {
 
 async function promptCommand(
   message: string,
+  language: Language,
   defaultValue?: string,
 ): Promise<string> {
   const value = await text({
     message,
-    placeholder: defaultValue ?? '例：npm install -g foo',
+    placeholder: defaultValue ?? t('common.exampleCommand', {}, language),
     defaultValue,
     validate(v) {
       if (typeof v !== 'string' || v.trim().length === 0) {
-        return '命令不能为空';
+        return t('op.commandRequired', {}, language);
       }
       return undefined;
     },
   });
-  return exitIfCanceled<string>(value).trim();
+  return exitIfCanceled<string>(value, language).trim();
 }
 
 async function pickCommandIndex(
   commands: readonly string[],
   message: string,
+  language: Language,
 ): Promise<number> {
   const picked = await select({
     message,
@@ -69,31 +80,32 @@ async function pickCommandIndex(
       label: `[${index + 1}/${commands.length}] ${truncate(command)}`,
     })),
   });
-  return Number.parseInt(exitIfCanceled<string>(picked), 10);
+  return Number.parseInt(exitIfCanceled<string>(picked, language), 10);
 }
 
 export async function editCommandChain(
   initial: string[] | undefined,
   opName: string,
+  language: Language,
 ): Promise<string[]> {
   const commands = initial === undefined
-    ? [await promptCommand(`操作 "${opName}" 的第一条命令`)]
+    ? [await promptCommand(t('op.firstCommand', { op: opName }, language), language)]
     : [...initial];
 
   while (true) {
     printCommandEntries(commands);
 
     const action = await select({
-      message: `编辑操作 "${opName}" 的命令链`,
+      message: t('op.editChain', { op: opName }, language),
       options: [
-        { value: 'edit', label: '修改某条命令' },
-        { value: 'delete', label: '删除某条命令' },
-        { value: 'append', label: '在末尾追加新命令' },
-        { value: 'done', label: '完成编辑' },
+        { value: 'edit', label: t('op.editCommand', {}, language) },
+        { value: 'delete', label: t('op.deleteCommand', {}, language) },
+        { value: 'append', label: t('op.appendCommand', {}, language) },
+        { value: 'done', label: t('op.done', {}, language) },
       ],
     });
 
-    const choice = exitIfCanceled<string>(action);
+    const choice = exitIfCanceled<string>(action, language);
     if (choice === 'done') {
       if (
         commands.length >= 1 &&
@@ -101,32 +113,47 @@ export async function editCommandChain(
       ) {
         return commands;
       }
-      console.error('命令链至少需要一条非空命令');
+      console.error(t('op.chainRequired', {}, language));
       continue;
     }
 
     if (choice === 'append') {
-      commands.push(await promptCommand('新增命令'));
+      commands.push(await promptCommand(t('op.newCommand', {}, language), language));
       continue;
     }
 
     if (choice === 'edit') {
-      const index = await pickCommandIndex(commands, '选择要修改的命令');
-      commands[index] = await promptCommand('新的命令', commands[index]);
+      const index = await pickCommandIndex(
+        commands,
+        t('op.pickEdit', {}, language),
+        language,
+      );
+      commands[index] = await promptCommand(
+        t('op.replacementCommand', {}, language),
+        language,
+        commands[index],
+      );
       continue;
     }
 
     if (choice === 'delete') {
       if (commands.length <= 1) {
-        console.error('至少需要保留一条命令');
+        console.error(t('op.keepOneCommand', {}, language));
         continue;
       }
-      const index = await pickCommandIndex(commands, '选择要删除的命令');
+      const index = await pickCommandIndex(
+        commands,
+        t('op.pickDelete', {}, language),
+        language,
+      );
       const yes = await confirm({
-        message: `确认删除第 ${index + 1}/${commands.length} 条命令？`,
+        message: t('op.confirmDeleteCommand', {
+          index: index + 1,
+          total: commands.length,
+        }, language),
         initialValue: false,
       });
-      if (exitIfCanceled<boolean>(yes)) {
+      if (exitIfCanceled<boolean>(yes, language)) {
         commands.splice(index, 1);
       }
     }
@@ -135,75 +162,84 @@ export async function editCommandChain(
 
 export async function promptNewOperationName(
   commands: ToolCommands,
-  message = '操作名称',
+  language: Language,
+  message = t('op.namePrompt', {}, language),
 ): Promise<string> {
   const existing = new Set(listConfiguredOps(commands));
   const value = await text({
     message,
     validate(v) {
       if (typeof v !== 'string' || v.trim().length === 0) {
-        return '操作名称不能为空';
+        return t('op.nameRequired', {}, language);
       }
       const op = v.trim();
       if (existing.has(op)) {
-        return `操作 "${op}" 已配置过`;
+        return t('op.exists', { op }, language);
       }
       return undefined;
     },
   });
-  return exitIfCanceled<string>(value).trim();
+  return exitIfCanceled<string>(value, language).trim();
 }
 
 export async function promptRenameOperationName(
   commands: ToolCommands,
   oldName: string,
+  language: Language,
 ): Promise<string> {
   const existing = new Set(listConfiguredOps(commands).filter((op) => op !== oldName));
   const value = await text({
-    message: `将 "${oldName}" 重命名为`,
+    message: t('op.renamePrompt', { oldName }, language),
     defaultValue: oldName,
     validate(v) {
       if (typeof v !== 'string' || v.trim().length === 0) {
-        return '操作名称不能为空';
+        return t('op.nameRequired', {}, language);
       }
       const op = v.trim();
       if (op === oldName) {
-        return '新操作名不能与原操作名相同';
+        return t('op.sameName', {}, language);
       }
       if (existing.has(op)) {
-        return `操作 "${op}" 已配置过`;
+        return t('op.exists', { op }, language);
       }
       return undefined;
     },
   });
-  return exitIfCanceled<string>(value).trim();
+  return exitIfCanceled<string>(value, language).trim();
 }
 
 export async function manageCommandsForNewTool(
   commands: ToolCommands,
+  language: Language,
 ): Promise<void> {
   while (true) {
     const ops = listConfiguredOps(commands);
     const selected = await select({
-      message: ops.length === 0 ? '配置操作（当前暂无已配置操作）' : '配置操作',
+      message: ops.length === 0
+        ? t('op.configureEmpty', {}, language)
+        : t('op.configure', {}, language),
       options: [
         ...ops.map((op) => ({
           value: `op:${op}`,
-          label: formatOpPreview(op, commands[op]!),
+          label: formatOpPreview(op, commands[op]!, language),
         })),
-        { value: 'add', label: '[+ 添加新操作]' },
-        { value: 'done', label: '[完成 →]' },
+        { value: 'add', label: t('op.addNew', {}, language) },
+        { value: 'done', label: t('op.doneArrow', {}, language) },
       ],
     });
-    const choice = exitIfCanceled<string>(selected);
+    const choice = exitIfCanceled<string>(selected, language);
     if (choice === 'done') return;
     if (choice === 'add') {
-      const op = await promptNewOperationName(commands, '操作名称（如 install、docs）');
-      commands[op] = await editCommandChain(undefined, op);
+      const op = await promptNewOperationName(
+        commands,
+        language,
+        t('op.nameExample', {}, language),
+      );
+      commands[op] = await editCommandChain(undefined, op, language);
       continue;
     }
 
     const op = choice.slice('op:'.length);
-    commands[op] = await editCommandChain(commands[op], op);
+    commands[op] = await editCommandChain(commands[op], op, language);
   }
 }

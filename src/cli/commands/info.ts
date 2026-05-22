@@ -9,44 +9,54 @@
 
 import { defineCommand } from 'citty';
 
+import { loadAppConfig } from '../../config/reader.js';
 import { loadRegistry } from '../../core/registry.js';
 import { suggestToolId } from '../../utils/fuzzy.js';
+import { t } from '../../i18n.js';
 
 export default defineCommand({
   meta: {
     name: 'info',
-    description: '查看某个工具的详细信息',
+    description: t('info.description'),
   },
   args: {
     'tool-id': {
       type: 'positional',
-      description: '工具 ID',
+      description: t('cli.toolId.description'),
       required: true,
     },
   },
   async run({ args }) {
     const toolId = String(args['tool-id']);
-    const registry = await loadRegistry();
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
+    const registry = await loadRegistry({ appConfig });
     const tool = registry.findById(toolId);
 
     if (tool === undefined) {
       const candidates = registry.list().map((t) => t.id);
       const hint = suggestToolId(toolId, candidates);
-      console.error(`找不到工具 "${toolId}"`);
+      console.error(t('cli.notFound.tool', { toolId }, language));
       if (hint !== undefined) {
-        console.error(`你是否想要：${hint}？`);
+        console.error(t('cli.notFound.hint', { hint }, language));
       }
-      console.error('运行 fastcli list 查看所有工具');
+      console.error(t('cli.notFound.listHint', {}, language));
       process.exit(1);
     }
 
     // 基本信息
     console.log(`ID:          ${tool.id}`);
-    console.log(`名称:        ${tool.name}`);
-    console.log(`描述:        ${tool.description ?? '（无）'}`);
-    console.log(`来源:        ${tool.source === 'builtin' ? '内置' : '自定义'}`);
+    console.log(t('info.name', { name: tool.name }, language));
+    console.log(t('info.desc', {
+      description: tool.description ?? t('common.none', {}, language),
+    }, language));
+    console.log(t('info.source', {
+      source: tool.source === 'builtin'
+        ? t('common.builtin', {}, language)
+        : t('common.user', {}, language),
+    }, language));
     if (tool.tags && tool.tags.length > 0) {
-      console.log(`标签:        ${tool.tags.join(', ')}`);
+      console.log(t('info.tags', { tags: tool.tags.join(', ') }, language));
     }
 
     // 操作明细：仅列出值不为 undefined 的键，按字母序
@@ -55,9 +65,9 @@ export default defineCommand({
       .sort(([a], [b]) => a.localeCompare(b));
 
     console.log('');
-    console.log('操作:');
+    console.log(t('info.ops', {}, language));
     if (ops.length === 0) {
-      console.log('  （无）');
+      console.log(`  ${t('common.none', {}, language)}`);
     } else {
       for (const [op, commands] of ops) {
         console.log(`  ${op}:`);

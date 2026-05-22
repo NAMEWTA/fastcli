@@ -28,6 +28,7 @@ const APP_CONFIG_VOLTA: AppConfig = {
   editor: '',
   confirmBeforeRun: true,
   firstRun: false,
+  language: 'en',
 };
 
 const APP_CONFIG_NPM: AppConfig = {
@@ -57,10 +58,18 @@ describe('loadRegistry - 合并语义', () => {
     });
 
     const all = registry.list();
-    // 5 个 builtin + 1 个 user = 6
-    expect(all).toHaveLength(6);
+    // 6 个 builtin + 1 个 user = 7
+    expect(all).toHaveLength(7);
     expect(all.map((t) => t.id).sort()).toEqual(
-      ['aider', 'claude', 'codex', 'copilot', 'gemini', 'opencode'].sort(),
+      [
+        'aider',
+        'claude',
+        'codex',
+        'copilot',
+        'gemini',
+        'opencode',
+        'pi-coding-agent',
+      ].sort(),
     );
   });
 
@@ -128,7 +137,7 @@ describe('loadRegistry - source 过滤', () => {
     });
 
     const builtin = registry.list({ source: 'builtin' });
-    expect(builtin).toHaveLength(5);
+    expect(builtin).toHaveLength(6);
     expect(builtin.every((t) => t.source === 'builtin')).toBe(true);
   });
 
@@ -164,9 +173,9 @@ describe('loadRegistry - tag 过滤', () => {
       toolsFile: { version: '2', tools: [userTool] },
     });
 
-    // 'coding' 是所有 5 个 builtin + aider 都拥有的 tag
+    // 'coding' 是所有 6 个 builtin + aider 都拥有的 tag
     const coding = registry.list({ tag: 'coding' });
-    expect(coding).toHaveLength(6);
+    expect(coding).toHaveLength(7);
 
     // 'python' 仅 aider 拥有
     const python = registry.list({ tag: 'python' });

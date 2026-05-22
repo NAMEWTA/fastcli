@@ -27,6 +27,7 @@ beforeEach(async () => {
         editor: '',
         confirmBeforeRun: false,
         firstRun: false,
+        language: 'en',
       },
       null,
       2,
@@ -114,7 +115,7 @@ describe('web API tools', () => {
     });
     expect(res.status).toBe(409);
     await expect(res.json()).resolves.toMatchObject({
-      message: '内置工具不可修改',
+      message: 'Builtin tools cannot be modified',
     });
   });
 
@@ -147,6 +148,53 @@ describe('web API tools', () => {
     const body = await res.json() as { etag?: string; tools?: unknown };
     expect(body.etag).toBeTruthy();
     expect(body.tools).toBeTruthy();
+  });
+});
+
+describe('web API config language', () => {
+  it('GET /api/config 返回 language', async () => {
+    const res = await request(`/api/config?token=${TOKEN}`);
+    expect(res.status).toBe(200);
+    const body = await res.json() as { config: { language?: string } };
+    expect(body.config.language).toBe('en');
+  });
+
+  it('PUT /api/config 接受有效 language', async () => {
+    const current = await request(`/api/config?token=${TOKEN}`);
+    const etag = current.headers.get('ETag')!;
+
+    const res = await request('/api/config', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        'If-Match': etag,
+      },
+      body: JSON.stringify({ language: 'zh-CN' }),
+    });
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({
+      config: { language: 'zh-CN' },
+    });
+  });
+
+  it('PUT /api/config 拒绝无效 language', async () => {
+    const current = await request(`/api/config?token=${TOKEN}`);
+    const etag = current.headers.get('ETag')!;
+
+    const res = await request('/api/config', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        'If-Match': etag,
+      },
+      body: JSON.stringify({ language: 'fr' }),
+    });
+
+    expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toMatchObject({
+      message: 'language must be en or zh-CN',
+    });
   });
 });
 

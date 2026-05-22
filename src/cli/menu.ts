@@ -30,6 +30,7 @@ import {
   printCommandList,
 } from '../core/executor.js';
 import type { ToolEntry } from '../config/schema.js';
+import { t, type Language } from '../i18n.js';
 
 /** 菜单中描述截断字符宽度。 */
 const DESC_TRUNC = 40;
@@ -55,9 +56,9 @@ function listOps(tool: ToolEntry): string[] {
   return [...priority, ...rest];
 }
 
-function exitIfCanceled<T>(value: T | symbol): T {
+function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   if (isCancel(value)) {
-    cancel('已取消');
+    cancel(t('common.cancelled', {}, language));
     process.exit(130);
   }
   return value;
@@ -71,7 +72,10 @@ function exitIfCanceled<T>(value: T | symbol): T {
  * 改进版：直接把分组拼接成单一 options 列表，分组之间用 label 标识但
  * 不可选；用户选完后我们用 toolId 反查工具。
  */
-async function pickTool(registry: Registry): Promise<ToolEntry | null> {
+async function pickTool(
+  registry: Registry,
+  language: Language,
+): Promise<ToolEntry | null> {
   const builtin = registry
     .list({ source: 'builtin' })
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -80,7 +84,7 @@ async function pickTool(registry: Registry): Promise<ToolEntry | null> {
     .sort((a, b) => a.name.localeCompare(b.name));
 
   if (builtin.length === 0 && user.length === 0) {
-    log.warn('当前没有任何工具，可运行 `fastcli add` 添加');
+    log.warn(t('menu.noTools', {}, language));
     return null;
   }
 
@@ -90,15 +94,18 @@ async function pickTool(registry: Registry): Promise<ToolEntry | null> {
   if (builtin.length > 0) {
     options.push({
       value: '__builtin_header',
-      label: '── 内置工具 ──',
-      hint: '（分组标题）',
+      label: `── ${t('common.builtinTools', {}, language)} ──`,
+      hint: t('menu.headerHint', {}, language),
     });
-    for (const t of builtin) {
-      const ops = Object.values(t.commands).filter((v) => v !== undefined).length;
+    for (const tool of builtin) {
+      const ops = Object.values(tool.commands).filter((v) => v !== undefined).length;
       options.push({
-        value: t.id,
-        label: `${t.name}（${t.id}）`,
-        hint: `${truncate(t.description, DESC_TRUNC)}  · 已配置 ${ops} 个操作`,
+        value: tool.id,
+        label: `${tool.name} (${tool.id})`,
+        hint: t('menu.configuredOpsHint', {
+          desc: truncate(tool.description, DESC_TRUNC),
+          count: ops,
+        }, language),
       });
     }
   }
@@ -106,25 +113,28 @@ async function pickTool(registry: Registry): Promise<ToolEntry | null> {
   if (user.length > 0) {
     options.push({
       value: '__user_header',
-      label: '── 自定义工具 ──',
-      hint: '（分组标题）',
+      label: `── ${t('common.userTools', {}, language)} ──`,
+      hint: t('menu.headerHint', {}, language),
     });
-    for (const t of user) {
-      const ops = Object.values(t.commands).filter((v) => v !== undefined).length;
+    for (const tool of user) {
+      const ops = Object.values(tool.commands).filter((v) => v !== undefined).length;
       options.push({
-        value: t.id,
-        label: `${t.name}（${t.id}）`,
-        hint: `${truncate(t.description, DESC_TRUNC)}  · 已配置 ${ops} 个操作`,
+        value: tool.id,
+        label: `${tool.name} (${tool.id})`,
+        hint: t('menu.configuredOpsHint', {
+          desc: truncate(tool.description, DESC_TRUNC),
+          count: ops,
+        }, language),
       });
     }
   }
 
   while (true) {
     const ans = await select({
-      message: '选择工具',
+      message: t('menu.pickTool', {}, language),
       options,
     });
-    const choice = exitIfCanceled<string>(ans);
+    const choice = exitIfCanceled<string>(ans, language);
     if (choice === '__builtin_header' || choice === '__user_header') {
       // 分组标题不可选；继续询问
       continue;
@@ -134,10 +144,10 @@ async function pickTool(registry: Registry): Promise<ToolEntry | null> {
 }
 
 /** 选择操作；返回 op name 或 null（用户取消返回上一层）。 */
-async function pickOp(tool: ToolEntry): Promise<string | null> {
+async function pickOp(tool: ToolEntry, language: Language): Promise<string | null> {
   const ops = listOps(tool);
   if (ops.length === 0) {
-    log.warn('该工具尚未配置任何操作');
+    log.warn(t('menu.noOps', {}, language));
     return null;
   }
   const options = ops.map((op) => ({
@@ -145,8 +155,8 @@ async function pickOp(tool: ToolEntry): Promise<string | null> {
     label: op,
     hint: truncate(tool.commands[op]?.[0], HINT_TRUNC),
   }));
-  const ans = await select({ message: '选择操作', options });
-  return exitIfCanceled<string>(ans);
+  const ans = await select({ message: t('menu.pickOp', {}, language), options });
+  return exitIfCanceled<string>(ans, language);
 }
 
 /** 主菜单循环。 */
@@ -154,17 +164,18 @@ export async function runInteractiveMenu(): Promise<void> {
   intro('fastcli');
 
   const appConfig = await loadAppConfig();
+  const language = appConfig.language;
   const registry = await loadRegistry({ appConfig });
 
   // 主循环：选工具 → 选操作 → 执行 → 回到选工具
   while (true) {
-    const tool = await pickTool(registry);
+    const tool = await pickTool(registry, language);
     if (tool === null) {
-      outro('再见');
+      outro(t('menu.goodbye', {}, language));
       return;
     }
 
-    const op = await pickOp(tool);
+    const op = await pickOp(tool, language);
     if (op === null) {
       // 操作未配置：回到选工具
       continue;
@@ -172,22 +183,22 @@ export async function runInteractiveMenu(): Promise<void> {
 
     let resolved = resolveCommand(tool, op);
     if (resolved.kind === 'unconfigured') {
-      log.warn(`工具 "${tool.id}" 未配置 "${op}" 操作`);
+      log.warn(t('run.unconfigured', { toolId: tool.id, op }, language));
       continue;
     }
 
     // {{version}} 占位符：交互模式下询问
     if (resolved.commands.some((command) => command.includes('{{version}}'))) {
       const v = await text({
-        message: '请输入版本号（用于 {{version}}）',
+        message: t('menu.versionPrompt', {}, language),
         validate(value) {
           if (typeof value !== 'string' || value.length === 0) {
-            return '版本号不能为空';
+            return t('run.versionEmpty', {}, language);
           }
           return undefined;
         },
       });
-      const version = exitIfCanceled<string>(v);
+      const version = exitIfCanceled<string>(v, language);
       resolved = resolveCommand(tool, op, { version });
       if (resolved.kind === 'unconfigured') continue;
     }
@@ -196,33 +207,37 @@ export async function runInteractiveMenu(): Promise<void> {
 
     if (appConfig.confirmBeforeRun) {
       const yes = await confirm({
-        message: '确认执行以上命令链？',
+        message: t('run.confirmChain', {}, language),
         initialValue: true,
       });
-      if (!exitIfCanceled<boolean>(yes)) {
+      if (!exitIfCanceled<boolean>(yes, language)) {
         // 拒绝执行：回到选工具
         continue;
       }
     }
 
-    const result = await executeCommandChain(resolved.commands);
+    const result = await executeCommandChain(resolved.commands, { language });
     if (result.success) {
-      log.success(`执行完成（退出码 ${result.code}）`);
+      log.success(t('menu.success', { code: result.code }, language));
     } else {
       if (result.failedStep !== undefined) {
         console.error(
-          `命令链在第 ${result.failedStep}/${result.totalSteps} 步失败（退出码 ${result.code}）`,
+          t('run.chainFailed', {
+            step: result.failedStep,
+            total: result.totalSteps,
+            code: result.code,
+          }, language),
         );
       }
-      log.error(`执行失败（退出码 ${result.code}）`);
+      log.error(t('menu.failure', { code: result.code }, language));
     }
 
     // 按回车返回菜单
     const cont = await text({
-      message: '按回车返回菜单（Ctrl+C 退出）',
+      message: t('menu.returnPrompt', {}, language),
       placeholder: '',
       defaultValue: '',
     });
-    exitIfCanceled<string>(cont);
+    exitIfCanceled<string>(cont, language);
   }
 }

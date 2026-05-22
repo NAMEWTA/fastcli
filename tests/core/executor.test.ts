@@ -149,7 +149,7 @@ describe('executeCommand - 退出码透传', () => {
 });
 
 describe('executeCommand - ENOENT 友好错误', () => {
-  it('spawn 抛 ENOENT → 输出「命令未找到：<bin>」并返回 code 127', async () => {
+  it('spawn 抛 ENOENT → 输出 command not found 并返回 code 127', async () => {
     const child = new FakeChild();
     const spawnMock = vi.fn(() => child as never);
     const promise = executeCommand('volta install foo', {
@@ -161,7 +161,7 @@ describe('executeCommand - ENOENT 友好错误', () => {
 
     expect(result).toEqual({ success: false, code: 127, signal: null });
     const errored = errorSpy.mock.calls.map((c) => String(c[0])).join('\n');
-    expect(errored).toContain('命令未找到：volta');
+    expect(errored).toContain('Command not found: volta');
   });
 
   it('其它 spawn error → 返回 code 1 且打印错误', async () => {

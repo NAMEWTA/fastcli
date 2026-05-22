@@ -18,8 +18,10 @@
 
 import { defineCommand } from 'citty';
 
+import { loadAppConfig } from '../../config/reader.js';
 import { loadRegistry } from '../../core/registry.js';
 import type { ToolEntry } from '../../config/schema.js';
+import { t, type Language } from '../../i18n.js';
 
 /** 描述截断字符宽度（PRD §6.1 提到 ~40 字符）。 */
 const DESC_TRUNC = 40;
@@ -37,10 +39,10 @@ function countOps(tool: ToolEntry): number {
 }
 
 /** 把单个工具格式化成一行。 */
-function formatLine(tool: ToolEntry): string {
+function formatLine(tool: ToolEntry, language: Language): string {
   const desc = truncate(tool.description, DESC_TRUNC);
   const ops = countOps(tool);
-  return `  ${tool.id}  ${tool.name}  ${desc}  已配置 ${ops} 个操作`;
+  return `  ${tool.id}  ${tool.name}  ${desc}  ${t('list.configuredOps', { count: ops }, language)}`;
 }
 
 /** 校验 `--source` 取值；无效时返回 undefined（视为不过滤）。 */
@@ -52,25 +54,27 @@ function parseSource(input: unknown): 'builtin' | 'user' | undefined {
 export default defineCommand({
   meta: {
     name: 'list',
-    description: '列出所有工具（builtin + user）',
+    description: t('list.description'),
   },
   args: {
     source: {
       type: 'string',
-      description: '仅列出某个来源（builtin | user）',
+      description: t('list.source.description'),
     },
     tag: {
       type: 'string',
-      description: '仅列出包含该 tag 的工具',
+      description: t('list.tag.description'),
     },
   },
   async run({ args }) {
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
     const source = parseSource(args.source);
     const tag = typeof args.tag === 'string' && args.tag.length > 0
       ? args.tag
       : undefined;
 
-    const registry = await loadRegistry();
+    const registry = await loadRegistry({ appConfig });
     const filtered = registry.list({ source, tag });
 
     // 分组：仅在没指定 source 或 source === 'builtin' 时输出 builtin 段；
@@ -87,11 +91,11 @@ export default defineCommand({
     const showUser = source === undefined || source === 'user';
 
     if (showBuiltin) {
-      console.log('── 内置工具 ──');
+      console.log(`── ${t('common.builtinTools', {}, language)} ──`);
       if (builtin.length === 0) {
-        console.log('  （无）');
+        console.log(`  ${t('common.none', {}, language)}`);
       } else {
-        for (const tool of builtin) console.log(formatLine(tool));
+        for (const tool of builtin) console.log(formatLine(tool, language));
       }
     }
 
@@ -101,11 +105,11 @@ export default defineCommand({
     }
 
     if (showUser) {
-      console.log('── 自定义工具 ──');
+      console.log(`── ${t('common.userTools', {}, language)} ──`);
       if (user.length === 0) {
-        console.log('  （无）');
+        console.log(`  ${t('common.none', {}, language)}`);
       } else {
-        for (const tool of user) console.log(formatLine(tool));
+        for (const tool of user) console.log(formatLine(tool, language));
       }
     }
   },

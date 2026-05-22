@@ -35,6 +35,7 @@ beforeEach(async () => {
     editor: '',
     confirmBeforeRun: false,
     firstRun: false,
+    language: 'en',
   };
   await fs.writeFile(
     path.join(tmpDir, 'config.json'),
@@ -87,14 +88,25 @@ describe('fastcli list - 默认输出', () => {
   it('包含全部 5 个 builtin 与 1 个 user', async () => {
     const r = await runCli(['list']);
     expect(r.code).toBe(0);
-    expect(r.stdout).toContain('内置工具');
+    expect(r.stdout).toContain('Builtin tools');
     expect(r.stdout).toContain('claude');
     expect(r.stdout).toContain('codex');
     expect(r.stdout).toContain('gemini');
     expect(r.stdout).toContain('copilot');
     expect(r.stdout).toContain('opencode');
-    expect(r.stdout).toContain('自定义工具');
+    expect(r.stdout).toContain('Custom tools');
     expect(r.stdout).toContain('aider');
+  });
+
+  it('language=zh-CN 时输出中文分组', async () => {
+    const raw = JSON.parse(await fs.readFile(path.join(tmpDir, 'config.json'), 'utf8'));
+    raw.language = 'zh-CN';
+    await fs.writeFile(path.join(tmpDir, 'config.json'), JSON.stringify(raw, null, 2), 'utf8');
+
+    const r = await runCli(['list']);
+    expect(r.code).toBe(0);
+    expect(r.stdout).toContain('内置工具');
+    expect(r.stdout).toContain('自定义工具');
   });
 });
 

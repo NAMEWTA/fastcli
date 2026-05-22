@@ -32,6 +32,7 @@ import runCommand from './cli/commands/run.js';
 import webCommand from './cli/commands/web.js';
 import { runFirstRunIfNeeded } from './cli/first-run.js';
 import { runInteractiveMenu } from './cli/menu.js';
+import { t } from './i18n.js';
 
 /** 从 package.json 读取版本号；编译产物在 dist/，源 package.json 在 ../package.json。 */
 function readPackageVersion(): string {
@@ -46,7 +47,7 @@ const main = defineCommand({
   meta: {
     name: 'fastcli',
     version: readPackageVersion(),
-    description: '统一管理 AI CLI 工具的命令行管家',
+    description: t('cli.main.description'),
   },
   subCommands: {
     run: runCommand,
@@ -83,15 +84,15 @@ try {
 } catch (err) {
   if (err instanceof ConfigCorruptError) {
     console.error(err.message);
-    if (err.message !== `配置文件损坏：${err.path}`) {
-      console.error(`文件位置：${err.path}`);
+    if (err.message !== t('reader.corrupt', { path: err.path })) {
+      console.error(t('reader.filePath', { path: err.path }));
     }
-    console.error('建议：运行 `fastcli config edit` 修复，或检查文件 JSON 是否合法。');
+    console.error(t('reader.fixHint'));
     process.exit(1);
   }
   if (err instanceof ConfigVersionTooNewError) {
-    console.error(`配置文件版本过新（${err.version}），请升级 fastcli。`);
-    console.error(`文件位置：${err.path}`);
+    console.error(t('reader.upgradeFastcli', { version: err.version }));
+    console.error(t('reader.filePath', { path: err.path }));
     process.exit(1);
   }
   throw err;

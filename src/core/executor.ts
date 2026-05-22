@@ -39,6 +39,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import type { ExecResult } from '../config/schema.js';
+import { t, type Language } from '../i18n.js';
 
 /**
  * {@link executeCommand} 的可选项。
@@ -53,6 +54,8 @@ export interface ExecuteOptions {
   dryRun?: boolean;
   /** 注入 spawn 实现以便测试。默认使用 node:child_process.spawn。 */
   spawnImpl?: typeof nodeSpawn;
+  /** UI language for executor diagnostics. */
+  language?: Language;
 }
 
 export interface ExecuteChainResult extends ExecResult {
@@ -237,6 +240,7 @@ export async function executeCommand(
   command: string,
   opts: ExecuteOptions = {},
 ): Promise<ExecResult> {
+  const language = opts.language ?? 'en';
   // Requirement 7.1：在任何 spawn 触发前打印命令；dry-run 也打印。
   console.log(`$ ${command}`);
 
@@ -265,11 +269,11 @@ export async function executeCommand(
       const code = (err as NodeJS.ErrnoException).code;
       if (code === 'ENOENT') {
         const bin = extractBinary(command);
-        console.error(`命令未找到：${bin}`);
+        console.error(t('executor.commandNotFound', { bin }, language));
         settle({ success: false, code: 127, signal: null });
         return;
       }
-      console.error(`执行失败：${err.message}`);
+      console.error(t('executor.failed', { message: err.message }, language));
       settle({ success: false, code: 1, signal: null });
     });
 
@@ -303,6 +307,7 @@ export async function executeCommandChain(
   commands: string[],
   opts: ExecuteOptions = {},
 ): Promise<ExecuteChainResult> {
+  const language = opts.language ?? 'en';
   if (commands.length === 0) {
     return { success: true, code: 0, signal: null, totalSteps: 0 };
   }
@@ -335,11 +340,11 @@ export async function executeCommandChain(
       const code = (err as NodeJS.ErrnoException).code;
       if (code === 'ENOENT') {
         const bin = extractBinary(command);
-        console.error(`命令未找到：${bin}`);
+        console.error(t('executor.commandNotFound', { bin }, language));
         settle({ success: false, code: 127, signal: null });
         return;
       }
-      console.error(`执行失败：${err.message}`);
+      console.error(t('executor.failed', { message: err.message }, language));
       settle({ success: false, code: 1, signal: null });
     });
 

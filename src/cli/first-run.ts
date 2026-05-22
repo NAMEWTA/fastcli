@@ -25,6 +25,7 @@ import {
   DEFAULT_APP_CONFIG,
   DEFAULT_TOOLS_FILE,
 } from '../config/schema.js';
+import { t, type Language } from '../i18n.js';
 
 async function fileExists(path: string): Promise<boolean> {
   try {
@@ -35,9 +36,9 @@ async function fileExists(path: string): Promise<boolean> {
   }
 }
 
-function exitIfCanceled<T>(value: T | symbol): T {
+function exitIfCanceled<T>(value: T | symbol, language: Language): T {
   if (isCancel(value)) {
-    cancel('已取消');
+    cancel(t('common.cancelled', {}, language));
     process.exit(130);
   }
   return value;
@@ -56,26 +57,28 @@ function exitIfCanceled<T>(value: T | symbol): T {
 export async function runFirstRunIfNeeded(): Promise<void> {
   const configPath = getAppConfigPath();
   const hasConfig = await fileExists(configPath);
+  let language: Language = DEFAULT_APP_CONFIG.language;
 
   // 已存在的配置先尝试读取；只有当 `firstRun === true` 才进入引导。
   if (hasConfig) {
     const cfg = await loadAppConfig();
+    language = cfg.language;
     if (cfg.firstRun !== true) {
       return;
     }
   }
 
-  intro('欢迎使用 fastcli');
+  intro(t('firstRun.intro', {}, language));
 
   const pm = await select({
-    message: '请选择你常用的包管理器',
+    message: t('firstRun.pmPrompt', {}, language),
     options: [
-      { value: 'volta', label: 'volta（推荐）' },
+      { value: 'volta', label: t('firstRun.voltaRecommended', {}, language) },
       { value: 'npm', label: 'npm' },
     ],
     initialValue: 'volta',
   });
-  const pmChoice = exitIfCanceled<string>(pm) as 'volta' | 'npm';
+  const pmChoice = exitIfCanceled<string>(pm, language) as 'volta' | 'npm';
 
   // 写 config.json：默认值 + 用户选择 + firstRun=false
   const newConfig = {
@@ -91,5 +94,5 @@ export async function runFirstRunIfNeeded(): Promise<void> {
     await saveToolsFile(DEFAULT_TOOLS_FILE);
   }
 
-  outro('初始化完成');
+  outro(t('firstRun.done', {}, language));
 }

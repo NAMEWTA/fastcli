@@ -29,6 +29,7 @@ import {
   printCommandList,
 } from '../../core/executor.js';
 import { suggestToolId } from '../../utils/fuzzy.js';
+import { t, type Language } from '../../i18n.js';
 
 /** 命令字符串中是否含 `{{version}}`。 */
 function needsVersion(commands: readonly string[]): boolean {
@@ -39,7 +40,11 @@ function needsVersion(commands: readonly string[]): boolean {
  * 把 clack 的取消符号视为「用户主动放弃」：以退出码 130 退出。
  * 同时让类型变窄为 string，方便后续用作变量值。
  */
-function exitIfCanceled<T>(value: T | symbol, message = '已取消'): T {
+function exitIfCanceled<T>(
+  value: T | symbol,
+  language: Language,
+  message = t('common.cancelled', {}, language),
+): T {
   if (isCancel(value)) {
     console.error(message);
     process.exit(130);
@@ -50,27 +55,27 @@ function exitIfCanceled<T>(value: T | symbol, message = '已取消'): T {
 export default defineCommand({
   meta: {
     name: 'run',
-    description: '运行某个工具的某个操作',
+    description: t('run.description'),
   },
   args: {
     'tool-id': {
       type: 'positional',
-      description: '工具 ID',
+      description: t('cli.toolId.description'),
       required: true,
     },
     op: {
       type: 'positional',
-      description: '操作名（如 install / update / uninstall）',
+      description: t('run.op.description'),
       required: true,
     },
     'dry-run': {
       type: 'boolean',
-      description: '仅打印命令而不实际执行',
+      description: t('run.dryRun.description'),
       default: false,
     },
     version: {
       type: 'string',
-      description: '透传到 {{version}} 占位符的版本号',
+      description: t('run.version.description'),
     },
   },
   async run({ args }) {
@@ -82,6 +87,7 @@ export default defineCommand({
       : undefined;
 
     const appConfig = await loadAppConfig();
+    const language = appConfig.language;
     const registry = await loadRegistry({ appConfig });
 
     // 1. 查工具
@@ -89,11 +95,11 @@ export default defineCommand({
     if (tool === undefined) {
       const candidates = registry.list().map((t) => t.id);
       const hint = suggestToolId(toolId, candidates);
-      console.error(`找不到工具 "${toolId}"`);
+      console.error(t('cli.notFound.tool', { toolId }, language));
       if (hint !== undefined) {
-        console.error(`你是否想要：${hint}？`);
+        console.error(t('cli.notFound.hint', { hint }, language));
       }
-      console.error('运行 fastcli list 查看所有工具');
+      console.error(t('cli.notFound.listHint', {}, language));
       process.exit(1);
     }
 
@@ -101,11 +107,11 @@ export default defineCommand({
     let resolved = resolveCommand(tool, op, { version: cliVersion });
     if (resolved.kind === 'unconfigured') {
       const opsList = resolved.availableOps.join(', ');
-      console.error(`工具 "${tool.id}" 未配置 "${op}" 操作`);
+      console.error(t('run.unconfigured', { toolId: tool.id, op }, language));
       if (opsList.length > 0) {
-        console.error(`该工具已配置的操作：${opsList}`);
+        console.error(t('run.availableOps', { ops: opsList }, language));
       } else {
-        console.error('该工具尚未配置任何操作');
+        console.error(t('run.noOps', {}, language));
       }
       process.exit(1);
     }
@@ -113,25 +119,23 @@ export default defineCommand({
     // 3. {{version}} 处理
     if (needsVersion(resolved.commands) && cliVersion === undefined) {
       if (!process.stdin.isTTY) {
-        console.error(
-          `命令包含 {{version}} 占位符，请通过 --version=<v> 提供版本号`,
-        );
+        console.error(t('run.versionRequired', {}, language));
         process.exit(1);
       }
       const input = await text({
-        message: `请输入版本号（用于 {{version}} 占位符）`,
+        message: t('run.versionPrompt', {}, language),
         validate(v) {
           if (typeof v !== 'string' || v.length === 0) {
-            return '版本号不能为空';
+            return t('run.versionEmpty', {}, language);
           }
           return undefined;
         },
       });
-      const version = exitIfCanceled<string>(input);
+      const version = exitIfCanceled<string>(input, language);
       resolved = resolveCommand(tool, op, { version });
       // 仍需校验仍可能落入 unconfigured（理论上不会，因 op 之前已存在）
       if (resolved.kind === 'unconfigured') {
-        console.error(`工具 "${tool.id}" 未配置 "${op}" 操作`);
+        console.error(t('run.unconfigured', { toolId: tool.id, op }, language));
         process.exit(1);
       }
     }
@@ -146,21 +150,25 @@ export default defineCommand({
     // 5. confirmBeforeRun
     if (appConfig.confirmBeforeRun && !dryRun) {
       const ans = await confirm({
-        message: '确认执行以上命令链？',
+        message: t('run.confirmChain', {}, language),
         initialValue: true,
       });
-      const ok = exitIfCanceled<boolean>(ans);
+      const ok = exitIfCanceled<boolean>(ans, language);
       if (!ok) {
-        console.log('已取消执行');
+        console.log(t('run.cancelledExecution', {}, language));
         process.exit(0);
       }
     }
 
     // 6. 执行
-    const result = await executeCommandChain(resolved.commands);
+    const result = await executeCommandChain(resolved.commands, { language });
     if (!result.success && result.failedStep !== undefined) {
       console.error(
-        `命令链在第 ${result.failedStep}/${result.totalSteps} 步失败（退出码 ${result.code}）`,
+        t('run.chainFailed', {
+          step: result.failedStep,
+          total: result.totalSteps,
+          code: result.code,
+        }, language),
       );
     }
 

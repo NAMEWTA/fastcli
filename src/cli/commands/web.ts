@@ -12,6 +12,7 @@ import {
   createWebApp,
   listenOnAvailablePort,
 } from '../../web-server/server.js';
+import { t, type Language } from '../../i18n.js';
 
 function parsePort(value: unknown): number {
   if (typeof value === 'number' && Number.isInteger(value)) return value;
@@ -38,27 +39,29 @@ function waitForShutdown(): Promise<NodeJS.Signals> {
 export default defineCommand({
   meta: {
     name: 'web',
-    description: '启动本地 Web 编辑器',
+    description: t('web.description'),
   },
   args: {
     port: {
       type: 'string',
-      description: '起始端口，默认 3000',
+      description: t('web.port.description'),
     },
     'no-open': {
       type: 'boolean',
-      description: '启动后不自动打开浏览器',
+      description: t('web.noOpen.description'),
       default: false,
     },
   },
   async run({ args }) {
+    let language: Language = 'en';
     try {
-      await loadAppConfig();
+      const appConfig = await loadAppConfig();
+      language = appConfig.language;
       await loadToolsFile();
     } catch (err) {
       if (err instanceof ConfigCorruptError) {
         console.error(
-          `配置文件损坏：${err.path}，请运行 fastcli config edit 修复后再启动 web 编辑器`,
+          t('web.configCorrupt', { path: err.path }, language),
         );
         process.exit(1);
       }
@@ -81,13 +84,13 @@ export default defineCommand({
     }
 
     const url = `http://127.0.0.1:${started.port}?token=${token}`;
-    console.log(`Web 编辑器已启动：${url}`);
+    console.log(t('web.started', { url }, language));
 
     if (args['no-open'] !== true) {
       try {
         await open(url);
       } catch {
-        console.warn(`无法自动打开浏览器，请手动访问：${url}`);
+        console.warn(t('web.openFailed', { url }, language));
       }
     }
 

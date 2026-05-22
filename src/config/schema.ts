@@ -75,6 +75,8 @@ export interface AppConfig {
   confirmBeforeRun: boolean;
   /** 是否首次运行；首次运行引导会把它置为 `false`。 */
   firstRun: boolean;
+  /** 用户界面语言。 */
+  language: Language;
 }
 
 /**
@@ -123,6 +125,7 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   editor: '',
   confirmBeforeRun: true,
   firstRun: true,
+  language: 'en',
 };
 
 /**
@@ -132,3 +135,4 @@ export const DEFAULT_TOOLS_FILE: ToolsFile = {
   version: SCHEMA_VERSION,
   tools: [],
 };
+import type { Language } from '../i18n.js';

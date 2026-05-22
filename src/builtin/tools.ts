@@ -82,4 +82,11 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     npmPackage: 'opencode',
     tags: ['opensource', 'coding'],
   },
+  {
+    id: 'pi-coding-agent',
+    name: 'PI Coding Agent',
+    description: 'PI Coding Agent CLI',
+    npmPackage: '@earendil-works/pi-coding-agent',
+    tags: ['pi', 'coding'],
+  },
 ];

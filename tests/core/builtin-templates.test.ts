@@ -22,14 +22,15 @@ const EXPECTED_BUILTINS: ReadonlyArray<{ id: string; npmPackage: string }> = [
   { id: 'gemini', npmPackage: '@google/gemini-cli' },
   { id: 'copilot', npmPackage: '@github/copilot' },
   { id: 'opencode', npmPackage: 'opencode' },
+  { id: 'pi-coding-agent', npmPackage: '@earendil-works/pi-coding-agent' },
 ];
 
 describe('BUILTIN_TOOLS 元数据', () => {
-  it('内置工具数量恰好为 5', () => {
-    expect(BUILTIN_TOOLS).toHaveLength(5);
+  it('内置工具数量与期望清单一致', () => {
+    expect(BUILTIN_TOOLS).toHaveLength(EXPECTED_BUILTINS.length);
   });
 
-  it('内置工具的 id 集合等于 {claude, codex, gemini, copilot, opencode}', () => {
+  it('内置工具的 id 集合等于期望清单', () => {
     const actualIds = new Set(BUILTIN_TOOLS.map((t) => t.id));
     const expectedIds = new Set(EXPECTED_BUILTINS.map((t) => t.id));
     expect(actualIds).toEqual(expectedIds);

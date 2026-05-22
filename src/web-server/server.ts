@@ -24,6 +24,7 @@ import {
 import { saveAppConfig, saveToolsFile } from '../config/writer.js';
 import { loadRegistry } from '../core/registry.js';
 import { resolveCommand } from '../core/resolver.js';
+import { normalizeLanguage, t, type Language } from '../i18n.js';
 
 const TOOL_ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 
@@ -134,28 +135,28 @@ async function toolsPayload(): Promise<{ builtin: ToolEntry[]; user: ToolEntry[]
   };
 }
 
-function validateCommands(value: unknown): ToolCommands | string {
+function validateCommands(value: unknown, language: Language): ToolCommands | string {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-    return 'commands 必须是对象';
+    return t('api.commandsObject', {}, language);
   }
   const entries = Object.entries(value as Record<string, unknown>);
   if (entries.length === 0) {
-    return 'commands 至少需要一个操作';
+    return t('api.commandsRequired', {}, language);
   }
   const commands: ToolCommands = {};
   for (const [op, chain] of entries) {
     if (op.trim().length === 0) {
-      return 'commands 包含空操作名';
+      return t('api.emptyOperation', {}, language);
     }
     if (!Array.isArray(chain)) {
-      return `commands.${op} 必须是字符串数组`;
+      return t('api.commandArray', { op }, language);
     }
     if (chain.length < 1) {
-      return `commands.${op} 至少需要一条命令`;
+      return t('api.commandRequired', { op }, language);
     }
     for (const item of chain) {
       if (typeof item !== 'string' || item.trim().length === 0) {
-        return `commands.${op} 只能包含非空字符串`;
+        return t('api.commandNonEmpty', { op }, language);
       }
     }
     commands[op] = chain.map((item) => item.trim());
@@ -165,22 +166,23 @@ function validateCommands(value: unknown): ToolCommands | string {
 
 function validateToolInput(
   body: unknown,
+  language: Language,
   expectedId?: string,
 ): ValidatedToolInput | string {
   if (typeof body !== 'object' || body === null || Array.isArray(body)) {
-    return '请求体必须是对象';
+    return t('common.invalidBody', {}, language);
   }
   const obj = body as Record<string, unknown>;
   if (typeof obj.id !== 'string' || !TOOL_ID_RE.test(obj.id)) {
-    return 'id 必须匹配 ^[a-z0-9][a-z0-9-]*$';
+    return t('api.idInvalid', {}, language);
   }
   if (expectedId !== undefined && obj.id !== expectedId) {
-    return '请求体 id 必须与路径 id 一致';
+    return t('api.pathIdMismatch', {}, language);
   }
   if (typeof obj.name !== 'string' || obj.name.trim().length === 0) {
-    return 'name 不能为空';
+    return t('api.nameRequired', {}, language);
   }
-  const commands = validateCommands(obj.commands);
+  const commands = validateCommands(obj.commands, language);
   if (typeof commands === 'string') return commands;
 
   const tags = Array.isArray(obj.tags)
@@ -202,14 +204,18 @@ function latestToolsConflictPayload(etag: string) {
   return toolsPayload().then((tools) => ({ etag, tools }));
 }
 
-function ensureIfMatch(req: Request, res: Response): string | undefined {
+function ensureIfMatch(
+  req: Request,
+  res: Response,
+  language: Language,
+): string | undefined {
   const ifMatch = req.header('if-match');
   if (ifMatch === undefined || ifMatch.length === 0) {
     sendError(
       res,
       428,
       'precondition_required',
-      '缺少 If-Match 头',
+      t('api.ifMatchRequired', {}, language),
     );
     return undefined;
   }
@@ -222,7 +228,7 @@ export function createWebApp(options: WebServerOptions): express.Express {
 
   app.use('/api', (req, res, next) => {
     if (!isLocalRequest(req)) {
-      sendError(res, 403, 'forbidden', '仅允许 127.0.0.1 访问');
+      sendError(res, 403, 'forbidden', t('api.localOnly'));
       return;
     }
     if (tokenFromRequest(req) !== options.token) {
@@ -239,10 +245,12 @@ export function createWebApp(options: WebServerOptions): express.Express {
   }));
 
   app.get('/api/tools/:id', asyncRoute(async (req, res) => {
-    const registry = await loadRegistry();
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
+    const registry = await loadRegistry({ appConfig });
     const tool = registry.findById(req.params.id);
     if (tool === undefined) {
-      sendError(res, 404, 'not_found', `找不到工具 "${req.params.id}"`);
+      sendError(res, 404, 'not_found', t('cli.notFound.tool', { toolId: req.params.id }, language));
       return;
     }
     res.setHeader('ETag', await toolsEtag());
@@ -250,21 +258,23 @@ export function createWebApp(options: WebServerOptions): express.Express {
   }));
 
   app.post('/api/tools', asyncRoute(async (req, res) => {
-    const input = validateToolInput(req.body);
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
+    const input = validateToolInput(req.body, language);
     if (typeof input === 'string') {
       sendError(res, 400, 'bad_request', input);
       return;
     }
 
     await enqueueWrite(async () => {
-      const registry = await loadRegistry();
+      const registry = await loadRegistry({ appConfig });
       const existing = registry.findById(input.id);
       if (existing?.source === 'builtin') {
-        sendError(res, 409, 'conflict', '内置工具不可修改');
+        sendError(res, 409, 'conflict', t('cli.builtin.readonly.modify', {}, language));
         return;
       }
       if (existing !== undefined) {
-        sendError(res, 409, 'conflict', `工具 "${input.id}" 已存在`);
+        sendError(res, 409, 'conflict', t('api.toolExists', { id: input.id }, language));
         return;
       }
 
@@ -279,10 +289,12 @@ export function createWebApp(options: WebServerOptions): express.Express {
   }));
 
   app.put('/api/tools/:id', asyncRoute(async (req, res) => {
-    const ifMatch = ensureIfMatch(req, res);
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
+    const ifMatch = ensureIfMatch(req, res, language);
     if (ifMatch === undefined) return;
 
-    const input = validateToolInput(req.body, req.params.id);
+    const input = validateToolInput(req.body, language, req.params.id);
     if (typeof input === 'string') {
       sendError(res, 400, 'bad_request', input);
       return;
@@ -295,20 +307,20 @@ export function createWebApp(options: WebServerOptions): express.Express {
           res,
           409,
           'conflict',
-          'tools.json 已被外部修改',
+          t('api.toolsModified', {}, language),
           await latestToolsConflictPayload(latest),
         );
         return;
       }
 
-      const registry = await loadRegistry();
+      const registry = await loadRegistry({ appConfig });
       const existing = registry.findById(req.params.id);
       if (existing?.source === 'builtin') {
-        sendError(res, 409, 'conflict', '内置工具不可修改');
+        sendError(res, 409, 'conflict', t('cli.builtin.readonly.modify', {}, language));
         return;
       }
       if (existing === undefined) {
-        sendError(res, 404, 'not_found', `找不到工具 "${req.params.id}"`);
+        sendError(res, 404, 'not_found', t('cli.notFound.tool', { toolId: req.params.id }, language));
         return;
       }
 
@@ -325,7 +337,9 @@ export function createWebApp(options: WebServerOptions): express.Express {
   }));
 
   app.delete('/api/tools/:id', asyncRoute(async (req, res) => {
-    const ifMatch = ensureIfMatch(req, res);
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
+    const ifMatch = ensureIfMatch(req, res, language);
     if (ifMatch === undefined) return;
 
     await enqueueWrite(async () => {
@@ -335,20 +349,20 @@ export function createWebApp(options: WebServerOptions): express.Express {
           res,
           409,
           'conflict',
-          'tools.json 已被外部修改',
+          t('api.toolsModified', {}, language),
           await latestToolsConflictPayload(latest),
         );
         return;
       }
 
-      const registry = await loadRegistry();
+      const registry = await loadRegistry({ appConfig });
       const existing = registry.findById(req.params.id);
       if (existing?.source === 'builtin') {
-        sendError(res, 409, 'conflict', '内置工具不可修改');
+        sendError(res, 409, 'conflict', t('cli.builtin.readonly.modify', {}, language));
         return;
       }
       if (existing === undefined) {
-        sendError(res, 404, 'not_found', `找不到工具 "${req.params.id}"`);
+        sendError(res, 404, 'not_found', t('cli.notFound.tool', { toolId: req.params.id }, language));
         return;
       }
 
@@ -374,20 +388,22 @@ export function createWebApp(options: WebServerOptions): express.Express {
   }));
 
   app.put('/api/config', asyncRoute(async (req, res) => {
-    const ifMatch = ensureIfMatch(req, res);
+    const currentBeforeMatch = await loadAppConfig();
+    const language = currentBeforeMatch.language;
+    const ifMatch = ensureIfMatch(req, res, language);
     if (ifMatch === undefined) return;
 
     await enqueueWrite(async () => {
       const latest = await configEtag();
       if (latest !== ifMatch) {
-        sendError(res, 409, 'conflict', 'config.json 已被外部修改', {
+        sendError(res, 409, 'conflict', t('api.configModified', {}, language), {
           etag: latest,
           config: await loadAppConfig(),
         });
         return;
       }
 
-      const current = await loadAppConfig();
+      const current = currentBeforeMatch;
       const body = typeof req.body === 'object' && req.body !== null
         ? req.body as Partial<AppConfig>
         : {};
@@ -397,18 +413,25 @@ export function createWebApp(options: WebServerOptions): express.Express {
         body.packageManager !== 'volta' &&
         body.packageManager !== 'npm'
       ) {
-        sendError(res, 400, 'bad_request', 'packageManager 必须为 volta 或 npm');
+        sendError(res, 400, 'bad_request', t('api.packageManagerInvalid', {}, language));
         return;
       }
       if (body.editor !== undefined && typeof body.editor !== 'string') {
-        sendError(res, 400, 'bad_request', 'editor 必须是字符串');
+        sendError(res, 400, 'bad_request', t('api.editorInvalid', {}, language));
         return;
       }
       if (
         body.confirmBeforeRun !== undefined &&
         typeof body.confirmBeforeRun !== 'boolean'
       ) {
-        sendError(res, 400, 'bad_request', 'confirmBeforeRun 必须是布尔值');
+        sendError(res, 400, 'bad_request', t('api.confirmInvalid', {}, language));
+        return;
+      }
+      if (
+        body.language !== undefined &&
+        normalizeLanguage(body.language) !== body.language
+      ) {
+        sendError(res, 400, 'bad_request', t('api.languageInvalid', {}, language));
         return;
       }
 
@@ -417,6 +440,7 @@ export function createWebApp(options: WebServerOptions): express.Express {
         packageManager: body.packageManager ?? current.packageManager,
         editor: body.editor ?? current.editor,
         confirmBeforeRun: body.confirmBeforeRun ?? current.confirmBeforeRun,
+        language: normalizeLanguage(body.language ?? current.language),
       };
       await saveAppConfig(next);
       res.json({ config: next });
@@ -428,21 +452,24 @@ export function createWebApp(options: WebServerOptions): express.Express {
       ? req.body as { op?: unknown; version?: unknown }
       : {};
     if (typeof body.op !== 'string' || body.op.length === 0) {
-      sendError(res, 400, 'bad_request', 'op 不能为空');
+      const language = (await loadAppConfig()).language;
+      sendError(res, 400, 'bad_request', t('api.opRequired', {}, language));
       return;
     }
 
-    const registry = await loadRegistry();
+    const appConfig = await loadAppConfig();
+    const language = appConfig.language;
+    const registry = await loadRegistry({ appConfig });
     const tool = registry.findById(req.params.id);
     if (tool === undefined) {
-      sendError(res, 404, 'not_found', `找不到工具 "${req.params.id}"`);
+      sendError(res, 404, 'not_found', t('cli.notFound.tool', { toolId: req.params.id }, language));
       return;
     }
     const resolved = resolveCommand(tool, body.op, {
       version: typeof body.version === 'string' ? body.version : undefined,
     });
     if (resolved.kind === 'unconfigured') {
-      sendError(res, 404, 'not_found', `操作 "${body.op}" 未配置`);
+      sendError(res, 404, 'not_found', t('api.operationUnconfigured', { op: body.op }, language));
       return;
     }
     res.json({ commands: resolved.commands });
@@ -455,7 +482,7 @@ export function createWebApp(options: WebServerOptions): express.Express {
   });
 
   app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-    const message = err instanceof Error ? err.message : '内部错误';
+    const message = err instanceof Error ? err.message : t('api.internalError');
     sendError(res, 500, 'internal_error', message);
   });
 
@@ -489,7 +516,7 @@ export async function listenOnAvailablePort(
   host = '127.0.0.1',
 ): Promise<{ server: Server; port: number }> {
   if (host !== '127.0.0.1') {
-    throw new Error('Web 编辑器只允许绑定 127.0.0.1');
+    throw new Error(t('web.localOnlyBind'));
   }
 
   for (let port = startPort; port <= endPort; port += 1) {
@@ -508,6 +535,6 @@ export async function listenOnAvailablePort(
   }
 
   throw new Error(
-    `端口 ${startPort}-3100 均被占用，请通过 --port=<N> 指定其它端口`,
+    t('web.portBusy', { startPort }),
   );
 }
