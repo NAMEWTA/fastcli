@@ -210,4 +210,56 @@ describe('executeCommandChain - 命令链语义', () => {
     expect(result.failedStep).toBe(2);
     expect(result.totalSteps).toBe(3);
   });
+
+  it('在 Windows 上顺序执行并在中途失败时返回步骤信息', async () => {
+    if (process.platform !== 'win32') return;
+    const result = await executeCommandChain([
+      'echo step1',
+      'exit /b 1',
+      'echo skipped',
+    ]);
+    expect(result.success).toBe(false);
+    expect(result.code).toBe(1);
+    expect(result.failedStep).toBe(2);
+    expect(result.totalSteps).toBe(3);
+  });
+
+  it('在 Windows 上顺序执行全部成功时返回 success', async () => {
+    if (process.platform !== 'win32') return;
+    const result = await executeCommandChain([
+      'echo step1',
+      'echo step2',
+    ]);
+    expect(result.success).toBe(true);
+    expect(result.code).toBe(0);
+    expect(result.failedStep).toBeUndefined();
+    expect(result.totalSteps).toBe(2);
+  });
+
+  it('顺序执行时在失败的步骤处停止并报告正确的步骤号（mock）', async () => {
+    if (process.platform !== 'win32') return;
+    let callCount = 0;
+    const spawnMock = vi.fn(() => {
+      const child = new FakeChild();
+      if (callCount === 0) {
+        // Step 1 succeeds
+        setImmediate(() => child.emit('exit', 0, null));
+      } else {
+        // Step 2 fails
+        setImmediate(() => child.emit('exit', 2, null));
+      }
+      callCount += 1;
+      return child as never;
+    });
+
+    const result = await executeCommandChain(
+      ['cmd-a', 'cmd-b', 'cmd-c'],
+      { spawnImpl: spawnMock as never },
+    );
+    expect(result.success).toBe(false);
+    expect(result.code).toBe(2);
+    expect(result.failedStep).toBe(2);
+    expect(result.totalSteps).toBe(3);
+    expect(callCount).toBe(2); // only steps 1 and 2 were attempted
+  });
 });

@@ -316,6 +316,25 @@ export async function executeCommandChain(
     return { success: true, code: 0, signal: null, totalSteps: commands.length };
   }
 
+  // On Windows, execute commands sequentially to avoid POSIX shell script
+  // generation that cmd.exe cannot parse. Each command runs in its own
+  // shell via executeCommand(), which already handles cmd.exe correctly.
+  // Step tracking is done in-process rather than via a temp file.
+  if (process.platform === 'win32') {
+    for (let i = 0; i < commands.length; i += 1) {
+      const step = i + 1;
+      const stepResult = await executeCommand(commands[i]!, opts);
+      if (!stepResult.success) {
+        return {
+          ...stepResult,
+          failedStep: step,
+          totalSteps: commands.length,
+        };
+      }
+    }
+    return { success: true, code: 0, signal: null, totalSteps: commands.length };
+  }
+
   const statePath = join(
     tmpdir(),
     `fastcli-chain-${process.pid}-${Date.now()}-${randomUUID()}`,
