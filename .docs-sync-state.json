@@ -7,15 +7,14 @@
     "AGENTS.md",
     "CHANGELOG.md"
   ],
-  "last_sync_sha": "ec10c7bfa692cc605adede5b124e835ab72ab32f",
-  "last_sync_short": "ec10c7b",
-  "last_sync_commit_subject": "chore(release): v3.0.1",
-  "last_sync_commit_date": "2026-05-23T00:23:16+08:00",
-  "last_sync_run_at": "2026-05-22T16:24:33Z",
-  "previous_sync_sha": "a15aa95b755af251a72b880ddc230ac568027cbb",
-  "total_syncs": 4,
+  "last_sync_sha": "b6f4a411ce607e28d78b694e71fbfa11ec14cbe0",
+  "last_sync_short": "b6f4a41",
+  "last_sync_commit_subject": "chore(release): v3.1.0",
+  "last_sync_commit_date": "2026-07-10T09:08:53+08:00",
+  "last_sync_run_at": "2026-07-10T01:11:47Z",
+  "previous_sync_sha": "ec10c7bfa692cc605adede5b124e835ab72ab32f",
+  "total_syncs": 5,
   "synced_docs": [
-    "README.md",
     "CHANGELOG.md"
   ]
 }
