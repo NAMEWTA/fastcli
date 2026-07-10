@@ -1,6 +1,7 @@
-import { readFile, rename, writeFile } from 'node:fs/promises';
+import { readFile, rename } from 'node:fs/promises';
 
 import { getAppConfigPath, getToolsPath } from './paths.js';
+import { atomicWriteJson } from './atomic.js';
 import {
   DEFAULT_APP_CONFIG,
   DEFAULT_TOOLS_FILE,
@@ -89,10 +90,6 @@ function isPlainObject(value: unknown): value is JsonObject {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-async function writeJsonFile(path: string, value: unknown): Promise<void> {
-  await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
-}
-
 async function backupAndWriteDefault<T>(
   path: string,
   defaultValue: T,
@@ -100,7 +97,7 @@ async function backupAndWriteDefault<T>(
   const ts = Math.floor(Date.now() / 1000);
   const backupPath = `${path}.bak.${ts}`;
   await rename(path, backupPath);
-  await writeJsonFile(path, defaultValue);
+  await atomicWriteJson(path, defaultValue);
   console.warn(
     t('reader.oldBackup', { backupPath }),
   );
@@ -252,6 +249,35 @@ async function readJsonObject(
 }
 
 /**
+ * 校验 AppConfig 中关键字段的类型，对无效值回退到默认并打印警告。
+ *
+ * 这是防御性修复：即使文件通过了 JSON 解析和 schema 版本检查，字段值仍可能
+ * 因手动编辑或 bug 而出现类型错误（例如 packageManager 被写成字符串 "apt"）。
+ */
+function validateAppConfigFields(path: string, parsed: AppConfig): AppConfig {
+  let result = parsed;
+  if (parsed.packageManager !== 'volta' && parsed.packageManager !== 'npm') {
+    console.warn(
+      t('reader.invalidPackageManager', { value: String(parsed.packageManager), default: DEFAULT_APP_CONFIG.packageManager }),
+    );
+    result = { ...result, packageManager: DEFAULT_APP_CONFIG.packageManager };
+  }
+  if (typeof parsed.confirmBeforeRun !== 'boolean') {
+    console.warn(
+      t('reader.invalidConfirmBeforeRun', { value: String(parsed.confirmBeforeRun), default: String(DEFAULT_APP_CONFIG.confirmBeforeRun) }),
+    );
+    result = { ...result, confirmBeforeRun: DEFAULT_APP_CONFIG.confirmBeforeRun };
+  }
+  if (typeof parsed.firstRun !== 'boolean') {
+    console.warn(
+      t('reader.invalidFirstRun', { value: String(parsed.firstRun), default: String(DEFAULT_APP_CONFIG.firstRun) }),
+    );
+    result = { ...result, firstRun: DEFAULT_APP_CONFIG.firstRun };
+  }
+  return result;
+}
+
+/**
  * 加载 `~/.fastcli/config.json`。
  *
  * 行为细节见 {@link loadJsonFile} 文档。文件不存在时返回 {@link DEFAULT_APP_CONFIG}
@@ -270,7 +296,7 @@ export async function loadAppConfig(): Promise<AppConfig> {
       version: SCHEMA_VERSION,
       language: normalizeLanguage(parsed.language),
     } as AppConfig;
-    await writeJsonFile(path, migrated);
+    await atomicWriteJson(path, migrated);
     console.warn(t('reader.configUpgraded', {}, migrated.language));
     return migrated;
   }
@@ -279,9 +305,12 @@ export async function loadAppConfig(): Promise<AppConfig> {
     throw new ConfigCorruptError(path);
   }
 
+  // 校验关键字段类型，防止损坏的 config.json 导致运行时错误。
+  const validated = validateAppConfigFields(path, parsed as AppConfig);
+
   return {
-    ...(parsed as AppConfig),
-    language: normalizeLanguage(parsed.language),
+    ...validated,
+    language: normalizeLanguage(validated.language),
   };
 }
 
@@ -300,7 +329,7 @@ export async function loadToolsFile(): Promise<ToolsFile> {
 
   if (parsed.version === '1') {
     const migrated = migrateToolsFileV1(path, parsed);
-    await writeJsonFile(path, migrated);
+    await atomicWriteJson(path, migrated);
     console.warn(t('reader.toolsUpgraded'));
     return migrated;
   }

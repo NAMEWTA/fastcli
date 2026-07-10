@@ -28,7 +28,7 @@ import {
   executeCommandChain,
   printCommandList,
 } from '../../core/executor.js';
-import { suggestToolId } from '../../utils/fuzzy.js';
+import { suggestOp, suggestToolId } from '../../utils/fuzzy.js';
 import { t, type Language } from '../../i18n.js';
 
 /** 命令字符串中是否含 `{{version}}`。 */
@@ -77,6 +77,11 @@ export default defineCommand({
       type: 'string',
       description: t('run.version.description'),
     },
+    yes: {
+      type: 'boolean',
+      description: t('run.yes.description'),
+      default: false,
+    },
   },
   async run({ args }) {
     const toolId = String(args['tool-id']);
@@ -85,6 +90,7 @@ export default defineCommand({
     const cliVersion = typeof args.version === 'string' && args.version.length > 0
       ? args.version
       : undefined;
+    const skipConfirm = args.yes === true;
 
     const appConfig = await loadAppConfig();
     const language = appConfig.language;
@@ -108,6 +114,10 @@ export default defineCommand({
     if (resolved.kind === 'unconfigured') {
       const opsList = resolved.availableOps.join(', ');
       console.error(t('run.unconfigured', { toolId: tool.id, op }, language));
+      const opHint = suggestOp(op, resolved.availableOps);
+      if (opHint !== undefined) {
+        console.error(t('run.opHint', { hint: opHint }, language));
+      }
       if (opsList.length > 0) {
         console.error(t('run.availableOps', { ops: opsList }, language));
       } else {
@@ -149,14 +159,21 @@ export default defineCommand({
 
     // 5. confirmBeforeRun
     if (appConfig.confirmBeforeRun && !dryRun) {
-      const ans = await confirm({
-        message: t('run.confirmChain', {}, language),
-        initialValue: true,
-      });
-      const ok = exitIfCanceled<boolean>(ans, language);
-      if (!ok) {
-        console.log(t('run.cancelledExecution', {}, language));
-        process.exit(0);
+      if (skipConfirm) {
+        // --yes 跳过确认
+      } else if (!process.stdin.isTTY) {
+        console.error(t('run.confirmNonTty', {}, language));
+        process.exit(1);
+      } else {
+        const ans = await confirm({
+          message: t('run.confirmChain', {}, language),
+          initialValue: true,
+        });
+        const ok = exitIfCanceled<boolean>(ans, language);
+        if (!ok) {
+          console.log(t('run.cancelledExecution', {}, language));
+          process.exit(0);
+        }
       }
     }
 

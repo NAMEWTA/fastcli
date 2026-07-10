@@ -151,8 +151,14 @@ describe('web API tools', () => {
   });
 
   it('POST /api/tools 省略 id 时根据 name 自动生成 id', async () => {
+    const list = await request(`/api/tools?token=${TOKEN}`);
+    const etag = list.headers.get('ETag')!;
+
     const res = await request(`/api/tools?token=${TOKEN}`, {
       method: 'POST',
+      headers: {
+        'If-Match': etag,
+      },
       body: JSON.stringify({
         name: 'My Tool',
         commands: { install: ['echo ok'] },
@@ -168,8 +174,14 @@ describe('web API tools', () => {
   });
 
   it('POST /api/tools 拒绝重复 name', async () => {
+    const list = await request(`/api/tools?token=${TOKEN}`);
+    const etag = list.headers.get('ETag')!;
+
     const res = await request(`/api/tools?token=${TOKEN}`, {
       method: 'POST',
+      headers: {
+        'If-Match': etag,
+      },
       body: JSON.stringify({
         name: 'Claude Code',
         commands: { install: ['echo ok'] },

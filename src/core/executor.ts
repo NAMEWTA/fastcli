@@ -316,18 +316,16 @@ export async function executeCommandChain(
     return { success: true, code: 0, signal: null, totalSteps: commands.length };
   }
 
-  // On Windows, execute commands sequentially to avoid POSIX shell script
-  // generation that cmd.exe cannot parse. Each command runs in its own
-  // shell via executeCommand(), which already handles cmd.exe correctly.
-  // Step tracking is done in-process rather than via a temp file.
+  // Windows 回退路径：cmd.exe 不支持 POSIX trap / shell 变量，因此逐条执行。
+  // shell 变量跨命令不持久，但内置工具模板不依赖此特性（测试已跳过 win32）。
   if (process.platform === 'win32') {
+    printCommandList(commands);
     for (let i = 0; i < commands.length; i += 1) {
-      const step = i + 1;
-      const stepResult = await executeCommand(commands[i]!, opts);
-      if (!stepResult.success) {
+      const result = await executeCommand(commands[i]!, opts);
+      if (!result.success) {
         return {
-          ...stepResult,
-          failedStep: step,
+          ...result,
+          failedStep: i + 1,
           totalSteps: commands.length,
         };
       }

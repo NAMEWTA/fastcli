@@ -268,6 +268,9 @@ export function createWebApp(options: WebServerOptions): express.Express {
   app.post('/api/tools', asyncRoute(async (req, res) => {
     const appConfig = await loadAppConfig();
     const language = appConfig.language;
+    const ifMatch = ensureIfMatch(req, res, language);
+    if (ifMatch === undefined) return;
+
     const input = validateToolInput(req.body, language);
     if (typeof input === 'string') {
       sendError(res, 400, 'bad_request', input);
@@ -275,6 +278,18 @@ export function createWebApp(options: WebServerOptions): express.Express {
     }
 
     await enqueueWrite(async () => {
+      const latest = await toolsEtag();
+      if (latest !== ifMatch) {
+        sendError(
+          res,
+          409,
+          'conflict',
+          t('api.toolsModified', {}, language),
+          await latestToolsConflictPayload(latest),
+        );
+        return;
+      }
+
       const registry = await loadRegistry({ appConfig });
       const existingTools = registry.list();
       if (hasToolName(existingTools, input.name)) {
