@@ -4,7 +4,21 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
-## [Unreleased]
+## [3.1.0] - 2026-07-10
+
+### 修复
+
+- **CI**：build 步骤移至 test 之前，修复 e2e 测试在首次 checkout 时找不到 `dist/index.js` 的问题。
+- **Config**：v1 配置迁移与旧 schema 默认值重写改用原子写（临时文件 + rename + chmod 0o600），防止写盘中途崩溃导致配置文件损坏。
+- **CLI**：`fastcli run` 在非 TTY 环境下检测 `confirmBeforeRun` 并报错退出（避免交互式确认挂起）；新增 `--yes` 标志跳过二次确认。
+- **Web API**：`POST /api/tools` 添加 `If-Match` 乐观锁，与 PUT/DELETE 端点保持一致，防止 CLI 与 Web 并发写盘时丢改。
+
+### 新增
+
+- **CLI**：`fastcli run <tool> <op>` 操作名输错时提供模糊匹配建议（suggestOp），与工具名找不到时的行为对齐。
+- **Config**：启动时校验 `packageManager`、`confirmBeforeRun`、`firstRun` 字段类型，无效值自动回退默认并打印告警。
+
+---
 
 ## [3.0.2] - 2026-06-13
 
@@ -12,6 +26,9 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 - **Windows**：修复命令链在 Windows 上因 POSIX shell 脚本语法不兼容而立即失败的问题（`'__fastcli_step_file' 不是内部或外部命令`）。Windows 上现改为逐条顺序执行命令，不再生成 POSIX 专用脚本。
 
+---
+
+## [Unreleased]
 
 ---
 
