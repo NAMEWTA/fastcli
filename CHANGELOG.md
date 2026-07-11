@@ -20,15 +20,7 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
-## [3.0.2] - 2026-06-13
-
-### 修复
-
-- **Windows**：修复命令链在 Windows 上因 POSIX shell 脚本语法不兼容而立即失败的问题（`'__fastcli_step_file' 不是内部或外部命令`）。Windows 上现改为逐条顺序执行命令，不再生成 POSIX 专用脚本。
-
----
-
-## [Unreleased]
+## [3.2.0] - 2026-07-11
 
 ### 新增
 
@@ -41,6 +33,18 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 ### 变更
 
 - **Registry**：`list()` 方法新增 `category` 过滤支持；`buildBuiltinEntries` 兼容 `commands` 直写，不再强制依赖 `npmPackage`。
+
+---
+
+## [Unreleased]
+
+---
+
+## [3.0.2] - 2026-06-13
+
+### 修复
+
+- **Windows**：修复命令链在 Windows 上因 POSIX shell 脚本语法不兼容而立即失败的问题（`'__fastcli_step_file' 不是内部或外部命令`）。Windows 上现改为逐条顺序执行命令，不再生成 POSIX 专用脚本。
 
 ---
 
