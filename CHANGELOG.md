@@ -30,6 +30,18 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+### 新增
+
+- **Builtin**：新增 Grok CLI（curl 安装）、Cursor CLI（curl 安装）、Speculo（npm 安装）三个内置工具。
+- **Builtin**：`BuiltinSpec` 新增 `category` 字段（coding/tool）和 `commands` 字段，支持非 npm 安装方式的工具直写命令。
+- **CLI**：`fastcli list` 新增 `--category=coding|tool` 过滤选项。
+- **CLI**：交互式菜单重构为「AI 编程工具 / 通用工具 / 自定义 / 可视化配置」四入口，按 category 分组。
+- **Docs**：新增 `CLAUDE.md`，为 Claude Code 提供仓库架构、构建命令和设计决策参考。
+
+### 变更
+
+- **Registry**：`list()` 方法新增 `category` 过滤支持；`buildBuiltinEntries` 兼容 `commands` 直写，不再强制依赖 `npmPackage`。
+
 ---
 
 ## [3.0.1] - 2026-05-23

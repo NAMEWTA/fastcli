@@ -16,6 +16,7 @@
 - `tests`：Vitest 测试，覆盖 CLI、core、config、utils 和 web-server。
 - `.github/workflows`：CI 与 tag 发布流水线。
 - `.agents/skills`：基于 git diff 同步对外文档、commit / release / tag 编排的技能资产。
+- `CLAUDE.md`：Claude Code 仓库导航与设计决策参考。
 
 ## Common Commands
 
@@ -34,7 +35,7 @@
 |------|------|
 | `fastcli` | 进入交互式菜单。 |
 | `fastcli run <tool-id> <op>` | 解析并执行某工具的 operation。 |
-| `fastcli list [--source=builtin|user] [--tag=<tag>]` | 列出工具，可按来源和标签过滤。 |
+| `fastcli list [--source=builtin|user] [--tag=<tag>] [--category=coding|tool]` | 列出工具，可按来源、标签和分类过滤。 |
 | `fastcli info <tool-id>` | 输出工具详情和命令链。 |
 | `fastcli add` | 交互式新增用户工具。 |
 | `fastcli edit <tool-id>` | 编辑用户工具；内置工具拒绝编辑。 |
@@ -48,7 +49,7 @@
 - `config.json` 与 `tools.json` 的 schema 版本固定为 `"2"`。
 - `commands` 的 operation 值必须是 `string[]`，不得回退为 string。
 - 内置工具只允许在 `src/builtin/tools.ts` 定义；用户工具只写 `~/.fastcli/tools.json`。
-- 内置工具命令字符串必须由 `src/core/builtin-templates.ts` 根据 `packageManager` 生成。
+- 内置工具命令字符串优先使用 `BuiltinSpec.commands`（直写）；若无 `commands` 则由 `src/core/builtin-templates.ts` 根据 `npmPackage` + `packageManager` 生成。
 - 用户工具可以覆盖同 id 内置工具，但 registry 必须打印 warn。
 - 本地可视化编辑器只能绑定到 `127.0.0.1`，并使用 token 鉴权。
 - Web API 写入 `config.json` / `tools.json` 必须使用 ETag + `If-Match` 防止覆盖外部改动。
@@ -78,6 +79,6 @@
 
 - 用户推广和使用文档以 [README.md](README.md) 为主。
 - 发布历史记录在 [CHANGELOG.md](CHANGELOG.md) 中。
-- AI 代理协作规则在 [AGENTS.md](AGENTS.md) 中。
+- AI 代理协作规则在 [AGENTS.md](AGENTS.md) 中，仓库架构参考在 [CLAUDE.md](CLAUDE.md) 中。
 - AI 代理技能在 [.agents/skills/docs-sync/SKILL.md](.agents/skills/docs-sync/SKILL.md) 和 [.agents/skills/npm-cicd-release/SKILL.md](.agents/skills/npm-cicd-release/SKILL.md)。
 - docs-sync 状态文件位于 `.docs-sync-state.json`，应与这些公开文档保持一致。

@@ -73,6 +73,9 @@ fastcli 内置常用 AI CLI 工具，包括：
 - GitHub Copilot
 - OpenCode
 - PI Coding Agent
+- Grok CLI
+- Cursor CLI
+- Speculo
 
 这些内置工具不会写入用户的 `tools.json`，也不会要求用户手动维护 npm 包名。fastcli 在运行时根据全局配置生成安装和卸载命令。你只需要记住统一入口：
 
@@ -305,15 +308,19 @@ fastcli 会引导你选择包管理器，并在 `~/.fastcli/` 下创建配置文
 
 ```text
 fastcli
-├── System builtin / 系统内置
+├── AI 编程工具 / AI Coding Tools
 │   ├── Claude Code
 │   ├── OpenAI Codex
 │   ├── Gemini CLI
 │   ├── GitHub Copilot
 │   ├── OpenCode
-│   └── PI Coding Agent
-├── Custom / 自定义
-└── Visual config / 可视化配置
+│   ├── PI Coding Agent
+│   ├── Grok CLI
+│   └── Cursor CLI
+├── 通用工具 / General Tools
+│   └── Speculo
+├── 自定义 / Custom
+└── 可视化配置 / Visual Config
 ```
 
 常用命令：
@@ -341,7 +348,7 @@ fastcli view
 |------|------|
 | `fastcli` | 进入交互式菜单。 |
 | `fastcli run <tool-id> <op>` | 执行某工具的某个 operation。 |
-| `fastcli list [--source=builtin\|user] [--tag=<tag>]` | 列出工具，可按来源和标签过滤。 |
+| `fastcli list [--source=builtin\|user] [--tag=<tag>] [--category=coding\|tool]` | 列出工具，可按来源、标签和分类过滤。 |
 | `fastcli info <tool-id>` | 查看工具详情、标签、来源和命令链。 |
 | `fastcli add` | 交互式添加自定义工具。 |
 | `fastcli edit <tool-id>` | 编辑自定义工具；内置工具只读。 |
@@ -384,9 +391,10 @@ fastcli list
 fastcli list --source=builtin
 fastcli list --source=user
 fastcli list --tag=coding
+fastcli list --category=coding
 ```
 
-`--source` 支持 `builtin` / `user`。`--tag` 用于筛选包含某个标签的工具。
+`--source` 支持 `builtin` / `user`。`--tag` 用于筛选包含某个标签的工具。`--category` 支持 `coding`（AI 编程工具）/ `tool`（通用开发工具）。
 
 ### `fastcli info`
 
@@ -441,16 +449,19 @@ fastcli view --no-open
 
 ## 内置工具
 
-fastcli 当前内置 6 个 AI CLI 工具。内置条目只在源码中定义，不写入用户的 `tools.json`。
+fastcli 当前内置 9 个工具。内置条目只在源码中定义，不写入用户的 `tools.json`。
 
-| ID | 名称 | npm 包名 | 标签 |
-|----|------|----------|------|
-| `claude` | Claude Code | `@anthropic-ai/claude-code` | `anthropic`, `coding` |
-| `codex` | OpenAI Codex | `@openai/codex` | `openai`, `coding` |
-| `gemini` | Gemini CLI | `@google/gemini-cli` | `google`, `coding` |
-| `copilot` | GitHub Copilot | `@github/copilot` | `github`, `coding` |
-| `opencode` | OpenCode | `opencode` | `opensource`, `coding` |
-| `pi-coding-agent` | PI Coding Agent | `@earendil-works/pi-coding-agent` | `pi`, `coding` |
+| ID | 名称 | 安装方式 | 分类 | 标签 |
+|----|------|----------|------|------|
+| `claude` | Claude Code | npm (`@anthropic-ai/claude-code`) | coding | `anthropic`, `coding` |
+| `codex` | OpenAI Codex | npm (`@openai/codex`) | coding | `openai`, `coding` |
+| `gemini` | Gemini CLI | npm (`@google/gemini-cli`) | coding | `google`, `coding` |
+| `copilot` | GitHub Copilot | npm (`@github/copilot`) | coding | `github`, `coding` |
+| `opencode` | OpenCode | npm (`opencode`) | coding | `opensource`, `coding` |
+| `pi-coding-agent` | PI Coding Agent | npm (`@earendil-works/pi-coding-agent`) | coding | `pi`, `coding` |
+| `grok` | Grok CLI | curl 脚本 | coding | `xai`, `coding` |
+| `cursor` | Cursor CLI | curl 脚本 | coding | `cursor`, `coding` |
+| `speculo` | Speculo | npm (`@namewta/speculo`) | tool | `spec`, `tool` |
 
 内置工具默认提供：
 
@@ -722,6 +733,7 @@ tests            Vitest 单元测试与集成测试
 
 - [CHANGELOG.md](CHANGELOG.md)：版本变更记录。
 - [AGENTS.md](AGENTS.md)：AI 代理协作手册。
+- [CLAUDE.md](CLAUDE.md)：Claude Code 仓库导航与设计决策参考。
 - [.agents/skills/docs-sync/SKILL.md](.agents/skills/docs-sync/SKILL.md)：基于 git diff 的文档同步技能。
 - [.agents/skills/npm-cicd-release/SKILL.md](.agents/skills/npm-cicd-release/SKILL.md)：commit / docs-sync / release / tag 编排技能。
 
