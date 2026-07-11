@@ -43,7 +43,7 @@ afterEach(() => {
 });
 
 describe('loadRegistry - 合并语义', () => {
-  it('list() 同时包含 builtin（5 个）与 user 工具', async () => {
+  it('list() 同时包含 builtin（9 个）与 user 工具', async () => {
     const userTool: ToolEntry = {
       id: 'aider',
       name: 'Aider',
@@ -58,17 +58,20 @@ describe('loadRegistry - 合并语义', () => {
     });
 
     const all = registry.list();
-    // 6 个 builtin + 1 个 user = 7
-    expect(all).toHaveLength(7);
+    // 9 个 builtin + 1 个 user = 10
+    expect(all).toHaveLength(10);
     expect(all.map((t) => t.id).sort()).toEqual(
       [
         'aider',
         'claude',
         'codex',
         'copilot',
+        'cursor',
         'gemini',
+        'grok',
         'opencode',
         'pi-coding-agent',
+        'speculo',
       ].sort(),
     );
   });
@@ -141,7 +144,7 @@ describe('loadRegistry - source 过滤', () => {
     });
 
     const builtin = registry.list({ source: 'builtin' });
-    expect(builtin).toHaveLength(6);
+    expect(builtin).toHaveLength(9);
     expect(builtin.every((t) => t.source === 'builtin')).toBe(true);
   });
 
@@ -177,9 +180,9 @@ describe('loadRegistry - tag 过滤', () => {
       toolsFile: { version: '2', tools: [userTool] },
     });
 
-    // 'coding' 是所有 6 个 builtin + aider 都拥有的 tag
+    // 'coding' 是所有 8 个 coding builtin + aider 都拥有的 tag（speculo 属于 tool 分类不含此 tag）
     const coding = registry.list({ tag: 'coding' });
-    expect(coding).toHaveLength(7);
+    expect(coding).toHaveLength(9);
 
     // 'python' 仅 aider 拥有
     const python = registry.list({ tag: 'python' });
@@ -225,5 +228,89 @@ describe('loadRegistry - user 条目 source 强制覆盖', () => {
     });
     const aider = registry.findById('aider');
     expect(aider?.source).toBe('user');
+  });
+});
+
+describe('loadRegistry - category 过滤', () => {
+  it('list({ category: "coding" }) 返回所有 coding 分类的 builtin 工具', async () => {
+    const registry = await loadRegistry({
+      appConfig: APP_CONFIG_VOLTA,
+      toolsFile: EMPTY_TOOLS,
+    });
+    const coding = registry.list({ category: 'coding' });
+    expect(coding).toHaveLength(8);
+    expect(coding.every((t) => t.source === 'builtin')).toBe(true);
+    expect(coding.every((t) => t.category === 'coding')).toBe(true);
+  });
+
+  it('list({ category: "tool" }) 仅返回 speculo', async () => {
+    const registry = await loadRegistry({
+      appConfig: APP_CONFIG_VOLTA,
+      toolsFile: EMPTY_TOOLS,
+    });
+    const tool = registry.list({ category: 'tool' });
+    expect(tool.map((t) => t.id)).toEqual(['speculo']);
+  });
+
+  it('category + source 组合过滤 user 工具无 category 时为空', async () => {
+    const userTool: ToolEntry = {
+      id: 'aider',
+      name: 'Aider',
+      commands: { install: ['pip install aider-chat'] },
+      source: 'user',
+    };
+    const registry = await loadRegistry({
+      appConfig: APP_CONFIG_VOLTA,
+      toolsFile: { version: '2', tools: [userTool] },
+    });
+    const result = registry.list({ source: 'user', category: 'coding' });
+    expect(result).toEqual([]);
+  });
+});
+
+describe('loadRegistry - curl-based builtin commands', () => {
+  it('grok / cursor 的 commands 不随 packageManager 改变', async () => {
+    const registryVolta = await loadRegistry({
+      appConfig: APP_CONFIG_VOLTA,
+      toolsFile: EMPTY_TOOLS,
+    });
+    const registryNpm = await loadRegistry({
+      appConfig: APP_CONFIG_NPM,
+      toolsFile: EMPTY_TOOLS,
+    });
+
+    const grokVolta = registryVolta.findById('grok');
+    const grokNpm = registryNpm.findById('grok');
+    expect(grokVolta?.commands.install).toEqual([
+      'curl -fsSL https://x.ai/cli/install.sh | bash',
+    ]);
+    expect(grokNpm?.commands.install).toEqual(grokVolta?.commands.install);
+    expect(grokVolta?.commands.uninstall).toBeUndefined();
+
+    const cursorVolta = registryVolta.findById('cursor');
+    const cursorNpm = registryNpm.findById('cursor');
+    expect(cursorVolta?.commands.install).toEqual([
+      'curl https://cursor.com/install -fsS | bash',
+    ]);
+    expect(cursorNpm?.commands.install).toEqual(cursorVolta?.commands.install);
+  });
+
+  it('speculo 的 commands 随 packageManager 改变', async () => {
+    const registryVolta = await loadRegistry({
+      appConfig: APP_CONFIG_VOLTA,
+      toolsFile: EMPTY_TOOLS,
+    });
+    const registryNpm = await loadRegistry({
+      appConfig: APP_CONFIG_NPM,
+      toolsFile: EMPTY_TOOLS,
+    });
+    const speculoVolta = registryVolta.findById('speculo');
+    const speculoNpm = registryNpm.findById('speculo');
+    expect(speculoVolta?.commands.install).toEqual([
+      'volta install @namewta/speculo@latest',
+    ]);
+    expect(speculoNpm?.commands.install).toEqual([
+      'npm install -g @namewta/speculo',
+    ]);
   });
 });

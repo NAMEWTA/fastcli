@@ -59,6 +59,8 @@ export interface ToolEntry {
   commands: ToolCommands;
   /** 来源。`builtin` 由二进制内置；`user` 来自 `~/.fastcli/tools.json`。 */
   source: 'builtin' | 'user';
+  /** 工具分类（仅 builtin 工具设置此字段）。coding = AI 编程工具，tool = 通用开发工具。 */
+  category?: 'coding' | 'tool';
 }
 
 /**

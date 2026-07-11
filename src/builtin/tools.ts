@@ -23,11 +23,14 @@
  * 会让用户条目覆盖内置条目（并打印一次性 warn），见 Requirement 1.5。
  */
 
+import type { ToolCommands } from '../config/schema.js';
+
 /**
  * 内置工具的纯元数据描述。
  *
- * 不包含命令字符串：命令模板由 `core/builtin-templates.ts` 在加载 registry 时
- * 根据 `AppConfig.packageManager` 动态生成。
+ * 不包含命令字符串（除非通过 `commands` 直接指定）：如果有 `commands`，它会被直接用作
+ * ToolEntry.commands；否则由 `core/builtin-templates.ts` 根据 `npmPackage` 和
+ * `AppConfig.packageManager` 动态生成。
  */
 export interface BuiltinSpec {
   /** 全局唯一 slug，与用户工具共用命名空间。 */
@@ -36,10 +39,19 @@ export interface BuiltinSpec {
   name: string;
   /** 一句话描述，用于 `list` / `info` 展示。 */
   description: string;
-  /** 对应的 npm 包名，命令模板生成时填入。 */
-  npmPackage: string;
+  /** 对应的 npm 包名。提供后由 buildBuiltinCommands 生成命令；若提供 commands 则可省略。 */
+  npmPackage?: string;
   /** 可选标签，用于 `list --tag=<T>` 过滤。 */
   tags?: string[];
+  /** 工具分类：coding = AI 编程工具，tool = 通用开发工具。 */
+  category: 'coding' | 'tool';
+  /**
+   * 可选的自定义命令对象。
+   *
+   * 提供后直接用作 ToolEntry.commands，不再调用 buildBuiltinCommands。
+   * 适用于非 npm 安装方式（如 curl、brew 等）的工具。
+   */
+  commands?: ToolCommands;
 }
 
 /**
@@ -53,6 +65,7 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     description: 'Anthropic Claude Code CLI',
     npmPackage: '@anthropic-ai/claude-code',
     tags: ['anthropic', 'coding'],
+    category: 'coding',
   },
   {
     id: 'codex',
@@ -60,6 +73,7 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     description: 'OpenAI Codex CLI',
     npmPackage: '@openai/codex',
     tags: ['openai', 'coding'],
+    category: 'coding',
   },
   {
     id: 'gemini',
@@ -67,6 +81,7 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     description: 'Google Gemini CLI',
     npmPackage: '@google/gemini-cli',
     tags: ['google', 'coding'],
+    category: 'coding',
   },
   {
     id: 'copilot',
@@ -74,6 +89,7 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     description: 'GitHub Copilot CLI',
     npmPackage: '@github/copilot',
     tags: ['github', 'coding'],
+    category: 'coding',
   },
   {
     id: 'opencode',
@@ -81,6 +97,7 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     description: 'OpenCode CLI',
     npmPackage: 'opencode',
     tags: ['opensource', 'coding'],
+    category: 'coding',
   },
   {
     id: 'pi-coding-agent',
@@ -88,5 +105,34 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     description: 'PI Coding Agent CLI',
     npmPackage: '@earendil-works/pi-coding-agent',
     tags: ['pi', 'coding'],
+    category: 'coding',
+  },
+  {
+    id: 'grok',
+    name: 'Grok CLI',
+    description: 'xAI Grok CLI',
+    tags: ['xai', 'coding'],
+    category: 'coding',
+    commands: {
+      install: ['curl -fsSL https://x.ai/cli/install.sh | bash'],
+    },
+  },
+  {
+    id: 'cursor',
+    name: 'Cursor',
+    description: 'Cursor CLI',
+    tags: ['cursor', 'coding'],
+    category: 'coding',
+    commands: {
+      install: ['curl https://cursor.com/install -fsS | bash'],
+    },
+  },
+  {
+    id: 'speculo',
+    name: 'Speculo',
+    description: 'Speculo CLI',
+    npmPackage: '@namewta/speculo',
+    tags: ['spec', 'tool'],
+    category: 'tool',
   },
 ];

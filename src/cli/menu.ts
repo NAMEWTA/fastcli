@@ -23,7 +23,7 @@ import {
 } from '@clack/prompts';
 
 import { loadAppConfig } from '../config/reader.js';
-import { loadRegistry, type Registry } from '../core/registry.js';
+import { loadRegistry, type Registry, type ListFilter } from '../core/registry.js';
 import { resolveCommand } from '../core/resolver.js';
 import {
   executeCommandChain,
@@ -46,7 +46,7 @@ function truncate(s: string | undefined, width: number): string {
   return `${s.slice(0, width - 1)}…`;
 }
 
-type MenuSection = 'builtin' | 'user' | 'view';
+type MenuSection = 'coding' | 'tool' | 'custom' | 'config';
 
 /** 已配置（值不为 undefined）的操作名，install/danger/uninstall 优先,其他按字母序。 */
 function listOps(tool: ToolEntry): string[] {
@@ -71,22 +71,23 @@ async function pickSection(language: Language): Promise<MenuSection> {
   const ans = await select({
     message: t('menu.pickSection', {}, language),
     options: [
-      { value: 'builtin', label: t('menu.builtinSection', {}, language) },
-      { value: 'user', label: t('menu.userSection', {}, language) },
-      { value: 'view', label: t('menu.viewSection', {}, language) },
+      { value: 'coding', label: t('menu.codingSection', {}, language) },
+      { value: 'tool', label: t('menu.toolSection', {}, language) },
+      { value: 'custom', label: t('menu.customSection', {}, language) },
+      { value: 'config', label: t('menu.configSection', {}, language) },
     ],
   });
   return exitIfCanceled<MenuSection>(ans, language);
 }
 
-/** 选择指定来源的工具；展示名只使用 name，id 仅作为内部值。 */
+/** 选择指定过滤条件的工具；展示名只使用 name，id 仅作为内部值。 */
 async function pickTool(
   registry: Registry,
-  source: 'builtin' | 'user',
+  filter: ListFilter,
   language: Language,
 ): Promise<ToolEntry | null> {
   const tools = registry
-    .list({ source })
+    .list(filter)
     .sort((a, b) => a.name.localeCompare(b.name));
 
   if (tools.length === 0) {
@@ -148,13 +149,22 @@ export async function runInteractiveMenu(): Promise<void> {
   // 主循环：选分类 → 选工具 → 选操作 → 执行 → 回到分类
   while (true) {
     const section = await pickSection(language);
-    if (section === 'view') {
+    if (section === 'config') {
       await startViewEditor();
       await reloadMenuState();
       continue;
     }
 
-    const tool = await pickTool(registry, section, language);
+    let filter: ListFilter;
+    if (section === 'coding') {
+      filter = { category: 'coding' };
+    } else if (section === 'tool') {
+      filter = { category: 'tool' };
+    } else {
+      filter = { source: 'user' };
+    }
+
+    const tool = await pickTool(registry, filter, language);
     if (tool === null) {
       continue;
     }

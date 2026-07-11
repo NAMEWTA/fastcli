@@ -19,7 +19,7 @@
 
 import { BUILTIN_TOOLS } from '../builtin/tools.js';
 import { loadAppConfig, loadToolsFile } from '../config/reader.js';
-import type { AppConfig, ToolEntry, ToolsFile } from '../config/schema.js';
+import type { AppConfig, ToolCommands, ToolEntry, ToolsFile } from '../config/schema.js';
 import { buildBuiltinCommands } from './builtin-templates.js';
 import { t } from '../i18n.js';
 
@@ -36,6 +36,8 @@ export interface ListFilter {
   source?: 'builtin' | 'user';
   /** 仅返回包含该 tag 的条目。 */
   tag?: string;
+  /** 仅返回某个分类的条目（builtin 工具才有 category）。 */
+  category?: 'coding' | 'tool';
 }
 
 /**
@@ -68,14 +70,25 @@ export interface LoadRegistryDeps {
  * 把内置工具元数据装配为 {@link ToolEntry}，命令模板按当前 PM 生成。
  */
 function buildBuiltinEntries(appConfig: AppConfig): ToolEntry[] {
-  return BUILTIN_TOOLS.map((spec) => ({
-    id: spec.id,
-    name: spec.name,
-    description: spec.description,
-    tags: spec.tags,
-    commands: buildBuiltinCommands(appConfig.packageManager, spec.npmPackage),
-    source: 'builtin',
-  }));
+  return BUILTIN_TOOLS.map((spec) => {
+    let commands: ToolCommands;
+    if (spec.commands) {
+      commands = spec.commands;
+    } else if (spec.npmPackage) {
+      commands = buildBuiltinCommands(appConfig.packageManager, spec.npmPackage);
+    } else {
+      commands = {};
+    }
+    return {
+      id: spec.id,
+      name: spec.name,
+      description: spec.description,
+      tags: spec.tags,
+      category: spec.category,
+      commands,
+      source: 'builtin',
+    };
+  });
 }
 
 /**
@@ -142,6 +155,9 @@ export async function loadRegistry(
           return false;
         }
         if (filter.tag !== undefined && !entry.tags?.includes(filter.tag)) {
+          return false;
+        }
+        if (filter.category !== undefined && entry.category !== filter.category) {
           return false;
         }
         return true;

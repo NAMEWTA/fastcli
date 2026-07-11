@@ -51,6 +51,12 @@ function parseSource(input: unknown): 'builtin' | 'user' | undefined {
   return undefined;
 }
 
+/** 校验 `--category` 取值；无效时返回 undefined（视为不过滤）。 */
+function parseCategory(input: unknown): 'coding' | 'tool' | undefined {
+  if (input === 'coding' || input === 'tool') return input;
+  return undefined;
+}
+
 export default defineCommand({
   meta: {
     name: 'list',
@@ -65,6 +71,10 @@ export default defineCommand({
       type: 'string',
       description: t('list.tag.description'),
     },
+    category: {
+      type: 'string',
+      description: 'Only list tools in a category (coding | tool)',
+    },
   },
   async run({ args }) {
     const appConfig = await loadAppConfig();
@@ -73,9 +83,10 @@ export default defineCommand({
     const tag = typeof args.tag === 'string' && args.tag.length > 0
       ? args.tag
       : undefined;
+    const category = parseCategory(args.category);
 
     const registry = await loadRegistry({ appConfig });
-    const filtered = registry.list({ source, tag });
+    const filtered = registry.list({ source, tag, category });
 
     // 分组：仅在没指定 source 或 source === 'builtin' 时输出 builtin 段；
     // user 同理。这样 `--source=user` 时不会出现「── 内置工具 ──\n（空）」的
