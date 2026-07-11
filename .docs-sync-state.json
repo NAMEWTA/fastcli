@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": "1",
   "skill": "docs-sync",
   "state_path": ".docs-sync-state.json",
   "tracked_docs": [
@@ -7,14 +7,16 @@
     "AGENTS.md",
     "CHANGELOG.md"
   ],
-  "last_sync_sha": "b6f4a411ce607e28d78b694e71fbfa11ec14cbe0",
-  "last_sync_short": "b6f4a41",
-  "last_sync_commit_subject": "chore(release): v3.1.0",
-  "last_sync_commit_date": "2026-07-10T09:08:53+08:00",
-  "last_sync_run_at": "2026-07-10T01:11:47Z",
-  "previous_sync_sha": "ec10c7bfa692cc605adede5b124e835ab72ab32f",
-  "total_syncs": 5,
+  "last_sync_sha": "72ecac53245042d75ac6a7cdc0fe08be22e78d8f",
+  "last_sync_short": "72ecac5",
+  "last_sync_commit_subject": "chore(release): v3.2.0",
+  "last_sync_commit_date": "2026-07-11T17:12:15+08:00",
+  "last_sync_run_at": "2026-07-11T09:13:39Z",
+  "previous_sync_sha": "b6f4a411ce607e28d78b694e71fbfa11ec14cbe0",
+  "total_syncs": 6,
   "synced_docs": [
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "AGENTS.md",
+    "README.md"
   ]
 }
