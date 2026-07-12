@@ -108,6 +108,14 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     category: 'coding',
   },
   {
+    id: 'codebuddy',
+    name: 'CodeBuddy Code',
+    description: 'Tencent Cloud CodeBuddy Code CLI',
+    npmPackage: '@tencent-ai/codebuddy-code',
+    tags: ['tencent', 'coding'],
+    category: 'coding',
+  },
+  {
     id: 'grok',
     name: 'Grok CLI',
     description: 'xAI Grok CLI',

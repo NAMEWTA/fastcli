@@ -12,7 +12,7 @@
  *    - 未提供 + TTY → clack.text 询问
  *    - 未提供 + 非 TTY → 报错退出
  * 4. confirmBeforeRun（来自 AppConfig）→ 用 clack.confirm 二次确认
- * 5. 调用 executor.executeCommand（透传 dryRun）
+ * 5. 调用 executor.executeCommandChain（透传 dryRun）
  * 6. 退出码 = 子进程退出码（dry-run 为 0）
  *
  * Validates: Requirements 3.1, 2.6, 6.1, 6.3, 6.4, 7.1, 7.2

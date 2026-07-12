@@ -4,7 +4,7 @@
  * 流程：装载 registry → 「选择分类」（系统内置 / 自定义 / 可视化配置）→
  * 「选择工具」→「选择操作」（已配置非空，install/danger/uninstall 优先）→
  * 显示完整命令 → `confirmBeforeRun ? clack.confirm` →
- * executor.executeCommand → 显示退出码 → 按回车返回菜单。
+ * executor.executeCommandChain → 显示退出码 → 按回车返回菜单。
  *
  * 任意步骤的取消（Ctrl+C / Esc）→ `cancel('已取消')` + `process.exit(130)`。
  *

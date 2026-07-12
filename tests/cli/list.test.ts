@@ -13,7 +13,7 @@ const execFileP = promisify(execFile);
  * `fastcli list` 的端到端测试。
  *
  * 覆盖：
- * - 默认输出包含 9 个 builtin 工具
+ * - 默认输出包含 10 个 builtin 工具
  * - --source=builtin 仅输出 builtin
  * - --source=user 仅输出 user
  * - --tag=anthropic 仅输出含该 tag 的工具
@@ -85,11 +85,12 @@ async function runCli(
 }
 
 describe('fastcli list - 默认输出', () => {
-  it('包含全部 9 个 builtin 与 1 个 user', async () => {
+  it('包含全部 10 个 builtin 与 1 个 user', async () => {
     const r = await runCli(['list']);
     expect(r.code).toBe(0);
     expect(r.stdout).toContain('Builtin tools');
     expect(r.stdout).toContain('claude');
+    expect(r.stdout).toContain('codebuddy');
     expect(r.stdout).toContain('codex');
     expect(r.stdout).toContain('gemini');
     expect(r.stdout).toContain('copilot');

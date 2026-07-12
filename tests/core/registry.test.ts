@@ -43,7 +43,7 @@ afterEach(() => {
 });
 
 describe('loadRegistry - 合并语义', () => {
-  it('list() 同时包含 builtin（9 个）与 user 工具', async () => {
+  it('list() 同时包含 builtin（10 个）与 user 工具', async () => {
     const userTool: ToolEntry = {
       id: 'aider',
       name: 'Aider',
@@ -58,12 +58,13 @@ describe('loadRegistry - 合并语义', () => {
     });
 
     const all = registry.list();
-    // 9 个 builtin + 1 个 user = 10
-    expect(all).toHaveLength(10);
+    // 10 个 builtin + 1 个 user = 11
+    expect(all).toHaveLength(11);
     expect(all.map((t) => t.id).sort()).toEqual(
       [
         'aider',
         'claude',
+        'codebuddy',
         'codex',
         'copilot',
         'cursor',
@@ -144,7 +145,7 @@ describe('loadRegistry - source 过滤', () => {
     });
 
     const builtin = registry.list({ source: 'builtin' });
-    expect(builtin).toHaveLength(9);
+    expect(builtin).toHaveLength(10);
     expect(builtin.every((t) => t.source === 'builtin')).toBe(true);
   });
 
@@ -180,9 +181,9 @@ describe('loadRegistry - tag 过滤', () => {
       toolsFile: { version: '2', tools: [userTool] },
     });
 
-    // 'coding' 是所有 8 个 coding builtin + aider 都拥有的 tag（speculo 属于 tool 分类不含此 tag）
+    // 'coding' 是所有 9 个 coding builtin + aider 都拥有的 tag（speculo 属于 tool 分类不含此 tag）
     const coding = registry.list({ tag: 'coding' });
-    expect(coding).toHaveLength(9);
+    expect(coding).toHaveLength(10);
 
     // 'python' 仅 aider 拥有
     const python = registry.list({ tag: 'python' });
@@ -238,7 +239,7 @@ describe('loadRegistry - category 过滤', () => {
       toolsFile: EMPTY_TOOLS,
     });
     const coding = registry.list({ category: 'coding' });
-    expect(coding).toHaveLength(8);
+    expect(coding).toHaveLength(9);
     expect(coding.every((t) => t.source === 'builtin')).toBe(true);
     expect(coding.every((t) => t.category === 'coding')).toBe(true);
   });

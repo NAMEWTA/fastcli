@@ -1,32 +1,29 @@
 /**
- * 子进程执行器：把一段 shell 命令字符串交给系统 shell 执行，并把退出状态、
- * 信号、底层错误统一封装为 {@link ExecResult}。
+ * 子进程执行器：把命令字符串交给系统 shell 执行，统一封装退出状态、信号、
+ * 底层错误为 {@link ExecResult}。
  *
- * 这一层是所有命令真正落到 `spawn` 之前的最后一站。它的职责非常窄但不可
- * 越界：
+ * 内部结构：
  *
- * - **不修改命令字符串**：执行的是与展示一致的字节序（Requirement 7.3）。
- *   不做转义、不拆分参数，整段命令以单个参数交给系统 shell 自行解析
- * - **不决定父进程退出码**：仅返回 {@link ExecResult}，让上层 CLI 决定是否
- *   `process.exit(result.code)`。这是为了让 TUI 主菜单循环可以在执行结束
- *   后继续运行，而不是被 executor 直接终结
- * - **不向上抛异常**：spawn 的 ENOENT、子进程非 0 退出、被信号终止，都映射
- *   为 ExecResult 的字段；调用方只需要看返回值，无需 try/catch
+ * - `spawnOnce`（私有原语）——唯一接触 `node:child_process.spawn` 的模块，
+ *   封装 spawn + promise + 信号转发 + error/exit 事件处理
+ * - `executeCommandChain`（唯一公共入口）——按命令数量分支：
+ *   n=0 直接返回、n=1 无 trap 开销、n>1 POSIX 拼接追踪链、
+ *   n>1 Windows 逐条执行
+ *
+ * 职责边界：
+ *
+ * - **不修改命令字符串**：执行与展示一致的字节序（Requirement 7.3）
+ * - **不决定父进程退出码**：仅返回 {@link ExecResult}，由上层 CLI 决定
+ * - **不向上抛异常**：所有失败映射为 ExecResult 字段，调用方无需 try/catch
  *
  * 命令打印（Requirement 7.1）
  * ----------------------------
- * 该「即将执行：…」打印由 *executor 自己* 负责。所有调用方（`cli/run.ts`、
- * `cli/menu.ts`、TUI 等）都不应再额外打印命令字符串，避免重复输出。把
- * 打印责任收紧在这一层，是为了让 Requirement 7.1 「不可被绕过」——任何
- * 真正会触发 spawn 的路径，都必须经过这里，从而都会先看到完整命令。
+ * 打印由 executor 自己负责——n=1 打印 `$ <command>`，n>1 打印 `[i/N] $ <command>`。
+ * 所有 spawn 路径都先打印后执行，不可绕过。
  *
  * 信号转发（Requirement 7.5）
  * ----------------------------
- * spawn 期间临时把 SIGINT / SIGTERM 处理器注册到父进程上，把同名信号
- * 投递给子进程；executor 自身不调用 `process.exit`，而是通过 `exit` 事件
- * 把「子进程被信号终止」的事实编码进 ExecResult，让 CLI 决定如何退出。
- * 这些处理器在子进程退出（或 spawn 失败）时立刻卸载，避免污染长期运行的
- * TUI 进程。
+ * spawn 期间挂载 SIGINT/SIGTERM 转发器，子进程退出后立即卸载。
  *
  * Validates: Requirements 6.5, 7.1, 7.3, 7.5
  */
@@ -42,7 +39,7 @@ import type { ExecResult } from '../config/schema.js';
 import { t, type Language } from '../i18n.js';
 
 /**
- * {@link executeCommand} 的可选项。
+ * {@link executeCommandChain} 的可选项。
  *
  * - `dryRun`：仅打印命令、不真正调用 spawn；返回 `{ success: true, code: 0 }`。
  *   即便如此 Requirement 7.1 的命令打印仍会发生
@@ -203,52 +200,20 @@ function attachSignalForwarders(child: ChildProcess): () => void {
 }
 
 /**
- * 执行一条 shell 命令，返回退出状态。
+ * spawnOnce — 私有原语，唯一接触 `node:child_process.spawn` 的模块。
  *
- * 流程：
+ * 调用方负责在调用前打印命令（Requirement 7.1）；本函数只管 spawn、
+ * promise 包装、信号转发、error/exit 事件处理。始终 resolve，绝不 reject。
  *
- * 1. 打印 `$ <command>`（包括 dry-run；满足 Requirement 7.1）
- * 2. 若 `opts.dryRun === true`，直接返回 `{ success: true, code: 0 }`，
- *    不调用 spawn
- * 3. 否则按平台构造 shell 调用，`stdio: 'inherit'` 让子进程接管控制台
- * 4. 监听 `error`：
- *    - `ENOENT` → `console.error('命令未找到：<bin>')`，resolve
- *      `{ success: false, code: 127, signal: null }`（127 是 shell 的
- *      「command not found」约定退出码）
- *    - 其它错误 → 打印错误信息，resolve `{ success: false, code: 1 }`
- * 5. 监听 `exit`：根据 `(code, signal)` 组装 ExecResult
- *    - `signal !== null` → 被信号终止：`code = 128 + signal_number`
- *    - 否则 → 透传子进程退出码；`code === null` 时回退到 1
- * 6. 在 spawn 与 exit 之间临时挂载 SIGINT / SIGTERM 转发器，settle 时
- *    立刻卸载
- *
- * 这个函数始终 resolve（不会 reject）：所有可恢复的失败情况都映射为
- * ExecResult，调用链不必在 try/catch 与 result 检查之间二选一。
- *
- * @param command  完整的、已经做过变量替换的命令字符串
- * @param opts     可选的执行选项；见 {@link ExecuteOptions}
- *
- * @example
- *   const result = await executeCommand('volta install @anthropic-ai/claude-code');
- *   if (!result.success) process.exit(result.code);
- *
- * @example
- *   await executeCommand('rm -rf /tmp/foo', { dryRun: true });
- *   // 仅打印 `$ rm -rf /tmp/foo`，不真正执行
+ * @param command   完整的、已经做过变量替换的命令字符串
+ * @param spawnImpl spawn 实现（生产用 nodeSpawn，测试用 mock）
+ * @param language  UI 语言
  */
-export async function executeCommand(
+function spawnOnce(
   command: string,
-  opts: ExecuteOptions = {},
+  spawnImpl: typeof nodeSpawn,
+  language: Language,
 ): Promise<ExecResult> {
-  const language = opts.language ?? 'en';
-  // Requirement 7.1：在任何 spawn 触发前打印命令；dry-run 也打印。
-  console.log(`$ ${command}`);
-
-  if (opts.dryRun === true) {
-    return { success: true, code: 0 };
-  }
-
-  const spawnImpl = opts.spawnImpl ?? nodeSpawn;
   const { file, args } = buildShellInvocation(command);
 
   return new Promise<ExecResult>((resolve) => {
@@ -303,25 +268,62 @@ export function printCommandList(commands: readonly string[]): void {
   });
 }
 
+/**
+ * 执行一条或多条 shell 命令，返回退出状态与步骤信息。
+ *
+ * 这是 executor 模块的唯一公共入口。内部按命令数量分支：
+ *
+ * - n=0：直接返回成功
+ * - n=1：打印 `$ <command>`（无 [1/1] 前缀），调用 spawnOnce
+ * - n>1 (POSIX)：打印 [i/N] 清单，拼接为带 trap 的追踪命令链，调用 spawnOnce
+ * - n>1 (Windows)：打印 [i/N] 清单，逐条调用 spawnOnce
+ *
+ * 单命令路径不创建临时 statePath 文件（无 trap 开销）。
+ *
+ * @example
+ *   const result = await executeCommandChain(['volta install foo']);
+ *   if (!result.success) process.exit(result.code);
+ */
 export async function executeCommandChain(
   commands: string[],
   opts: ExecuteOptions = {},
 ): Promise<ExecuteChainResult> {
   const language = opts.language ?? 'en';
+  const spawnImpl = opts.spawnImpl ?? nodeSpawn;
+
+  // n=0：空命令链视为成功。
   if (commands.length === 0) {
     return { success: true, code: 0, signal: null, totalSteps: 0 };
   }
+
+  // n=1：单命令路径，不创建 trap/statePath，打印格式无 [1/1] 前缀。
+  if (commands.length === 1) {
+    const cmd = commands[0]!;
+    console.log(`$ ${cmd}`);
+
+    if (opts.dryRun === true) {
+      return { success: true, code: 0, signal: null, totalSteps: 1 };
+    }
+
+    const result = await spawnOnce(cmd, spawnImpl, language);
+    return {
+      ...result,
+      failedStep: result.success ? undefined : 1,
+      totalSteps: 1,
+    };
+  }
+
+  // n>1：打印带编号的命令清单（Requirement 7.1）。
+  printCommandList(commands);
 
   if (opts.dryRun === true) {
     return { success: true, code: 0, signal: null, totalSteps: commands.length };
   }
 
   // Windows 回退路径：cmd.exe 不支持 POSIX trap / shell 变量，因此逐条执行。
-  // shell 变量跨命令不持久，但内置工具模板不依赖此特性（测试已跳过 win32）。
   if (process.platform === 'win32') {
-    printCommandList(commands);
     for (let i = 0; i < commands.length; i += 1) {
-      const result = await executeCommand(commands[i]!, opts);
+      const result = await spawnOnce(commands[i]!, spawnImpl, language);
       if (!result.success) {
         return {
           ...result,
@@ -333,55 +335,13 @@ export async function executeCommandChain(
     return { success: true, code: 0, signal: null, totalSteps: commands.length };
   }
 
+  // POSIX：拼接为带 trap 的追踪命令链，单次 spawnOnce。
   const statePath = join(
     tmpdir(),
     `fastcli-chain-${process.pid}-${Date.now()}-${randomUUID()}`,
   );
   const command = buildTrackedCommandChain(commands, statePath);
-  const spawnImpl = opts.spawnImpl ?? nodeSpawn;
-  const { file, args } = buildShellInvocation(command);
-
-  const result = await new Promise<ExecResult>((resolve) => {
-    const child = spawnImpl(file, args, { stdio: 'inherit' });
-    const detachSignals = attachSignalForwarders(child);
-
-    let settled = false;
-    const settle = (next: ExecResult): void => {
-      if (settled) return;
-      settled = true;
-      detachSignals();
-      resolve(next);
-    };
-
-    child.on('error', (err) => {
-      const code = (err as NodeJS.ErrnoException).code;
-      if (code === 'ENOENT') {
-        const bin = extractBinary(command);
-        console.error(t('executor.commandNotFound', { bin }, language));
-        settle({ success: false, code: 127, signal: null });
-        return;
-      }
-      console.error(t('executor.failed', { message: err.message }, language));
-      settle({ success: false, code: 1, signal: null });
-    });
-
-    child.on('exit', (code, signal) => {
-      if (signal !== null) {
-        settle({
-          success: false,
-          code: signalToExitCode(signal),
-          signal,
-        });
-        return;
-      }
-      const exitCode = code ?? 1;
-      settle({
-        success: exitCode === 0,
-        code: exitCode,
-        signal: null,
-      });
-    });
-  });
+  const result = await spawnOnce(command, spawnImpl, language);
 
   let failedStep: number | undefined;
   if (!result.success) {
