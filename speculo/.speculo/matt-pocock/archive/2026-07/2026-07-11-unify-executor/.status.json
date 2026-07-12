@@ -1,15 +1,19 @@
 {
   "change_id": "2026-07-11-unify-executor",
   "route": "idea-to-delivery",
-  "phase": "spec",
+  "phase": "review",
   "status": "completed",
   "created_at": "2026-07-11T15:30:00+08:00",
   "phase_history": [
     {"phase": "scan", "status": "completed", "at": "2026-07-11T15:30:00+08:00"},
     {"phase": "select-grill", "status": "completed", "at": "2026-07-11T15:30:00+08:00"},
     {"phase": "grill", "status": "completed", "at": "2026-07-12T00:00:00+08:00"},
-    {"phase": "spec", "status": "completed", "at": "2026-07-12T00:00:00+08:00"}
+    {"phase": "spec", "status": "completed", "at": "2026-07-12T00:00:00+08:00"},
+    {"phase": "review", "status": "completed", "at": "2026-07-12T00:00:00+08:00"},
+    {"phase": "finalize", "status": "completed", "at": "2026-07-12T00:00:00+08:00"}
   ],
+  "archived": true,
+  "archive_path": "archive/2026-07/2026-07-11-unify-executor/",
   "next_route": "idea-to-delivery",
   "artifacts": {
     "architecture/candidates.html": "架构审查报告（5 个深化候选）",
