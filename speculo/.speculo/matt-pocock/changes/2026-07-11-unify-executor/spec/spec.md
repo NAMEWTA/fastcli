@@ -28,7 +28,8 @@
 ```typescript
 function spawnOnce(
   command: string,
-  spawnImpl: typeof nodeSpawn
+  spawnImpl: typeof nodeSpawn,
+  language: Language,
 ): Promise<ExecResult>
 ```
 

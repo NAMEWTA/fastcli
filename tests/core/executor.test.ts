@@ -318,7 +318,7 @@ describe('executeCommandChain - n=1 路径', () => {
     expect(result.totalSteps).toBe(1);
   });
 
-  it('n=1 时 n=0 返回 totalSteps: 0', async () => {
+  it('n=0 时返回 totalSteps: 0', async () => {
     const spawnMock = vi.fn();
     const result = await executeCommandChain([], {
       spawnImpl: spawnMock as never,
@@ -341,5 +341,23 @@ describe('executeCommandChain - n=1 路径', () => {
       totalSteps: 1,
     });
     expect(result.failedStep).toBeUndefined();
+  });
+
+  it('n=1 路径不创建临时 statePath 文件（无 trap 开销）', async () => {
+    const child = new FakeChild();
+    const spawnMock = vi.fn(() => child as never);
+    // 验证 spawnOnce 只接收到原始命令，而非带 __fastcli_step_file 的追踪链
+    const promise = executeCommandChain(['my-cmd'], {
+      spawnImpl: spawnMock as never,
+    });
+    setImmediate(() => child.emit('exit', 0, null));
+    await promise;
+
+    expect(spawnMock).toHaveBeenCalledTimes(1);
+    const [_file, args] = spawnMock.mock.calls[0]! as [string, string[]];
+    const commandArg = args[args.length - 1]!;
+    // n=1 路径直接传递原始命令，不含追踪变量
+    expect(commandArg).not.toContain('__fastcli_step_file');
+    expect(commandArg).toBe('my-cmd');
   });
 });
