@@ -21,11 +21,13 @@
   ],
   "scope_revision": 1,
   "scope_confirmed_at": "2026-07-12T10:48:00+08:00",
-  "last_sync_run_at": "2026-07-12T10:50:00+08:00",
+  "last_sync_run_at": "2026-07-12T10:55:00+08:00",
   "total_syncs": 1,
   "synced_assets": [
     "README.md",
     "CHANGELOG.md",
-    "AGENTS.md"
+    "AGENTS.md",
+    "CLAUDE.md",
+    "speculo/workflows/matt-pocock/README.md"
   ]
 }

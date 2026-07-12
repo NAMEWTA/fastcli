@@ -2,7 +2,9 @@
   "schema_version": 1,
   "workflow": "matt-pocock",
   "manifest_path": "speculo/.speculo/matt-pocock/docs-sync.json",
-  "project_targets": [],
+  "project_targets": [
+    { "path": "speculo/workflows/matt-pocock/README.md", "kind": "file" }
+  ],
   "state_targets": [
     { "path": "knowledge/", "kind": "directory" },
     { "path": "policy/", "kind": "directory" },

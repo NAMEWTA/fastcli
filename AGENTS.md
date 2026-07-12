@@ -6,17 +6,22 @@
 
 ## Repository Layout
 
-- `src/cli`：命令入口、参数解析、首次运行引导、交互式菜单和各子命令。
-- `src/core`：工具注册、内置命令模板、operation 解析、命令链执行器。
-- `src/config`：`config.json` / `tools.json` 的路径、schema、读取、迁移、原子写入与权限控制。
-- `src/web-server`：本地 Web API 服务，只允许 `127.0.0.1` + token 访问。
-- `src/builtin`：内置 AI CLI 工具元数据；内置工具只允许在源码中定义。
-- `src/utils`：fuzzy 建议、slug 生成等通用工具。
-- `packages/web`：Vite + React 构建的浏览器编辑器前端。
+```
+src/index.ts          — citty 命令树，注册子命令，捕获 ConfigCorruptError/ConfigVersionTooNewError
+  src/cli/            — CLI 命令（add, edit, remove, run, list, info, view, config）+ 首次运行引导 + TUI 菜单
+    └── src/core/     — 领域层：registry（合并 builtin+user）、resolver（op 查找 + {{name}}/{{version}} 替换）、executor（spawn shell、信号转发、命令链）、builtin-templates（由 packageManager 生成 install/uninstall/danger）
+    └── src/config/   — 路径、schema 类型、reader（加载/迁移/校验）、writer（原子写、0o600）
+    └── src/utils/    — fuzzy 搜索（fuse.js）、slug/id 生成、工具名冲突检查
+    └── src/i18n.ts   — en/zh-CN 消息字典、normalizeLanguage、t() 辅助函数
+    └── src/web-server/ — Express API，仅 127.0.0.1，token 鉴权，ETag+If-Match 写保护
+
+packages/web/         — Vite+React SPA，仅通过 HTTP API 与 web-server 通信
+```
+
 - `tests`：Vitest 测试，覆盖 CLI、core、config、utils 和 web-server。
 - `.github/workflows`：CI 与 tag 发布流水线。
-- `.agents/skills`：基于 git diff 同步对外文档、commit / release / tag 编排的技能资产。
-- `CLAUDE.md`：Claude Code 仓库导航与设计决策参考。
+- `.agents/skills`：AI 代理技能资产。
+- 依赖规则：`src/cli` → `src/core`/`src/config`/`src/utils`/`src/i18n`；`src/core` 禁依赖 CLI/Web；`src/config` 禁依赖上层模块；`packages/web` 仅 HTTP。
 
 ## Common Commands
 
@@ -67,6 +72,16 @@
 - `packages/web` 只能通过 HTTP API 访问后端，不能直接读写 `~/.fastcli/`。
 - `FASTCLI_HOME` 仅用于测试隔离和自动化场景，不要在用户文档中推荐为日常配置方式。
 
+## Key Design Decisions
+
+- **内置工具**：`src/builtin/tools.ts` 中仅存元数据（id、name、npmPackage、tags）。实际命令字符串由 `src/core/builtin-templates.ts` 在运行时根据 `config.packageManager` 生成（`volta` → `volta install <pkg>@latest`；`npm` → `npm install -g <pkg>`）。
+- **注册中心**：合并 builtin + user 工具到 `Map<id, ToolEntry>`。同 id 用户条目覆盖内置（一次性 `console.warn`）。
+- **解析 vs 执行**：`resolver.ts` 是纯函数——查找 operation、做 `{{name}}`/`{{version}}` 替换，返回 `{ kind: 'ok', commands }` 或 `{ kind: 'unconfigured', availableOps }`。未知占位符保留字面量。`executor.ts` 随后 spawn shell。
+- **命令链**：始终 `string[]`，单命令也用单元素数组。无 string-or-array 歧义。
+- **执行器**：执行前打印 `$ <command>`。使用 `/bin/sh -c`（POSIX）或 `cmd.exe /d /s /c`（Windows）。信号转发：SIGINT/SIGTERM 在 spawn 期间转发给子进程。返回 `ExecResult`，永不抛异常。
+- **Web API**：通过 promise 队列（`enqueueWrite`）序列化写操作。所有变更端点要求 `If-Match` 头，对照当前文件内容的 SHA-256 ETag 校验。仅接受 `127.0.0.1` 连接。
+- **配置文件**：`config.json`、`tools.json` 使用 schema 版本 `"2"`。reader 自动迁移 v1→v2（字符串转数组）。损坏 JSON 或版本过新 → `ConfigCorruptError` / `ConfigVersionTooNewError` 在顶层捕获。POSIX 写使用原子 rename + `0o600`。
+
 ## Testing Expectations
 
 - 修改 CLI 命令签名、输出或退出码时，同步更新 `tests/cli/**`。
@@ -79,7 +94,7 @@
 
 - 用户推广和使用文档以 [README.md](README.md) 为主。
 - 发布历史记录在 [CHANGELOG.md](CHANGELOG.md) 中。
-- AI 代理协作规则在 [AGENTS.md](AGENTS.md) 中，仓库架构参考在 [CLAUDE.md](CLAUDE.md) 中。
+- AI 代理协作规则以本文件（`AGENTS.md`）为唯一权威来源；`CLAUDE.md` 为指向本文件的重定向。
 - AI 代理技能在 [.agents/skills/add-builtin-tool/SKILL.md](.agents/skills/add-builtin-tool/SKILL.md)。
 - docs-sync 由 [speculo/commands/docs-sync.md](speculo/commands/docs-sync.md) 编排，状态位于 `speculo/.speculo/commands/docs-sync/state.json`。
 - 旧 `.docs-sync-state.json` 为遗留文件，仅作历史参考。
