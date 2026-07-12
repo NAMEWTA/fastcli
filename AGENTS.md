@@ -57,7 +57,7 @@
 - 发布由 tag `v*` 驱动，CI 必须先 `pnpm build`，再 `pnpm test`，然后发布 npm 并创建 GitHub Release。
 - README 是推广和用户入口文档，必须强调 fastcli 的优势、场景、安装、命令和配置。
 - CHANGELOG 顶部必须保留 `[Unreleased]`。
-- docs-sync 触发时必须先读取 `.docs-sync-state.json`，并基于 `last_sync_sha..HEAD` 的 git diff 决定文档更新。
+- docs-sync 由 `speculo/commands/docs-sync.md` 编排，基于 Git 区间与 workflow 声明全量审计文档；触发时读取 `speculo/.speculo/commands/docs-sync/state.json` 确定基线。
 
 ## Architecture Notes
 
@@ -80,5 +80,6 @@
 - 用户推广和使用文档以 [README.md](README.md) 为主。
 - 发布历史记录在 [CHANGELOG.md](CHANGELOG.md) 中。
 - AI 代理协作规则在 [AGENTS.md](AGENTS.md) 中，仓库架构参考在 [CLAUDE.md](CLAUDE.md) 中。
-- AI 代理技能在 [.agents/skills/docs-sync/SKILL.md](.agents/skills/docs-sync/SKILL.md) 和 [.agents/skills/npm-cicd-release/SKILL.md](.agents/skills/npm-cicd-release/SKILL.md)。
-- docs-sync 状态文件位于 `.docs-sync-state.json`，应与这些公开文档保持一致。
+- AI 代理技能在 [.agents/skills/add-builtin-tool/SKILL.md](.agents/skills/add-builtin-tool/SKILL.md)。
+- docs-sync 由 [speculo/commands/docs-sync.md](speculo/commands/docs-sync.md) 编排，状态位于 `speculo/.speculo/commands/docs-sync/state.json`。
+- 旧 `.docs-sync-state.json` 为遗留文件，仅作历史参考。

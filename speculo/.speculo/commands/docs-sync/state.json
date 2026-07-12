@@ -1,0 +1,31 @@
+{
+  "schema_version": 4,
+  "command": "docs-sync",
+  "state_path": "speculo/.speculo/commands/docs-sync/state.json",
+  "baseline": {
+    "mode": "state-file-commit",
+    "sha": null
+  },
+  "last_range": {
+    "from_sha": null,
+    "to_sha": "91177f4b6bd1930bb3cdda0a33857ee13c262cf0"
+  },
+  "project_targets": [
+    { "path": "README.md", "kind": "file" },
+    { "path": "CHANGELOG.md", "kind": "file" },
+    { "path": "AGENTS.md", "kind": "file" },
+    { "path": ".agents/", "kind": "directory" }
+  ],
+  "pending_legacy_targets": [
+    { "path": ".docs-sync-state.json", "kind": "file", "note": "v1 legacy state file, read-only reference" }
+  ],
+  "scope_revision": 1,
+  "scope_confirmed_at": "2026-07-12T10:48:00+08:00",
+  "last_sync_run_at": "2026-07-12T10:50:00+08:00",
+  "total_syncs": 1,
+  "synced_assets": [
+    "README.md",
+    "CHANGELOG.md",
+    "AGENTS.md"
+  ]
+}

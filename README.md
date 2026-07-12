@@ -449,7 +449,7 @@ fastcli view --no-open
 
 ## 内置工具
 
-fastcli 当前内置 9 个工具。内置条目只在源码中定义，不写入用户的 `tools.json`。
+fastcli 当前内置 10 个工具。内置条目只在源码中定义，不写入用户的 `tools.json`。
 
 | ID | 名称 | 安装方式 | 分类 | 标签 |
 |----|------|----------|------|------|
@@ -459,6 +459,7 @@ fastcli 当前内置 9 个工具。内置条目只在源码中定义，不写入
 | `copilot` | GitHub Copilot | npm (`@github/copilot`) | coding | `github`, `coding` |
 | `opencode` | OpenCode | npm (`opencode`) | coding | `opensource`, `coding` |
 | `pi-coding-agent` | PI Coding Agent | npm (`@earendil-works/pi-coding-agent`) | coding | `pi`, `coding` |
+| `codebuddy` | CodeBuddy Code | npm (`@tencent-ai/codebuddy-code`) | coding | `tencent`, `coding` |
 | `grok` | Grok CLI | curl 脚本 | coding | `xai`, `coding` |
 | `cursor` | Cursor CLI | curl 脚本 | coding | `cursor`, `coding` |
 | `speculo` | Speculo | npm (`@namewta/speculo`) | tool | `spec`, `tool` |
@@ -734,8 +735,8 @@ tests            Vitest 单元测试与集成测试
 - [CHANGELOG.md](CHANGELOG.md)：版本变更记录。
 - [AGENTS.md](AGENTS.md)：AI 代理协作手册。
 - [CLAUDE.md](CLAUDE.md)：Claude Code 仓库导航与设计决策参考。
-- [.agents/skills/docs-sync/SKILL.md](.agents/skills/docs-sync/SKILL.md)：基于 git diff 的文档同步技能。
-- [.agents/skills/npm-cicd-release/SKILL.md](.agents/skills/npm-cicd-release/SKILL.md)：commit / docs-sync / release / tag 编排技能。
+- [.agents/skills/add-builtin-tool/SKILL.md](.agents/skills/add-builtin-tool/SKILL.md)：向 fastcli 添加新内置工具的登记流程。
+- [speculo/](speculo/)：基于 Speculo 的 AI 工作流编排与文档同步。
 
 ## License
 
