@@ -25,6 +25,7 @@ const EXPECTED_NPM_BUILTINS: ReadonlyArray<{ id: string; npmPackage: string }> =
   { id: 'opencode', npmPackage: 'opencode-ai' },
   { id: 'pi-coding-agent', npmPackage: '@earendil-works/pi-coding-agent' },
   { id: 'codebuddy', npmPackage: '@tencent-ai/codebuddy-code' },
+  { id: 'openwiki', npmPackage: 'openwiki' },
   { id: 'speculo', npmPackage: '@namewta/speculo' },
 ];
 
@@ -80,11 +81,11 @@ describe('BUILTIN_TOOLS 元数据', () => {
     }
   });
 
-  it('coding 分类包含 9 个工具，tool 分类包含 speculo', () => {
+  it('coding 分类包含 9 个工具，tool 分类包含 openwiki 和 speculo', () => {
     const coding = BUILTIN_TOOLS.filter((t) => t.category === 'coding');
     const tool = BUILTIN_TOOLS.filter((t) => t.category === 'tool');
     expect(coding).toHaveLength(9);
-    expect(tool.map((t) => t.id)).toEqual(['speculo']);
+    expect(tool.map((t) => t.id)).toEqual(['openwiki', 'speculo']);
   });
 });
 

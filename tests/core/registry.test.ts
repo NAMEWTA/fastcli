@@ -43,7 +43,7 @@ afterEach(() => {
 });
 
 describe('loadRegistry - 合并语义', () => {
-  it('list() 同时包含 builtin（10 个）与 user 工具', async () => {
+  it('list() 同时包含 builtin（11 个）与 user 工具', async () => {
     const userTool: ToolEntry = {
       id: 'aider',
       name: 'Aider',
@@ -58,8 +58,8 @@ describe('loadRegistry - 合并语义', () => {
     });
 
     const all = registry.list();
-    // 10 个 builtin + 1 个 user = 11
-    expect(all).toHaveLength(11);
+    // 11 个 builtin + 1 个 user = 12
+    expect(all).toHaveLength(12);
     expect(all.map((t) => t.id).sort()).toEqual(
       [
         'aider',
@@ -71,6 +71,7 @@ describe('loadRegistry - 合并语义', () => {
         'gemini',
         'grok',
         'opencode',
+        'openwiki',
         'pi-coding-agent',
         'speculo',
       ].sort(),
@@ -145,7 +146,7 @@ describe('loadRegistry - source 过滤', () => {
     });
 
     const builtin = registry.list({ source: 'builtin' });
-    expect(builtin).toHaveLength(10);
+    expect(builtin).toHaveLength(11);
     expect(builtin.every((t) => t.source === 'builtin')).toBe(true);
   });
 
@@ -244,13 +245,13 @@ describe('loadRegistry - category 过滤', () => {
     expect(coding.every((t) => t.category === 'coding')).toBe(true);
   });
 
-  it('list({ category: "tool" }) 仅返回 speculo', async () => {
+  it('list({ category: "tool" }) 返回 openwiki 和 speculo', async () => {
     const registry = await loadRegistry({
       appConfig: APP_CONFIG_VOLTA,
       toolsFile: EMPTY_TOOLS,
     });
     const tool = registry.list({ category: 'tool' });
-    expect(tool.map((t) => t.id)).toEqual(['speculo']);
+    expect(tool.map((t) => t.id)).toEqual(['openwiki', 'speculo']);
   });
 
   it('category + source 组合过滤 user 工具无 category 时为空', async () => {

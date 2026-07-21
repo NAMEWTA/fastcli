@@ -136,6 +136,14 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     },
   },
   {
+    id: 'openwiki',
+    name: 'OpenWiki',
+    description: 'OpenWiki CLI',
+    npmPackage: 'openwiki',
+    tags: ['opensource', 'tool'],
+    category: 'tool',
+  },
+  {
     id: 'speculo',
     name: 'Speculo',
     description: 'Speculo CLI',

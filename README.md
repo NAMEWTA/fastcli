@@ -318,6 +318,7 @@ fastcli
 │   ├── Grok CLI
 │   └── Cursor CLI
 ├── 通用工具 / General Tools
+│   ├── OpenWiki
 │   └── Speculo
 ├── 自定义 / Custom
 └── 可视化配置 / Visual Config
@@ -449,7 +450,7 @@ fastcli view --no-open
 
 ## 内置工具
 
-fastcli 当前内置 10 个工具。内置条目只在源码中定义，不写入用户的 `tools.json`。
+fastcli 当前内置 11 个工具。内置条目只在源码中定义，不写入用户的 `tools.json`。
 
 | ID | 名称 | 安装方式 | 分类 | 标签 |
 |----|------|----------|------|------|
@@ -458,6 +459,7 @@ fastcli 当前内置 10 个工具。内置条目只在源码中定义，不写�
 | `gemini` | Gemini CLI | npm (`@google/gemini-cli`) | coding | `google`, `coding` |
 | `copilot` | GitHub Copilot | npm (`@github/copilot`) | coding | `github`, `coding` |
 | `opencode` | OpenCode | npm (`opencode-ai`) | coding | `opensource`, `coding` |
+| `openwiki` | OpenWiki | npm (`openwiki`) | tool | `opensource`, `tool` |
 | `pi-coding-agent` | PI Coding Agent | npm (`@earendil-works/pi-coding-agent`) | coding | `pi`, `coding` |
 | `codebuddy` | CodeBuddy Code | npm (`@tencent-ai/codebuddy-code`) | coding | `tencent`, `coding` |
 | `grok` | Grok CLI | curl 脚本 | coding | `xai`, `coding` |
