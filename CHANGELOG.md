@@ -8,6 +8,14 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
+## [3.2.1] - 2026-07-21
+
+### 修复
+
+- **Builtin**：更新 OpenCode 的 npm 包名从 `opencode` 改为 `opencode-ai`。
+
+---
+
 ## [3.2.0] - 2026-07-11
 
 ### 新增
