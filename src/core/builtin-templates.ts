@@ -35,7 +35,7 @@ const DANGER_COMMANDS: Record<string, string> = {
   '@openai/codex': 'codex --dangerously-bypass-approvals-and-sandbox',
   '@github/copilot': 'copilot --autopilot --yolo',
   '@google/gemini-cli': 'gemini --yolo',
-  opencode: 'opencode run --dangerously-skip-permissions',
+  'opencode-ai': 'opencode run --dangerously-skip-permissions',
 };
 
 /**

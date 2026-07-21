@@ -457,7 +457,7 @@ fastcli 当前内置 10 个工具。内置条目只在源码中定义，不写�
 | `codex` | OpenAI Codex | npm (`@openai/codex`) | coding | `openai`, `coding` |
 | `gemini` | Gemini CLI | npm (`@google/gemini-cli`) | coding | `google`, `coding` |
 | `copilot` | GitHub Copilot | npm (`@github/copilot`) | coding | `github`, `coding` |
-| `opencode` | OpenCode | npm (`opencode`) | coding | `opensource`, `coding` |
+| `opencode` | OpenCode | npm (`opencode-ai`) | coding | `opensource`, `coding` |
 | `pi-coding-agent` | PI Coding Agent | npm (`@earendil-works/pi-coding-agent`) | coding | `pi`, `coding` |
 | `codebuddy` | CodeBuddy Code | npm (`@tencent-ai/codebuddy-code`) | coding | `tencent`, `coding` |
 | `grok` | Grok CLI | curl 脚本 | coding | `xai`, `coding` |

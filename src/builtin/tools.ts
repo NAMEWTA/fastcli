@@ -95,7 +95,7 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     id: 'opencode',
     name: 'OpenCode',
     description: 'OpenCode CLI',
-    npmPackage: 'opencode',
+    npmPackage: 'opencode-ai',
     tags: ['opensource', 'coding'],
     category: 'coding',
   },
