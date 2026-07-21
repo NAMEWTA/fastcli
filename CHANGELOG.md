@@ -6,6 +6,10 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+---
+
+## [3.2.2] - 2026-07-21
+
 ### 新增
 
 - **Builtin**：新增 OpenWiki（`openwiki`）内置工具。
