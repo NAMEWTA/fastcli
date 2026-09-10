@@ -727,11 +727,11 @@ tests            Vitest 单元测试与集成测试
 发布由 tag `v*` 驱动：
 
 1. GitHub Actions checkout。
-2. 安装 pnpm 与 Node.js 22。
+2. 安装 pnpm 与 Node.js 24。
 3. `pnpm install --frozen-lockfile`。
 4. `pnpm build`。
 5. `pnpm test`。
-6. `npm stage publish --access public`（当前 npm token 仅允许暂存；维护者 2FA 批准后上架）。
+6. `npm publish --access public --provenance`（GitHub OIDC trusted publishing，无需长期 `NPM_TOKEN`）。
 7. 创建 GitHub Release。
 
 ## 相关文档
