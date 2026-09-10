@@ -34,9 +34,12 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-      
-      - name: Publish to npm
-        run: pnpm publish --access public --no-git-checks
+
+      - name: Upgrade npm CLI
+        run: npm install -g npm@latest
+
+      - name: Stage package on npm
+        run: npm stage publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
@@ -49,6 +52,9 @@ jobs:
         with:
           name: v${{ steps.version.outputs.VERSION }}
           generate_release_notes: true
+          body: |
+            npm 包已提交到 staging，需维护者 2FA 批准后才会上架：
+            https://www.npmjs.com/settings/namewta/staged-packages
           draft: false
           prerelease: ${{ contains(github.ref, '-') }}
         env:

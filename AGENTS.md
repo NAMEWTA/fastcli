@@ -59,7 +59,7 @@ packages/web/         — Vite+React SPA，仅通过 HTTP API 与 web-server 通
 - 本地可视化编辑器只能绑定到 `127.0.0.1`，并使用 token 鉴权。
 - Web API 写入 `config.json` / `tools.json` 必须使用 ETag + `If-Match` 防止覆盖外部改动。
 - 配置写入必须走原子写入流程，POSIX 平台目标文件权限为 `0o600`。
-- 发布由 tag `v*` 驱动，CI 必须先 `pnpm build`，再 `pnpm test`，然后发布 npm 并创建 GitHub Release。
+- 发布由 tag `v*` 驱动，CI 必须先 `pnpm build`，再 `pnpm test`，然后 `npm stage publish`；上架需维护者在 npm 上 2FA 批准，并创建 GitHub Release。
 - README 是推广和用户入口文档，必须强调 fastcli 的优势、场景、安装、命令和配置。
 - CHANGELOG 顶部必须保留 `[Unreleased]`。
 

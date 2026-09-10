@@ -13,6 +13,7 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 ### 变更
 
 - **Docs**：移除仓库内 Speculo 工作区（matt-pocock 工作流、skills、docs-sync 状态与相关文档入口）。
+- **CI**：npm 发布改为 `npm stage publish`，适配仅允许暂存的 token；上架需维护者在 npm 上 2FA 批准。
 
 ---
 

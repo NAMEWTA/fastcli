@@ -731,7 +731,7 @@ tests            Vitest 单元测试与集成测试
 3. `pnpm install --frozen-lockfile`。
 4. `pnpm build`。
 5. `pnpm test`。
-6. `pnpm publish --access public --no-git-checks`。
+6. `npm stage publish --access public`（当前 npm token 仅允许暂存；维护者 2FA 批准后上架）。
 7. 创建 GitHub Release。
 
 ## 相关文档
