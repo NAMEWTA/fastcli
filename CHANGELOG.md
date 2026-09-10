@@ -6,6 +6,10 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+---
+
+## [3.2.3] - 2026-09-10
+
 ### 变更
 
 - **Builtin**：Grok Build 安装方式从 curl 脚本改为 npm 包 `@xai-official/grok`（volta 安装 `@latest`，npm 全局安装）。
@@ -109,7 +113,10 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## 版本链接
 
-- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.0...HEAD)
+- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.3...HEAD)
+- [3.2.3](https://github.com/namewta/fastcli/releases/tag/v3.2.3)
+- [3.2.2](https://github.com/namewta/fastcli/releases/tag/v3.2.2)
+- [3.2.1](https://github.com/namewta/fastcli/releases/tag/v3.2.1)
 - [3.2.0](https://github.com/namewta/fastcli/releases/tag/v3.2.0)
 - [3.1.0](https://github.com/namewta/fastcli/releases/tag/v3.1.0)
 - [3.0.2](https://github.com/namewta/fastcli/releases/tag/v3.0.2)
