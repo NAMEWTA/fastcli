@@ -8,6 +8,14 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
+## [3.2.5] - 2026-09-10
+
+### 变更
+
+- **Docs**：移除仓库内 Speculo 工作区（matt-pocock 工作流、skills、docs-sync 状态与相关文档入口）。
+
+---
+
 ## [3.2.4] - 2026-09-10
 
 ### 变更
@@ -121,7 +129,8 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## 版本链接
 
-- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.4...HEAD)
+- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.5...HEAD)
+- [3.2.5](https://github.com/namewta/fastcli/releases/tag/v3.2.5)
 - [3.2.4](https://github.com/namewta/fastcli/releases/tag/v3.2.4)
 - [3.2.3](https://github.com/namewta/fastcli/releases/tag/v3.2.3)
 - [3.2.2](https://github.com/namewta/fastcli/releases/tag/v3.2.2)
