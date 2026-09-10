@@ -8,6 +8,14 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
+## [3.2.4] - 2026-09-10
+
+### 变更
+
+- **Release**：重新发布 3.2.3 的变更（Grok Build 改为 npm 安装、AI 工具展示顺序调整）。3.2.3 因 npm 鉴权失败未上架。
+
+---
+
 ## [3.2.3] - 2026-09-10
 
 ### 变更
@@ -113,7 +121,8 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## 版本链接
 
-- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.3...HEAD)
+- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.4...HEAD)
+- [3.2.4](https://github.com/namewta/fastcli/releases/tag/v3.2.4)
 - [3.2.3](https://github.com/namewta/fastcli/releases/tag/v3.2.3)
 - [3.2.2](https://github.com/namewta/fastcli/releases/tag/v3.2.2)
 - [3.2.1](https://github.com/namewta/fastcli/releases/tag/v3.2.1)
