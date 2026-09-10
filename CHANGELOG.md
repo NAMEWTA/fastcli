@@ -12,7 +12,7 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ### 变更
 
-- **CI**：发布改为 GitHub OIDC trusted publishing，推 `v*` tag 后直接 `npm publish`，不再走 staging 人工批准。
+- **Release**：重新走 tag 发布。npm 包仍由 CI `npm stage publish` 暂存，维护者 2FA 批准后上架。
 
 ---
 
