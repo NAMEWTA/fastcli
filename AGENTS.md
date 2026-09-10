@@ -62,7 +62,6 @@ packages/web/         — Vite+React SPA，仅通过 HTTP API 与 web-server 通
 - 发布由 tag `v*` 驱动，CI 必须先 `pnpm build`，再 `pnpm test`，然后发布 npm 并创建 GitHub Release。
 - README 是推广和用户入口文档，必须强调 fastcli 的优势、场景、安装、命令和配置。
 - CHANGELOG 顶部必须保留 `[Unreleased]`。
-- docs-sync 由 `speculo/commands/docs-sync.md` 编排，基于 Git 区间与 workflow 声明全量审计文档；触发时读取 `speculo/.speculo/commands/docs-sync/state.json` 确定基线。
 
 ## Architecture Notes
 
@@ -96,5 +95,23 @@ packages/web/         — Vite+React SPA，仅通过 HTTP API 与 web-server 通
 - 发布历史记录在 [CHANGELOG.md](CHANGELOG.md) 中。
 - AI 代理协作规则以本文件（`AGENTS.md`）为唯一权威来源；`CLAUDE.md` 为指向本文件的重定向。
 - AI 代理技能在 [.agents/skills/add-builtin-tool/SKILL.md](.agents/skills/add-builtin-tool/SKILL.md)。
-- docs-sync 由 [speculo/commands/docs-sync.md](speculo/commands/docs-sync.md) 编排，状态位于 `speculo/.speculo/commands/docs-sync/state.json`。
-- 旧 `.docs-sync-state.json` 为遗留文件，仅作历史参考。
+
+<SPECULO>
+## Speculo 运行时配置
+
+### 初始化状态检查
+
+运行时必须读取以下文件以确认 Speculo 初始化状态：
+
+- `./speculo/.speculo/workspace.json` — 工作区根别名配置
+- `./speculo/config.json` — 项目配置文件
+
+若上述文件不存在或内容为空，说明项目尚未完成 Speculo 初始化。
+此时必须提示用户：**请先运行 `speculo init` 完成初始化配置。**
+
+### 工作流入口（强制读取）
+
+初始化时已选择以下工作流，运行时必须强制读取对应入口文件：
+
+- `./speculo/workflows/specdev/INDEX.md`
+</SPECULO>

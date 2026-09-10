@@ -740,7 +740,6 @@ tests            Vitest 单元测试与集成测试
 - [AGENTS.md](AGENTS.md)：AI 代理协作手册。
 - [CLAUDE.md](CLAUDE.md)：Claude Code 仓库导航与设计决策参考。
 - [.agents/skills/add-builtin-tool/SKILL.md](.agents/skills/add-builtin-tool/SKILL.md)：向 fastcli 添加新内置工具的登记流程。
-- [speculo/](speculo/)：基于 Speculo 的 AI 工作流编排与文档同步。
 
 ## License
 
