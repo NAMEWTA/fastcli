@@ -8,6 +8,14 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
+## [3.2.6] - 2026-09-10
+
+### 变更
+
+- **CI**：发布改为 GitHub OIDC trusted publishing，推 `v*` tag 后直接 `npm publish`，不再走 staging 人工批准。
+
+---
+
 ## [3.2.5] - 2026-09-10
 
 ### 变更
@@ -130,7 +138,8 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## 版本链接
 
-- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.5...HEAD)
+- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.6...HEAD)
+- [3.2.6](https://github.com/namewta/fastcli/releases/tag/v3.2.6)
 - [3.2.5](https://github.com/namewta/fastcli/releases/tag/v3.2.5)
 - [3.2.4](https://github.com/namewta/fastcli/releases/tag/v3.2.4)
 - [3.2.3](https://github.com/namewta/fastcli/releases/tag/v3.2.3)
