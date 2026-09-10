@@ -100,6 +100,9 @@ describe('fastcli list - 默认输出', () => {
     expect(r.stdout).toContain('grok');
     expect(r.stdout).toContain('cursor');
     expect(r.stdout).toContain('speculo');
+    expect(r.stdout.indexOf('codex')).toBeGreaterThan(-1);
+    expect(r.stdout.indexOf('codex')).toBeLessThan(r.stdout.indexOf('grok'));
+    expect(r.stdout.indexOf('grok')).toBeLessThan(r.stdout.indexOf('claude'));
     expect(r.stdout).toContain('Custom tools');
     expect(r.stdout).toContain('aider');
   });

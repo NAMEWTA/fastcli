@@ -11,8 +11,9 @@
  * - 当 user 中的 `id` 与某个 builtin 重名时，让 user 覆盖 builtin，并通过
  *   `console.warn` 打印一次性提示（Requirement 1.5）
  *
- * 本模块只负责数据装配与查询，不做排序——分组与字母序由上层
- * `cli/list` 与 `cli/menu` 在展示阶段处理（设计文档 §Components / Property 3）。
+ * 本模块只负责数据装配与查询，不做额外排序：`list()` 保持 Map 插入顺序
+ * （builtin 为 `BUILTIN_TOOLS` 声明顺序，user 接在后面）。分组与自定义工具
+ * 字母序由上层 `cli/list` 与 `cli/menu` 在展示阶段处理。
  *
  * Validates: Requirements 1.5, 3.2, 3.3, 3.4
  */
@@ -49,7 +50,7 @@ export interface ListFilter {
 export interface Registry {
   /** 按 id 精确查找（builtin 与 user 共用命名空间，user 覆盖 builtin）。 */
   findById(id: string): ToolEntry | undefined;
-  /** 列出全部条目，可按 `source` / `tag` 过滤；不保证顺序。 */
+  /** 列出全部条目，可按 `source` / `tag` / `category` 过滤；顺序为声明插入序。 */
   list(filter?: ListFilter): ToolEntry[];
 }
 

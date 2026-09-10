@@ -86,9 +86,10 @@ async function pickTool(
   filter: ListFilter,
   language: Language,
 ): Promise<ToolEntry | null> {
-  const tools = registry
-    .list(filter)
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const tools = registry.list(filter);
+  if (filter.source === 'user') {
+    tools.sort((a, b) => a.name.localeCompare(b.name));
+  }
 
   if (tools.length === 0) {
     log.warn(t('menu.noTools', {}, language));

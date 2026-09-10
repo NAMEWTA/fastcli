@@ -25,13 +25,13 @@ const EXPECTED_NPM_BUILTINS: ReadonlyArray<{ id: string; npmPackage: string }> =
   { id: 'opencode', npmPackage: 'opencode-ai' },
   { id: 'pi-coding-agent', npmPackage: '@earendil-works/pi-coding-agent' },
   { id: 'codebuddy', npmPackage: '@tencent-ai/codebuddy-code' },
+  { id: 'grok', npmPackage: '@xai-official/grok' },
   { id: 'openwiki', npmPackage: 'openwiki' },
   { id: 'speculo', npmPackage: '@namewta/speculo' },
 ];
 
 /** curl-based 内置工具：commands 硬编码在 BuiltinSpec 中，不通过 buildBuiltinCommands 生成。 */
 const EXPECTED_CURL_BUILTINS: ReadonlyArray<{ id: string }> = [
-  { id: 'grok' },
   { id: 'cursor' },
 ];
 
@@ -66,7 +66,7 @@ describe('BUILTIN_TOOLS 元数据', () => {
     }
   });
 
-  it('grok / cursor 不依赖 npmPackage，有直接 commands', () => {
+  it('cursor 不依赖 npmPackage，有直接 commands', () => {
     for (const { id } of EXPECTED_CURL_BUILTINS) {
       const tool = BUILTIN_TOOLS.find((t) => t.id === id);
       expect(tool?.commands).toBeDefined();
@@ -81,10 +81,20 @@ describe('BUILTIN_TOOLS 元数据', () => {
     }
   });
 
-  it('coding 分类包含 9 个工具，tool 分类包含 openwiki 和 speculo', () => {
+  it('coding 分类按 Codex、Grok Build、其余顺延的声明顺序，tool 分类为 openwiki 和 speculo', () => {
     const coding = BUILTIN_TOOLS.filter((t) => t.category === 'coding');
     const tool = BUILTIN_TOOLS.filter((t) => t.category === 'tool');
-    expect(coding).toHaveLength(9);
+    expect(coding.map((t) => t.id)).toEqual([
+      'codex',
+      'grok',
+      'claude',
+      'gemini',
+      'copilot',
+      'opencode',
+      'pi-coding-agent',
+      'codebuddy',
+      'cursor',
+    ]);
     expect(tool.map((t) => t.id)).toEqual(['openwiki', 'speculo']);
   });
 });

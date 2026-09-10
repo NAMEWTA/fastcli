@@ -67,13 +67,14 @@ fastcli 当前重点不是“做一个更复杂的脚本系统”，而是围绕
 
 fastcli 内置常用 AI CLI 工具，包括：
 
-- Claude Code
 - OpenAI Codex
+- Grok Build
+- Claude Code
 - Gemini CLI
 - GitHub Copilot
 - OpenCode
 - PI Coding Agent
-- Grok CLI
+- CodeBuddy Code
 - Cursor CLI
 - Speculo
 
@@ -309,13 +310,14 @@ fastcli 会引导你选择包管理器，并在 `~/.fastcli/` 下创建配置文
 ```text
 fastcli
 ├── AI 编程工具 / AI Coding Tools
-│   ├── Claude Code
 │   ├── OpenAI Codex
+│   ├── Grok Build
+│   ├── Claude Code
 │   ├── Gemini CLI
 │   ├── GitHub Copilot
 │   ├── OpenCode
 │   ├── PI Coding Agent
-│   ├── Grok CLI
+│   ├── CodeBuddy Code
 │   └── Cursor CLI
 ├── 通用工具 / General Tools
 │   ├── OpenWiki
@@ -454,16 +456,16 @@ fastcli 当前内置 11 个工具。内置条目只在源码中定义，不写�
 
 | ID | 名称 | 安装方式 | 分类 | 标签 |
 |----|------|----------|------|------|
-| `claude` | Claude Code | npm (`@anthropic-ai/claude-code`) | coding | `anthropic`, `coding` |
 | `codex` | OpenAI Codex | npm (`@openai/codex`) | coding | `openai`, `coding` |
+| `grok` | Grok Build | npm (`@xai-official/grok`) | coding | `xai`, `coding` |
+| `claude` | Claude Code | npm (`@anthropic-ai/claude-code`) | coding | `anthropic`, `coding` |
 | `gemini` | Gemini CLI | npm (`@google/gemini-cli`) | coding | `google`, `coding` |
 | `copilot` | GitHub Copilot | npm (`@github/copilot`) | coding | `github`, `coding` |
 | `opencode` | OpenCode | npm (`opencode-ai`) | coding | `opensource`, `coding` |
-| `openwiki` | OpenWiki | npm (`openwiki`) | tool | `opensource`, `tool` |
 | `pi-coding-agent` | PI Coding Agent | npm (`@earendil-works/pi-coding-agent`) | coding | `pi`, `coding` |
 | `codebuddy` | CodeBuddy Code | npm (`@tencent-ai/codebuddy-code`) | coding | `tencent`, `coding` |
-| `grok` | Grok CLI | curl 脚本 | coding | `xai`, `coding` |
 | `cursor` | Cursor CLI | curl 脚本 | coding | `cursor`, `coding` |
+| `openwiki` | OpenWiki | npm (`openwiki`) | tool | `opensource`, `tool` |
 | `speculo` | Speculo | npm (`@namewta/speculo`) | tool | `spec`, `tool` |
 
 内置工具默认提供：

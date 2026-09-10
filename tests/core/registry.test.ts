@@ -240,7 +240,17 @@ describe('loadRegistry - category 过滤', () => {
       toolsFile: EMPTY_TOOLS,
     });
     const coding = registry.list({ category: 'coding' });
-    expect(coding).toHaveLength(9);
+    expect(coding.map((t) => t.id)).toEqual([
+      'codex',
+      'grok',
+      'claude',
+      'gemini',
+      'copilot',
+      'opencode',
+      'pi-coding-agent',
+      'codebuddy',
+      'cursor',
+    ]);
     expect(coding.every((t) => t.source === 'builtin')).toBe(true);
     expect(coding.every((t) => t.category === 'coding')).toBe(true);
   });
@@ -271,7 +281,7 @@ describe('loadRegistry - category 过滤', () => {
 });
 
 describe('loadRegistry - curl-based builtin commands', () => {
-  it('grok / cursor 的 commands 不随 packageManager 改变', async () => {
+  it('cursor 的 commands 不随 packageManager 改变', async () => {
     const registryVolta = await loadRegistry({
       appConfig: APP_CONFIG_VOLTA,
       toolsFile: EMPTY_TOOLS,
@@ -281,20 +291,37 @@ describe('loadRegistry - curl-based builtin commands', () => {
       toolsFile: EMPTY_TOOLS,
     });
 
-    const grokVolta = registryVolta.findById('grok');
-    const grokNpm = registryNpm.findById('grok');
-    expect(grokVolta?.commands.install).toEqual([
-      'curl -fsSL https://x.ai/cli/install.sh | bash',
-    ]);
-    expect(grokNpm?.commands.install).toEqual(grokVolta?.commands.install);
-    expect(grokVolta?.commands.uninstall).toBeUndefined();
-
     const cursorVolta = registryVolta.findById('cursor');
     const cursorNpm = registryNpm.findById('cursor');
     expect(cursorVolta?.commands.install).toEqual([
       'curl https://cursor.com/install -fsS | bash',
     ]);
     expect(cursorNpm?.commands.install).toEqual(cursorVolta?.commands.install);
+  });
+
+  it('grok 的 commands 随 packageManager 改变', async () => {
+    const registryVolta = await loadRegistry({
+      appConfig: APP_CONFIG_VOLTA,
+      toolsFile: EMPTY_TOOLS,
+    });
+    const registryNpm = await loadRegistry({
+      appConfig: APP_CONFIG_NPM,
+      toolsFile: EMPTY_TOOLS,
+    });
+    const grokVolta = registryVolta.findById('grok');
+    const grokNpm = registryNpm.findById('grok');
+    expect(grokVolta?.commands.install).toEqual([
+      'volta install @xai-official/grok@latest',
+    ]);
+    expect(grokVolta?.commands.uninstall).toEqual([
+      'volta uninstall @xai-official/grok',
+    ]);
+    expect(grokNpm?.commands.install).toEqual([
+      'npm install -g @xai-official/grok',
+    ]);
+    expect(grokNpm?.commands.uninstall).toEqual([
+      'npm uninstall -g @xai-official/grok',
+    ]);
   });
 
   it('speculo 的 commands 随 packageManager 改变', async () => {

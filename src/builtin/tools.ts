@@ -13,11 +13,12 @@
  *
  * | id       | npmPackage                       |
  * |----------|----------------------------------|
- * | claude   | @anthropic-ai/claude-code        |
  * | codex    | @openai/codex                    |
+ * | grok     | @xai-official/grok               |
+ * | claude   | @anthropic-ai/claude-code        |
  * | gemini   | @google/gemini-cli               |
  * | copilot  | @github/copilot                  |
- * | opencode | opencode                         |
+ * | opencode | opencode-ai                      |
  *
  * 当用户在 `tools.json` 中定义了与某个内置工具同 `id` 的条目时，`core/registry.ts`
  * 会让用户条目覆盖内置条目（并打印一次性 warn），见 Requirement 1.5。
@@ -55,24 +56,31 @@ export interface BuiltinSpec {
 }
 
 /**
- * 内置工具列表。顺序仅作展示之用；`registry` 在合并 builtin + user 时会按
- * `name` 字母序重新排序。
+ * 内置工具列表。数组顺序即 `list` / 交互菜单 / Web 内置工具的展示顺序。
  */
 export const BUILTIN_TOOLS: BuiltinSpec[] = [
-  {
-    id: 'claude',
-    name: 'Claude Code',
-    description: 'Anthropic Claude Code CLI',
-    npmPackage: '@anthropic-ai/claude-code',
-    tags: ['anthropic', 'coding'],
-    category: 'coding',
-  },
   {
     id: 'codex',
     name: 'OpenAI Codex',
     description: 'OpenAI Codex CLI',
     npmPackage: '@openai/codex',
     tags: ['openai', 'coding'],
+    category: 'coding',
+  },
+  {
+    id: 'grok',
+    name: 'Grok Build',
+    description: 'xAI Grok Build CLI',
+    npmPackage: '@xai-official/grok',
+    tags: ['xai', 'coding'],
+    category: 'coding',
+  },
+  {
+    id: 'claude',
+    name: 'Claude Code',
+    description: 'Anthropic Claude Code CLI',
+    npmPackage: '@anthropic-ai/claude-code',
+    tags: ['anthropic', 'coding'],
     category: 'coding',
   },
   {
@@ -114,16 +122,6 @@ export const BUILTIN_TOOLS: BuiltinSpec[] = [
     npmPackage: '@tencent-ai/codebuddy-code',
     tags: ['tencent', 'coding'],
     category: 'coding',
-  },
-  {
-    id: 'grok',
-    name: 'Grok CLI',
-    description: 'xAI Grok CLI',
-    tags: ['xai', 'coding'],
-    category: 'coding',
-    commands: {
-      install: ['curl -fsSL https://x.ai/cli/install.sh | bash'],
-    },
   },
   {
     id: 'cursor',

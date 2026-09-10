@@ -10,8 +10,8 @@
  * ── 自定义工具 ──
  *   <id>  <name>  <description-trunc>  已配置 N 个操作
  *
- * 同组内按 `name` 字母序排序。`--source` / `--tag` 过滤直接透传到
- * `Registry.list({ source?, tag? })`。
+ * 内置工具按 `BUILTIN_TOOLS` 声明顺序展示；自定义工具按 `name` 字母序。
+ * `--source` / `--tag` 过滤直接透传到 `Registry.list({ source?, tag? })`。
  *
  * Validates: Requirements 3.2, 3.3, 3.4
  */
@@ -91,9 +91,7 @@ export default defineCommand({
     // 分组：仅在没指定 source 或 source === 'builtin' 时输出 builtin 段；
     // user 同理。这样 `--source=user` 时不会出现「── 内置工具 ──\n（空）」的
     // 视觉割裂。
-    const builtin = filtered
-      .filter((t) => t.source === 'builtin')
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const builtin = filtered.filter((t) => t.source === 'builtin');
     const user = filtered
       .filter((t) => t.source === 'user')
       .sort((a, b) => a.name.localeCompare(b.name));

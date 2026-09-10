@@ -6,6 +6,11 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+### 变更
+
+- **Builtin**：Grok Build 安装方式从 curl 脚本改为 npm 包 `@xai-official/grok`（volta 安装 `@latest`，npm 全局安装）。
+- **Builtin**：AI 编程工具展示顺序调整为 Codex、Grok Build，其余按原相对顺序顺延；`list` 与交互菜单按内置声明顺序展示。
+
 ---
 
 ## [3.2.2] - 2026-07-21
