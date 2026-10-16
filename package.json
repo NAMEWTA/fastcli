@@ -1,7 +1,7 @@
 {
   "name": "@namewta/fastcli",
-  "version": "3.2.6",
-  "description": "终端命令别名和交互式工作流管理工具",
+  "version": "3.2.7",
+  "description": "AI CLI launcher and npm manager for Claude, Codex, Gemini, Grok, OpenCode and Pi",
   "type": "module",
   "author": {
     "name": "namewta",
@@ -22,39 +22,40 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup && pnpm --filter @namewta/fastcli-web build",
+    "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "link": "pnpm build && pnpm link -g",
-    "unlink": "pnpm unlink -g"
+    "unlink": "pnpm unlink -g",
+    "typecheck": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.19.0"
   },
   "keywords": [
+    "ai",
     "cli",
-    "alias",
-    "workflow",
-    "terminal",
-    "command",
-    "shortcut",
-    "productivity"
+    "claude",
+    "codex",
+    "gemini",
+    "yolo",
+    "launcher"
   ],
   "license": "MIT",
   "packageManager": "pnpm@10.29.2",
   "dependencies": {
     "@clack/prompts": "^0.9.0",
-    "citty": "^0.1.6",
-    "express": "^5.2.1",
-    "fuse.js": "^7.0.0",
-    "open": "^11.0.0"
+    "cross-spawn": "^7.0.6",
+    "read-cmd-shim": "^5.0.0",
+    "semver": "^7.7.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "tsup": "^8.5.1",
     "typescript": "^6.0.2",
-    "vitest": "^4.1.1"
+    "vitest": "^4.1.1",
+    "@types/cross-spawn": "^6.0.6",
+    "@types/semver": "^7.7.0"
   }
 }

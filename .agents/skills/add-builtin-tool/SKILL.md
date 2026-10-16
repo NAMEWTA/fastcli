@@ -1,87 +1,25 @@
 ---
 name: add-builtin-tool
-description: 向 fastcli 添加新的内置工具。当用户要求添加新 CLI 工具、新增 builtin、加一个 install 命令、或新增 AI 编程工具时使用。覆盖 npm 工具和 curl/brew 工具的两种路径。
+description: 向 fastcli 添加或调整内置 AI CLI，核验官方 npm 分发、启动参数和本地检测，扩展固定工具目录及行为测试。
 ---
 
-向 fastcli 添加内置工具的**登记流程**：在元数据清单中注册，同步测试中的硬编码计数，验证全绿。
+fastcli 是专用 AI CLI 管理器，当前支持六个工具。新增支持项须来自用户请求；本 Skill 不把发现外部 CLI 自动视为扩充产品范围。
 
-## 注册（唯一必须修改的源代码文件）
+## 核验并登记
 
-在 `src/builtin/tools.ts` 的 `BUILTIN_TOOLS` 数组中新增一个 `BuiltinSpec` 条目。
+先核验官方 npm 包、可执行文件名、版本命令、交互式自动审批参数、Node/平台要求。使用一手文档或对应发布版本源码，不把同名社区包或非交互 run 子命令当作官方交互启动。工具默认无逐次审批时无需虚构 Yolo flag。
 
-**npm 工具**（提供 `npmPackage`，命令自动生成）：
+在 `src/builtin/tools.ts` 的 `BUILTIN_TOOLS` 中登记 `ToolDefinition`：id、name、npmPackage、executable、launchArgs、versionArgs，以及适用的 minimumNode。ID 唯一且不能与 install/upgrade/uninstall/list/info/config 冲突。
 
-```typescript
-{
-  id: '<kebab-id>',              // 全局唯一，与用户工具共用命名空间
-  name: '<Display Name>',        // 亦用于 {{name}} 变量替换
-  description: '<一句话描述>',
-  npmPackage: '<npm-pkg-name>',  // 提供此项则省略 commands
-  tags: ['<vendor>', 'coding'],  // 格式：[厂商标识, 'coding'|'tool']
-  category: 'coding',            // 'coding' = AI 编程工具，'tool' = 通用开发工具
-},
-```
+- 安装/升级由 `src/core/npm-manager.ts` 生成 `npm i -g <pkg>@latest`，卸载使用 `npm uninstall -g <pkg>`。
+- 需要安装脚本或 optional 平台包时，仅添加该工具所需的单次 npm 参数；不改全局 .npmrc、不自动升级 npm。
+- 没有官方 npm 分发的工具不能通过添加 curl/brew 命令绕过当前产品合同，需先明确支持范围。
+- `src/core/detection.ts` 的 PATH 与常见目录策略通常可复用。特殊布局只新增有一手依据的路径，不以配置目录作为安装证明。
+- 执行使用 executable/args 数组，工具后的原始参数保留。禁止 shell 字符串拼接。
+- 发现与管理所有权不同：可启动外部安装，不可用当前 npm 卸载另一来源。
 
-**非 npm 工具**（提供 `commands`，省略 `npmPackage`）：
+## 验收
 
-```typescript
-{
-  id: '<kebab-id>',
-  name: '<Display Name>',
-  description: '<一句话描述>',
-  tags: ['<vendor>', 'coding'],
-  category: 'coding',
-  commands: {
-    install: ['curl -fsSL <url> | bash'],
-  },
-},
-```
+新增对应快捷启动映射、版本读取、npm 参数及 PATH/非 PATH 发现测试。使用临时目录和伪 CLI/npm，不安装真实工具。检查入口帮助和未知工具提示中的名单、双语文案、README 工具表和 CHANGELOG。
 
-- `id` 必须匹配 `^[a-z0-9][a-z0-9-]*$`，不与现有 builtin 的 id 冲突。
-- `npmPackage` 的安装/卸载命令由 `src/core/builtin-templates.ts` 的 `buildBuiltinCommands()` 根据 `AppConfig.packageManager` 自动生成 —— volta 产生 `volta install <pkg>@latest`，npm 产生 `npm install -g <pkg>`。**不要在 BuiltinSpec 中硬编码命令。**
-- 如需 danger 全权限启动命令，在 `src/core/builtin-templates.ts` 的 `DANGER_COMMANDS` 中新增一条，key 为 `npmPackage` 值。
-
-## 同步测试计数
-
-添加新工具后，三个测试文件的硬编码数字需要更新。每处都必须匹配新总数，**一处不漏**：
-
-### `tests/core/builtin-templates.test.ts`
-
-1. `EXPECTED_NPM_BUILTINS` 数组新增一条 `{ id, npmPackage }` 映射（npm 工具），或 `EXPECTED_CURL_BUILTINS` 新增一条（curl 工具）
-2. `'coding 分类包含 N 个工具'` 测试中的 `.toHaveLength(N)` 计数 +1
-
-### `tests/core/registry.test.ts`
-
-搜索所有 `.toHaveLength(N)` 和注释中的数字，逐一更新：
-- builtin 总数 9→10（类推）
-- coding 分类数 8→9（类推）
-- `list()` 测试的 expected id 数组新增 `'<new-id>'`
-- tag `'coding'` 过滤结果计数 +1
-
-### `tests/cli/list.test.ts`
-
-- 注释中的 builtin 数量
-- `'包含全部 N 个 builtin'` 测试名
-- 新增 `expect(r.stdout).toContain('<new-id>')` 断言
-
-## 验证
-
-```bash
-pnpm build && pnpm test
-```
-
-**完成标准**：`pnpm test` 全部通过（16 个文件，无失败）。构建成功。
-
-## 参考架构
-
-```
-src/builtin/tools.ts          ← BuiltinSpec 元数据（你改的文件）
-  ↓
-src/core/registry.ts          ← buildBuiltinEntries 组装 ToolEntry
-  ↓
-src/core/builtin-templates.ts ← buildBuiltinCommands 生成命令字符串
-  ↓                              DANGER_COMMANDS 可选全权限命令
-src/config/schema.ts          ← ToolEntry / ToolCommands 类型定义
-```
-
-**依赖规则**：`builtin` → `core` → `config`。builtin 层只放元数据，不放逻辑。
+依次运行 `pnpm build`、`pnpm test`、`pnpm typecheck`。不通过修改工具计数代替行为验收；不为本次登记提交 tag 或发布。

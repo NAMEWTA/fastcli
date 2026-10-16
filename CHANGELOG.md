@@ -8,6 +8,24 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ---
 
+## [3.2.7] - 2026-10-16
+
+### 破坏性变更
+
+- 精简为 Claude Code、Codex、Gemini CLI、Grok Build、OpenCode、Pi 的启动与 npm 管理器，最低 Node.js 提升至 22.19。
+- 新增 `fastcli <tool>` Yolo 快捷启动及 install/upgrade/uninstall 命令；参数原样透传，菜单按行为组织。
+- 移除 Web 编辑器、自定义工具/命令链、Volta 管理和旧 run/add/edit/remove/view 接口；Pi ID 改为 `pi`。
+- 配置保留 schema 2，先备份再迁移到 npm 并保留语言；旧 tools.json 不再读取，原文件保留。
+
+### 新增
+
+- PATH 优先的跨平台安装发现、常见 Node 管理器路径、版本异常诊断及有界版本探测。
+- npm 全局环境所有权核验、包级脚本兼容参数和操作后状态验证；非 npm 安装可启动，不自动迁移。
+- 仅卸载确认，支持 --yes；管理 dry-run 不执行 npm 或迁移配置。
+- Linux/macOS/Windows CI 与新的进程、检测、菜单、管理及迁移测试。
+
+---
+
 ## [3.2.6] - 2026-09-10
 
 ### 变更
