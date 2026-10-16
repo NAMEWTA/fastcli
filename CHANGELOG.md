@@ -6,6 +6,10 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+### 修复
+
+- 发布工作流使用现有 NPM_TOKEN 直接发布到 npm，移除暂存后的人工批准步骤；新增按已有标签补发 npm 的入口和发布后 registry 核验。
+
 ---
 
 ## [3.2.7] - 2026-10-16

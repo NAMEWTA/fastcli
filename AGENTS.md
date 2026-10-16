@@ -42,7 +42,7 @@
 - dry-run 不执行 npm、不迁移配置；工具参数中的同名选项仍属于目标工具。
 - FASTCLI_HOME 仅用于测试隔离和自动化，不在用户文档中推荐为日常配置方式。
 - README 保持用户入口，强调优势、场景、安装、命令、检测和迁移。CHANGELOG 顶部保留 [Unreleased]。
-- 发布由 v* tag 驱动：先 build/test，再 npm stage publish，维护者 npm 2FA 批准，并创建 GitHub Release。
+- 发布由 v* tag 驱动：先 build/test，再使用 GitHub Secret NPM_TOKEN 执行 npm publish，核对 registry 后创建 GitHub Release。Token 必须允许直接发布并启用 Bypass 2FA；账号可保留 2FA。workflow_dispatch 只用于按已有标签补发 npm，不移动标签、不覆盖已有 Release 正文。
 
 ## Testing Expectations
 
