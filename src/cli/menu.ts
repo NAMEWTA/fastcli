@@ -26,7 +26,7 @@ async function managementMenu(ctx: CliContext): Promise<void> {
         const entry = detections[index]!.installations.find(item => item.isPathDefault) ?? detections[index]!.installations[0];
         const problem = managementProblem(state, action as ManagementAction, ctx.language);
         return { value: tool.id, label: tool.name,
-          hint: `${entry ? installationLabel(entry, ctx.language) : t(ctx.language, 'notInstalled')}${problem ? ` · ${problem}` : ''}` };
+          hint: `${problem ? `${problem} · ` : ''}${entry ? installationLabel(entry, ctx.language) : t(ctx.language, 'notInstalled')}` };
       });
       const id = await ctx.prompts.select(t(ctx.language, 'chooseTool'), [...options, back(ctx)]);
       if (id === ':back') break;
@@ -62,13 +62,14 @@ async function yoloMenu(ctx: CliContext): Promise<void> {
 
 /** The same launch/management actions power both direct commands and this terminal menu. */
 export async function runInteractiveMenu(ctx: CliContext): Promise<number> {
-  ctx.prompts.intro('fastcli');
+  ctx.prompts.intro(`fastcli${ctx.version ? ` v${ctx.version}` : ''} · ${t(ctx.language, 'tagline')}`);
   while (true) {
     const section = await ctx.prompts.select(t(ctx.language, 'choose'), [
-      { value: 'yolo', label: t(ctx.language, 'yolo') }, { value: 'manage', label: t(ctx.language, 'manage') },
-      { value: 'settings', label: t(ctx.language, 'settings') }, { value: 'exit', label: t(ctx.language, 'exit') },
+      { value: 'yolo', label: t(ctx.language, 'yolo'), hint: t(ctx.language, 'yoloHint'), tone: 'action' },
+      { value: 'manage', label: t(ctx.language, 'manage'), hint: t(ctx.language, 'manageHint') },
+      { value: 'settings', label: t(ctx.language, 'settings'), hint: t(ctx.language, 'settingsHint') }, { value: 'exit', label: t(ctx.language, 'exit') },
     ]);
-    if (section === 'exit') { ctx.prompts.outro('fastcli'); return 0; }
+    if (section === 'exit') { ctx.prompts.outro(t(ctx.language, 'goodbye')); return 0; }
     try {
       if (section === 'yolo') await yoloMenu(ctx);
       else if (section === 'manage') await managementMenu(ctx);
@@ -79,6 +80,7 @@ export async function runInteractiveMenu(ctx: CliContext): Promise<number> {
         if (language !== ':back') {
           await saveAppConfig({ ...await loadAppConfig(), language: language as Language });
           ctx.language = language as Language;
+          ctx.prompts.setLanguage?.(ctx.language);
           ctx.prompts.info(t(ctx.language, 'settingSaved'));
         }
       }

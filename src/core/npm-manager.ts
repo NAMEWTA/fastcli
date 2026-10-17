@@ -77,7 +77,7 @@ export function buildNpmInvocation(
 
 /** Inspect only the named package in this npm scope; never inspect PATH aliases. */
 export async function inspectNpmPackage(
-  tool: ToolDefinition,
+  tool: Pick<ToolDefinition, 'npmPackage' | 'executable'>,
   context: NpmContext,
 ): Promise<NpmPackageState> {
   const packageDir = join(context.root, tool.npmPackage);

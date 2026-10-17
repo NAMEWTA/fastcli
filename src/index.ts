@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 import { runCli } from './cli/app.js';
 
@@ -8,7 +9,7 @@ if (major! < 22 || (major === 22 && minor! < 19)) {
 } else {
   try {
     const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string };
-    process.exitCode = await runCli(process.argv.slice(2), { version: pkg.version });
+    process.exitCode = await runCli(process.argv.slice(2), { version: pkg.version, packageRoot: fileURLToPath(new URL('../', import.meta.url)) });
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
     process.exitCode = 1;

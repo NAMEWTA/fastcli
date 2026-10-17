@@ -20,12 +20,12 @@ export class ProcessCancelledError extends Error {
 }
 
 /** Executes literal argv with inherited terminal streams. Returns failures instead of throwing. */
-export async function runProcess(invocation: ProcessInvocation): Promise<ProcessResult> {
+export async function runProcess(invocation: ProcessInvocation, options: { terminateTree?: boolean } = {}): Promise<ProcessResult> {
   console.error(`$ ${formatInvocation(invocation)}`);
   return new Promise(resolve => {
     let child: ChildProcess;
     try {
-      child = spawn(invocation.file, [...invocation.args], { cwd: invocation.cwd, env: invocation.env, stdio: 'inherit' });
+      child = spawn(invocation.file, [...invocation.args], { cwd: invocation.cwd, env: invocation.env, stdio: 'inherit', detached: options.terminateTree && process.platform !== 'win32' });
     } catch (error) {
       resolve({ code: 1, error: String(error) });
       return;
@@ -35,7 +35,8 @@ export async function runProcess(invocation: ProcessInvocation): Promise<Process
     let cleanup: Promise<string | undefined> | undefined;
     const cancel = (signal: NodeJS.Signals) => {
       requested = signal;
-      if (process.platform === 'win32') cleanup ??= stopWindowsTree(child);
+      if (options.terminateTree) cleanup ??= stopProbe(child);
+      else if (process.platform === 'win32') cleanup ??= stopWindowsTree(child);
       else child.kill(signal);
     };
     const onInt = () => cancel('SIGINT');

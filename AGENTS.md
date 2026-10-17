@@ -22,11 +22,11 @@
 
 ## CLI Contract
 
-- `fastcli <claude|codex|gemini|grok|opencode|pi> [args...]`：固定 Yolo 参数加原始 argv，无确认。
+- `fastcli <claude|codex|gemini|grok|opencode|pi> [args...]`：交互启动先检查自身更新，再传递固定 Yolo 参数和原始 argv；目标工具启动无额外确认。
 - `fastcli`：Yolo 启动 → 安装/卸载/升级 → 设置 → 退出。
 - `fastcli install|upgrade|uninstall <tool> [--dry-run]`，仅卸载确认并支持 `--yes`。
 - `fastcli list` / `fastcli info <tool>`：安装状态、版本与位置。
-- `fastcli config [--language en|zh-CN]`：唯一可配置偏好为语言。
+- `fastcli config [--language en|zh-CN]`：语言配置；自身更新忽略记录单独保存在 update-state.json。
 - 旧 run/add/edit/remove/view/web、通用操作、Web 和用户工具已退役；不能重新引入旧逻辑作为隐式 fallback。
 
 ## Hard Rules
@@ -36,7 +36,7 @@
 - 内置工具仅在 `src/builtin/tools.ts` 定义，命令参数使用字符串数组和结构化进程调用，禁止把用户 argv 拼成 shell 命令。
 - PATH 默认入口优先；版本失败不等于未安装，也不自动切换另一份安装。
 - 启动可使用所有来源；变更仅操作经核验的当前 npm 全局包，禁止清理其他安装或账号数据。
-- 直接启动不扫描所有工具、不探版本；列表探测 3 秒/项、并发 4、输出 64 KiB，并负责子进程清理。
+- 直接启动不扫描所有工具、不探目标工具版本；TTY 启动可先执行有界的自身更新检查；列表探测 3 秒/项、并发 4、输出 64 KiB，并负责子进程清理。
 - config schema 固定为 `"2"`，packageManager 固定 npm；迁移先保留原始字节备份，原子写入，POSIX 文件权限 0600。
 - 旧 tools.json 原样保留，完全不读取或写入；其中旧 schema/commands 不再参与运行。
 - dry-run 不执行 npm、不迁移配置；工具参数中的同名选项仍属于目标工具。

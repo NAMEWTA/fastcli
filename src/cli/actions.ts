@@ -1,3 +1,4 @@
+import { color, wrapTerminalText, terminalWidth } from './terminal.js';
 import { homedir } from 'node:os';
 import { relative } from 'node:path';
 import { BUILTIN_TOOLS } from '../builtin/tools.js';
@@ -8,7 +9,7 @@ import type { ToolDefinition, DetectedInstallation, ToolDetection } from '../cor
 import { t, type Language } from '../i18n.js';
 import type { PromptUI } from './prompts.js';
 
-export interface CliContext { language: Language; interactive: boolean; env: NodeJS.ProcessEnv; prompts: PromptUI }
+export interface CliContext { version?: string; language: Language; interactive: boolean; env: NodeJS.ProcessEnv; prompts: PromptUI }
 export function discoveryOptions(ctx: CliContext, npm?: NpmContext) {
   return { env: ctx.env, home: (process.platform === 'win32' ? ctx.env.USERPROFILE : ctx.env.HOME) || homedir(), npmPrefix: npm?.prefix };
 }
@@ -17,7 +18,8 @@ export async function optionalNpm(ctx: CliContext): Promise<{ context?: NpmConte
   catch (error) { if (error instanceof ProcessCancelledError) throw error; return { error: String(error) }; }
 }
 export async function scanTools(ctx: CliContext, npm?: NpmContext): Promise<ToolDetection[]> {
-  return detectTools(BUILTIN_TOOLS, discoveryOptions(ctx, npm));
+  const scan = () => detectTools(BUILTIN_TOOLS, discoveryOptions(ctx, npm));
+  return ctx.prompts.progress ? ctx.prompts.progress(t(ctx.language, 'scanning'), scan) : scan();
 }
 export function installationLabel(entry: DetectedInstallation, language: Language): string {
   return `${entry.version ?? t(language, 'versionUnknown')} · ${entry.path}${entry.isPathDefault ? ` · ${t(language, 'pathDefault')}` : ''}${entry.error ? ` · ${entry.error}` : ''}`;
@@ -78,7 +80,8 @@ export async function manageAction(tool: ToolDefinition, action: ManagementActio
     }
   }
   const result = await manageTool(tool, action, npm);
-  console.error(t(ctx.language, result.message));
+  if (ctx.interactive) (result.code === 0 ? ctx.prompts.success ?? ctx.prompts.info : ctx.prompts.error)(t(ctx.language, result.message));
+  else console.error(t(ctx.language, result.message));
   if (result.details) console.error(result.details);
   console.error(`${tool.name}: ${t(ctx.language, result.installed ? 'installed' : 'notInstalled')}${result.version ? ` · ${result.version}` : ''}`);
   if (action === 'uninstall' || result.code !== 0) {
@@ -93,10 +96,12 @@ export async function printTools(ctx: CliContext, only?: ToolDefinition): Promis
   const tools = only ? [only] : BUILTIN_TOOLS;
   const results = await detectTools(tools, discoveryOptions(ctx, npm.context));
   for (const result of results) {
-    console.log(`${result.tool.id} — ${result.tool.name}`);
-    if (!result.installations.length) console.log(`  ${t(ctx.language, 'notInstalled')}`);
+    console.log(`${color.cyan(color.bold(result.tool.id))} — ${color.bold(result.tool.name)}`);
+    if (!result.installations.length) console.log(`  ${color.dim(t(ctx.language, 'notInstalled'))}`);
     for (const entry of result.installations) {
-      console.log(`  ${installationLabel(entry, ctx.language)}`);
+      const version = entry.version ? color.green(entry.version) : color.yellow(t(ctx.language, 'versionUnknown'));
+      const details = `${version} · ${color.dim(entry.path)}${entry.isPathDefault ? ` · ${color.cyan(t(ctx.language, 'pathDefault'))}` : ''}${entry.error ? ` · ${color.yellow(entry.error)}` : ''}`;
+      console.log('  ' + (process.stdout.isTTY ? wrapTerminalText(details, terminalWidth()).replaceAll('\n', '\n  ') : details));
       if (only) console.log(`  ${t(ctx.language, 'source')}: ${entry.source} · ${entry.realPath}`);
     }
     if (only) {

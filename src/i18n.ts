@@ -2,6 +2,12 @@ export type Language = 'en' | 'zh-CN';
 export function normalizeLanguage(value: unknown): Language { return value === 'zh-CN' ? 'zh-CN' : 'en'; }
 
 const messages = {
+  tagline: ['AI CLI launcher', 'AI CLI 启动与管理'],
+  yoloHint: ['Launch an installed AI CLI', '选择本机已安装的 AI CLI'],
+  manageHint: ['Manage the current global npm installation', '管理当前 npm 全局安装'],
+  settingsHint: ['Language preferences', '语言偏好'],
+  scanning: ['Checking installed tools', '正在检测已安装工具'],
+  goodbye: ['Done · fastcli --help for commands', '已退出 · fastcli --help 查看命令'],
   choose: ['Choose an action', '选择操作'],
   yolo: ['Yolo launch', 'Yolo 启动'],
   manage: ['Install / Uninstall / Upgrade', '安装 / 卸载 / 升级'],
