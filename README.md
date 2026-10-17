@@ -183,10 +183,10 @@ pnpm dev
 
 测试通过临时目录、伪 AI CLI 和伪 npm 验证真实进程/文件系统边界，不安装真实 AI 工具。CI 配置覆盖 Linux、macOS、Windows，先构建再测试。
 
-发布由 `v*` tag 驱动：构建、测试通过后直接执行 `npm publish --access public --tag latest`，核对 npm registry 后创建 GitHub Release。
+发布由 `v*` tag 驱动：构建、测试通过后执行 `npm stage publish --access public --tag latest`，核对暂存版本后创建 GitHub Release，并在 Actions Summary 中给出 Stage ID。
 
-GitHub Actions 使用仓库 Secret `NPM_TOKEN`。该 Token 需要包含本包的 **Read and write (publish and stage)** 权限并开启 **Bypass two-factor authentication**；包设置必须允许 Token 发布。账号本身可以保留 2FA，正常自动发布无需逐次人工批准。权限不足时工作流会失败，不会自动退回暂存发布。
+GitHub Actions 使用仓库 Secret `NPM_TOKEN`，可使用本包的 **Read and write (stage only)** 权限，无需开启 Bypass 2FA。维护者在 npmjs.com 的 **Staged Packages** 中审核并使用 2FA 确认后，版本才公开上架。GitHub Release 和 CI 成功仅表示暂存完成，不表示 npm 已发布。详见 [npm 暂存发布说明](https://docs.npmjs.com/staged-publishing/)。
 
-已存在标签但 npm 尚未上架时，可在 Actions → Release → Run workflow 中选择 `master` 并填写原标签（例如 `v3.2.7`）补发。补发构建原标签对应内容，不修改标签或已有 GitHub Release。已上架版本不能重复发布，恢复前先核对 registry。
+已存在标签但 npm 尚未暂存时，可在 Actions → Release → Run workflow 中选择 `master` 并填写原标签（例如 `v3.2.8`）补交。补交构建原标签对应内容，不修改标签或已有 GitHub Release；缺失的 Release 会创建。已有暂存或公开版本不能重复上传，恢复前先核对 `npm stage list @namewta/fastcli` 和 registry。
 
 项目协作约束见 [AGENTS.md](AGENTS.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。

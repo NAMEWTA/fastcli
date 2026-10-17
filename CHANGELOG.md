@@ -6,6 +6,10 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+### 修复
+
+- 发布流水线改为 npm 暂存发布，核对暂存记录后等待维护者在官网以 2FA 确认；支持用原标签恢复并创建缺失的 GitHub Release。
+
 ## [3.2.8] - 2026-10-17
 
 ### 新增

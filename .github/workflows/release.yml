@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Existing release tag to publish to npm (for example v3.2.7)'
+        description: 'Existing release tag to stage on npm (for example v3.2.8)'
         required: true
         type: string
 
@@ -70,33 +70,48 @@ jobs:
       - name: Upgrade npm CLI
         run: npm install -g npm@latest
 
-      - name: Publish package to npm
-        run: npm publish --access public --tag latest
+      - name: Stage package on npm for maintainer approval
+        run: npm stage publish --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Verify npm publication
+      - name: Verify npm staging
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
+          import { readFileSync, appendFileSync } from 'node:fs';
           import { execFileSync } from 'node:child_process';
           const { name, version } = JSON.parse(readFileSync('package.json', 'utf8'));
-          const published = execFileSync('npm', ['view', `${name}@${version}`, 'version', '--registry=https://registry.npmjs.org'], { encoding: 'utf8' }).trim();
-          const latest = execFileSync('npm', ['view', name, 'dist-tags.latest', '--registry=https://registry.npmjs.org'], { encoding: 'utf8' }).trim();
-          if (published !== version || latest !== version) {
-            throw new Error(`Registry verification failed: version=${published}, latest=${latest}`);
-          }
+          const stages = JSON.parse(execFileSync('npm', ['stage', 'list', name, '--json', '--registry=https://registry.npmjs.org'], { encoding: 'utf8' }));
+          const staged = stages.find(item => item.packageName === name && item.version === version && item.tag === 'latest');
+          if (!staged?.id) throw new Error(`No staged latest release found for ${name}@${version}`);
+          const summary = `${name}@${version} staged successfully. Stage ID: ${staged.id}.\n\nAwaiting maintainer approval with 2FA in npmjs.com → Staged Packages. This version is not public until approved.\n`;
+          console.log(summary);
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
           NODE
+
+      - name: Check existing GitHub Release
+        id: existing-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
       
       - name: Create GitHub Release
-        if: github.event_name == 'push'
+        if: steps.existing-release.outputs.exists != 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: ${{ env.RELEASE_TAG }}
           generate_release_notes: true
           body: |
-            npm 包已直接发布：
+            npm 包已提交暂存，等待维护者在 npmjs.com → Staged Packages 中使用 2FA 确认发布。
+            GitHub Release 创建成功不代表 npm 已公开上架。
             https://www.npmjs.com/package/@namewta/fastcli
           draft: false
           prerelease: ${{ contains(env.RELEASE_TAG, '-') }}
