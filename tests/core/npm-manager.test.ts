@@ -118,7 +118,7 @@ describe('npm management', () => {
 
   it('adapts OpenCode scripts to npm and pins the previously inspected scope', () => {
     const tool = { ...claude, id: 'opencode', executable: 'opencode', npmPackage: 'opencode-ai' };
-    const invocation = buildNpmInvocation(tool, 'upgrade', context);
+    const invocation = buildNpmInvocation(tool, 'install', context);
     expect(invocation).toEqual({
       file: '/isolated/bin/npm', cwd: '/project',
       env: { PATH: '/isolated/bin', npm_config_prefix: '/isolated' },
@@ -181,10 +181,8 @@ describe('npm management', () => {
       '--include=optional', '--allow-scripts=@anthropic-ai/claude-code'], prefix: scoped.prefix, cwd: fixture }]);
   });
 
-  it('refuses upgrade or uninstall when this npm scope does not own the package', async () => {
+  it('refuses uninstall when this npm scope does not own the package', async () => {
     await writeNpmFixture();
-    expect(await manageTool(claude, 'upgrade', scoped))
-      .toEqual({ code: 1, message: 'not-installed', installed: false });
     expect(await manageTool(claude, 'uninstall', scoped))
       .toEqual({ code: 1, message: 'not-installed', installed: false });
     await expect(readFile(log, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });

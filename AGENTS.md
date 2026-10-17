@@ -23,8 +23,8 @@
 ## CLI Contract
 
 - `fastcli <claude|codex|gemini|grok|opencode|pi> [args...]`：交互启动先检查自身更新，再传递固定 Yolo 参数和原始 argv；目标工具启动无额外确认。
-- `fastcli`：Yolo 启动 → 安装/卸载/升级 → 设置 → 退出。
-- `fastcli install|upgrade|uninstall <tool> [--dry-run]`，仅卸载确认并支持 `--yes`。
+- `fastcli`：Yolo 启动 → 安装/卸载 → 设置 → 退出。
+- `fastcli install|uninstall <tool> [--dry-run]`，仅卸载确认并支持 `--yes`。
 - `fastcli list` / `fastcli info <tool>`：安装状态、版本与位置。
 - `fastcli config [--language en|zh-CN]`：语言配置；自身更新忽略记录单独保存在 update-state.json。
 - 旧 run/add/edit/remove/view/web、通用操作、Web 和用户工具已退役；不能重新引入旧逻辑作为隐式 fallback。

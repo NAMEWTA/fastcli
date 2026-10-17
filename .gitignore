@@ -6,3 +6,8 @@ coverage/
 **/__pycache__/**
 .worktrees/
 .specforge/
+.agents/speculo/.speculo/back/
+.agents/.speculo-install.lock/
+.agents/.speculo-transactions/
+.speculo-file-*.tmp
+specdev-worktree/

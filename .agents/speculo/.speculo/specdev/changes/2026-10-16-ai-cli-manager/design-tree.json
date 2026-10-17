@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "artifact": "design-tree",
+  "change": "2026-10-16-ai-cli-manager",
+  "status": "consensus",
+  "round": 6,
+  "nodes": [
+    {
+      "id": "D-001",
+      "title": "范围",
+      "question": "如何处理辅助功能？",
+      "depends_on": [],
+      "recommendation": "CLI 重构，保留辅助功能",
+      "status": "answered",
+      "round": 1,
+      "answer": "精简为 AI CLI 管理器",
+      "log_ref": "LOG-001"
+    },
+    {
+      "id": "D-002",
+      "title": "npm",
+      "question": "包管理策略？",
+      "depends_on": [],
+      "recommendation": "默认 npm，兼容 Volta",
+      "status": "answered",
+      "round": 1,
+      "answer": "仅 npm，迁移旧配置",
+      "log_ref": "LOG-002"
+    },
+    {
+      "id": "D-003",
+      "title": "工具名单",
+      "question": "六个是否完整名单？",
+      "depends_on": [],
+      "recommendation": "仅这六个",
+      "status": "answered",
+      "round": 2,
+      "answer": "仅 Claude/Codex/Gemini/Grok/OpenCode/Pi",
+      "log_ref": "LOG-003"
+    },
+    {
+      "id": "D-004",
+      "title": "来源",
+      "question": "如何管理非 npm 安装？",
+      "depends_on": [],
+      "recommendation": "可启动，仅管理 npm 安装",
+      "status": "answered",
+      "round": 2,
+      "answer": "所有来源可启动；仅管理当前 npm 安装",
+      "log_ref": "LOG-004"
+    },
+    {
+      "id": "D-005",
+      "title": "旧接口",
+      "question": "是否兼容旧 run？",
+      "depends_on": [],
+      "recommendation": "只兼容内置工具命令",
+      "status": "answered",
+      "round": 2,
+      "answer": "完全替换旧命令接口，保留旧文件",
+      "log_ref": "LOG-005"
+    },
+    {
+      "id": "D-006",
+      "title": "菜单",
+      "question": "管理菜单顺序？",
+      "depends_on": [],
+      "recommendation": "先选操作，再选工具",
+      "status": "answered",
+      "round": 3,
+      "answer": "先选操作，再选工具",
+      "log_ref": "LOG-006"
+    },
+    {
+      "id": "D-007",
+      "title": "探测异常",
+      "question": "版本读取失败如何处理？",
+      "depends_on": [],
+      "recommendation": "显示异常，允许尝试启动",
+      "status": "answered",
+      "round": 3,
+      "answer": "显示异常，允许尝试启动",
+      "log_ref": "LOG-007"
+    },
+    {
+      "id": "D-008",
+      "title": "多安装",
+      "question": "如何确定启动入口？",
+      "depends_on": [],
+      "recommendation": "PATH 优先，歧义时选择",
+      "status": "answered",
+      "round": 3,
+      "answer": "PATH 优先，歧义时选择；非交互歧义报错",
+      "log_ref": "LOG-008"
+    },
+    {
+      "id": "D-009",
+      "title": "管理命令",
+      "question": "是否提供直接管理命令？",
+      "depends_on": [],
+      "recommendation": "命令与菜单都提供",
+      "status": "answered",
+      "round": 4,
+      "answer": "命令与菜单都提供，含 list/info",
+      "log_ref": "LOG-009"
+    },
+    {
+      "id": "D-010",
+      "title": "确认",
+      "question": "什么操作确认？",
+      "depends_on": [],
+      "recommendation": "仅卸载需要确认",
+      "status": "answered",
+      "round": 4,
+      "answer": "仅卸载需要确认，支持 --yes",
+      "log_ref": "LOG-010"
+    },
+    {
+      "id": "D-011",
+      "title": "脚本兼容",
+      "question": "是否允许包级适配？",
+      "depends_on": [],
+      "recommendation": "允许必要的包级适配",
+      "status": "answered",
+      "round": 5,
+      "answer": "允许必要包级参数，不修改全局 npm 配置",
+      "log_ref": "LOG-011"
+    },
+    {
+      "id": "D-012",
+      "title": "运行环境",
+      "question": "Node 门槛？",
+      "depends_on": [],
+      "recommendation": "统一要求 Node 22.19+",
+      "status": "answered",
+      "round": 5,
+      "answer": "统一要求 Node 22.19+",
+      "log_ref": "LOG-012"
+    },
+    {
+      "id": "D-013",
+      "title": "共识",
+      "question": "是否确认完整行为合同？",
+      "depends_on": [],
+      "recommendation": "确认这份合同",
+      "status": "answered",
+      "round": 6,
+      "answer": "确认这份合同；随后授权实施",
+      "log_ref": "LOG-013"
+    }
+  ]
+}

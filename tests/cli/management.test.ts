@@ -7,13 +7,13 @@ let f: Awaited<ReturnType<typeof fixture>>;
 beforeEach(async () => { f = await fixture(); });
 afterEach(async () => { await f.cleanup(); });
 
-it('installs/upgrades only the npm target and requires explicit non-TTY uninstall consent', async () => {
+it('installs and updates only the npm target and requires explicit non-TTY uninstall consent', async () => {
   const npm = await fakeNpm(f);
   const external = await fakeCli(f.bin, 'claude', 'console.log("1.0.0");');
   const userData = join(f.dir, '.claude', 'settings.json');
   await mkdir(join(f.dir, '.claude')); await writeFile(userData, '{"keep":true}');
-  for (const action of ['install', 'upgrade']) {
-    const result = await cli([action, 'claude'], f.env, f.dir);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const result = await cli(['install', 'claude'], f.env, f.dir);
     expect(result.code).toBe(0);
     expect(result.stderr).toContain(npm.prefix);
     expect(result.stderr).toContain('9.8.7');
@@ -86,7 +86,18 @@ it('does not call npm mutation when a foreign global entry occupies a first-inst
 it('does not describe the same managed npm entry as a separate installation', async () => {
   await fakeNpm(f);
   expect((await cli(['install', 'claude'], f.env)).code).toBe(0);
-  const result = await cli(['upgrade', 'claude'], f.env);
+  const result = await cli(['install', 'claude'], f.env);
   expect(result.code).toBe(0);
   expect(result.stderr).not.toContain('Other installations');
+});
+
+it('removes upgrade from commands and help without invoking npm', async () => {
+  const npm = await fakeNpm(f);
+  const result = await cli(['upgrade', 'codex'], f.env);
+  expect(result.code).toBe(1);
+  const help = await cli(['--help'], f.env);
+  expect(help.code).toBe(0);
+  expect(help.stdout).toContain('fastcli install <tool>');
+  expect(help.stdout).not.toContain('upgrade');
+  await expect(readFile(npm.log, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
 });

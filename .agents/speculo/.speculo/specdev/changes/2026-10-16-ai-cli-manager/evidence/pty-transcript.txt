@@ -1,0 +1,93 @@
+CASE: launch/settings/back/exit
+EXIT: 0
+┌  fastcli
+│
+◆  Choose an action
+│  ● Yolo launch
+│  ○ Install / Uninstall / Upgrade
+│  ○ Settings
+│  ○ Exit
+└
+◇  Choose an action
+│  Yolo launch
+│
+◆  Choose a tool
+│  ● Claude Code (1.2.3 · /tmp/fastcli-pty-2e5wahsa/bin/claude · PATH default)
+│  ○ Back
+└
+◇  Choose a tool
+│  Claude Code
+$ /tmp/fastcli-pty-2e5wahsa/bin/claude --dangerously-skip-permissions
+PTY_CHILD {"args":["--dangerously-skip-permissions"],"tty":true,"cwd":"/tmp/fastcli-pty-2e5wahsa"}
+│
+◆  Choose an action
+│  ● Yolo launch
+│  ○ Install / Uninstall / Upgrade
+│  ○ Settings
+│  ○ Exit
+└
+│  ○ Yolo launch
+│  ● Install / Uninstall / Upgrade
+│  ○ Settings
+│  ○ Exit
+└
+│  ○ Install / Uninstall / Upgrade
+│  ● Settings
+│  ○ Exit
+└
+◇  Choose an action
+│  Settings
+│
+◆  Language
+│  ● English
+│  ○ 简体中文
+│  ○ Back
+└
+│  ○ English
+│  ● 简体中文
+│  ○ Back
+└
+◇  Language
+│  简体中文
+│
+●  语言已保存。
+^[[B│
+◆  选择操作
+│  ● Yolo 启动
+│  ○ 安装 / 卸载 / 升级
+│  ○ 设置
+│  ○ 退出
+└
+│  ○ Yolo 启动
+│  ● 安装 / 卸载 / 升级
+│  ○ 设置
+│  ○ 退出
+└
+│  ○ 安装 / 卸载 / 升级
+│  ● 设置
+│  ○ 退出
+└
+│  ○ 设置
+│  ● 退出
+└
+◇  选择操作
+│  退出
+│
+└  fastcli
+
+
+
+CASE: cancel
+EXIT: 130
+┌  fastcli
+│
+◆  Choose an action
+│  ● Yolo launch
+│  ○ Install / Uninstall / Upgrade
+│  ○ Settings
+│  ○ Exit
+└
+■  Choose an action
+│  Yolo launch
+│
+Cancelled

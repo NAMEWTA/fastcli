@@ -1,0 +1,87 @@
+{
+  "schema_version": 3,
+  "package_version": "2.1.0",
+  "targets": [
+    "agents"
+  ],
+  "asset_ids": [
+    "command/handoff",
+    "specdev/code-review",
+    "specdev/diagnose-bugs",
+    "specdev/goal-plan",
+    "specdev/grill-with-docs",
+    "specdev/implement",
+    "specdev/retro",
+    "specdev/spec",
+    "specdev/tickets",
+    "specdev/triage"
+  ],
+  "files": [
+    {
+      "path": ".agents/skills/specdev-c-code-review/SKILL.md",
+      "asset_id": "specdev/code-review",
+      "sha256": "fd2d550d0d6a709eaa191b45a975c97b8b09452d8b0215c7572def2812925c35",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-d-diagnose-bugs/SKILL.md",
+      "asset_id": "specdev/diagnose-bugs",
+      "sha256": "3fa4f462c988fc99dd01ead1d7de64fdf660fd3c3107f8ffb775893e515ed54d",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-g-grill-with-docs/SKILL.md",
+      "asset_id": "specdev/grill-with-docs",
+      "sha256": "8b54ed2d664f0f7c1ca707d1a18e0bdaf55046a2c297f4d6c34192302cae8c26",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-i-implement/SKILL.md",
+      "asset_id": "specdev/implement",
+      "sha256": "cb0824735ef93c42b059047183073885fc9d931c31492da18182b1b7d933744c",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-p-goal-plan/SKILL.md",
+      "asset_id": "specdev/goal-plan",
+      "sha256": "d9450c6fb40d26da2c53a728f988878a38a544e9d1236926ccb1f7b21dc71c00",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-r-retro/SKILL.md",
+      "asset_id": "specdev/retro",
+      "sha256": "c1ff7942a51765b269fcb8329dff49c745338a88879c691c967abd7e89bc2ab9",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-s-spec/SKILL.md",
+      "asset_id": "specdev/spec",
+      "sha256": "df9c904b7264f90929b3ae7ac640d6969320d595e5863f4096215d7a35f2969e",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-t-tickets/SKILL.md",
+      "asset_id": "specdev/tickets",
+      "sha256": "cef38969f328dd9f4133d286371f507e730931797b3322a1c39d2c72365a8e7a",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/specdev-t-triage/SKILL.md",
+      "asset_id": "specdev/triage",
+      "sha256": "b43194abc5f493664758a09e37569bf3dbb6ad21bd2e35ecb11e2dad98c1be76",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/speculo-handoff/agents/openai.yaml",
+      "asset_id": "command/handoff",
+      "sha256": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+      "mode": 420
+    },
+    {
+      "path": ".agents/skills/speculo-handoff/SKILL.md",
+      "asset_id": "command/handoff",
+      "sha256": "d072ebcb93e4e2fd93c18972affff2527618e74ac84cb237e5686428539bc5d8",
+      "mode": 420
+    }
+  ]
+}

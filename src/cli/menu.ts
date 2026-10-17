@@ -12,7 +12,7 @@ const back = (ctx: CliContext) => ({ value: ':back', label: t(ctx.language, 'bac
 async function managementMenu(ctx: CliContext): Promise<void> {
   while (true) {
     const action = await ctx.prompts.select(t(ctx.language, 'choose'), [
-      ...(['install', 'uninstall', 'upgrade'] as const).map(value => ({ value, label: t(ctx.language, value) })), back(ctx),
+      ...(['install', 'uninstall'] as const).map(value => ({ value, label: t(ctx.language, value) })), back(ctx),
     ]);
     if (action === ':back') return;
     while (true) {

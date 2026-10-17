@@ -6,6 +6,13 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+## [3.2.9] - 2026-10-17
+
+### 变更
+
+- 纳入项目 Speculo 能力目录及工作指南。
+- 移除 `upgrade` 命令和升级菜单项，统一使用 `install` 安装或更新工具到最新版。
+
 ### 修复
 
 - 发布流水线改为 npm 暂存发布，核对暂存记录后等待维护者在官网以 2FA 确认；支持用原标签恢复并创建缺失的 GitHub Release。

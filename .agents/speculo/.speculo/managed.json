@@ -1,0 +1,4632 @@
+{
+  "schema_version": 2,
+  "package_version": "2.1.0",
+  "files": [
+    {
+      "path": ".speculo/AGENTS.md",
+      "bytes": 2760,
+      "sha256": "1128ded8d7143855d18b564185fc3d917a40b6863305787afac11b1e0437a5a6",
+      "mode": 436,
+      "owner": "core",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": ".speculo/baselines/config.json",
+      "bytes": 194,
+      "sha256": "65fca788decb68371fef90e4b4672bc13df23cca49cd8d0905b98d077e73d194",
+      "mode": 436,
+      "owner": "core/config",
+      "kind": "baseline",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": ".speculo/baselines/workflows/specdev/config.json",
+      "bytes": 672,
+      "sha256": "f1a2bf4a456d1259a7a8d922eb43b427f4a906eb85300645166819e94c0e1544",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "baseline",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": ".speculo/commands/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": 436,
+      "owner": "core/runtime-seed",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": ".speculo/kernel.json",
+      "bytes": 460,
+      "sha256": "b15f36f59c56ac41a2e5f4a3343c29d3be16cc365148b0471358b3e485977897",
+      "mode": 436,
+      "owner": "core",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": ".speculo/README.md",
+      "bytes": 4081,
+      "sha256": "a74c321103b9d2d47794d1c540ca7933d033ef83fb917567e977162ecf9084a8",
+      "mode": 436,
+      "owner": "core",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": ".speculo/refresh-contract.json",
+      "bytes": 745,
+      "sha256": "eafd254571e5ef2ec29073180803706111fbd92a92d89d43976902bfe4e50bf2",
+      "mode": 436,
+      "owner": "core",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": ".speculo/workspace.json",
+      "bytes": 458,
+      "sha256": "d1e5ef5b8ec8f0ac915dd9878dbc2e72f38a33451855de87c1779e62266b2a11",
+      "mode": 436,
+      "owner": "core",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "catalog.json",
+      "bytes": 10260,
+      "sha256": "927242c821b4ebf63f18ad46a367fbe5770999e54462e541837d756475900505",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/archive-and-consolidate/COMMAND.md",
+      "bytes": 3730,
+      "sha256": "d22f47a37ef06975cb4d209e9eea8b612e639af08cb5e5ed77c326a29e012e07",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/assets/agents-template.md",
+      "bytes": 697,
+      "sha256": "8d8e70af0fc1e6a985f9e9abd6b738d9c2ac6a24be436d7a6afdf214852a3fe1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/assets/report-template.md",
+      "bytes": 1128,
+      "sha256": "e06b755e9538d443a497b56ac4561b45047119b208db32c9b5eabae856e783d4",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/assets/state-template.json",
+      "bytes": 434,
+      "sha256": "f3042bea7966e62f3a12b9523c64f80a49e85870c113ffe68b63ea5585808606",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/assets/workflow-scope-template.json",
+      "bytes": 238,
+      "sha256": "690e193dd7547c0e23e485e4cab30177854d05e0760f7383126746d1f0cd6cd2",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/COMMAND.md",
+      "bytes": 2384,
+      "sha256": "64ae64212df2834e9e30d694815b690ce55fcd557b1157e4df71d00f1e2acbe0",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/references/agents-contract.md",
+      "bytes": 2213,
+      "sha256": "33c3dcab83f39a5d7666bc44f5bbad6fb665cefabbb9b82175ff3771384dccad",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/references/changelog-contract.md",
+      "bytes": 2585,
+      "sha256": "1871c10bfa395c99d41a62c66e93b2df0e853227abc8335110fb98c01a3a6de8",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/references/git-state-contract.md",
+      "bytes": 5353,
+      "sha256": "a90f17257304442728e3e46a299067a040fc1dd6037a91f8266bb75b37620e89",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/references/handbook-discovery.md",
+      "bytes": 1918,
+      "sha256": "56037c8d7108e258dfcf6f4f3b79f4d3fdc62cf8204fd9bd9758473a80bbfdc1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/references/operation-contract.md",
+      "bytes": 5972,
+      "sha256": "18ba30a2409b57890f31ce2670456ea60bdd8c9e347bafcf02c4fdd2cde54b08",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/references/readme-contract.md",
+      "bytes": 1853,
+      "sha256": "f7f0d083d3b27e28a836937de593f2d554a5c12086544daacb2ae87824637ddd",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/docs-sync/references/workflow-scope-contract.md",
+      "bytes": 3426,
+      "sha256": "edfc5875a0d4cb7997c0e80b5a338be1a5c49a65cbbabc91ef29bf2801aea60a",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/agents/openai.yaml",
+      "bytes": 43,
+      "sha256": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/COMMAND.md",
+      "bytes": 8865,
+      "sha256": "7e1a87c155c801c6855bf0b2f9154c763137d93677961de156f67ef44c3bf749",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/fallback/kotlin-gradle/build.gradle.kts",
+      "bytes": 77,
+      "sha256": "374445c2a78b9798074e6dd817e3e33ae8fe15c5fac0906fa849460bd484a0f9",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/fallback/kotlin-gradle/expected.json",
+      "bytes": 243,
+      "sha256": "1a171a01ce0f84478885f0f17b0a57525ecfd25468c20ad929805625a27054ce",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/fallback/kotlin-gradle/src/main/kotlin/example/App.kt",
+      "bytes": 49,
+      "sha256": "9b5ddd816c9b27c57b8501b295e422fec4f48363c365906556bab532eedc6b58",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/go/service/.golangci.yml",
+      "bytes": 31,
+      "sha256": "a58f705f024440a3da2ff0fe23d0f3ead7b8dde2d026b1f6c03c2f95562c117d",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/go/service/cmd/api/main.go",
+      "bytes": 88,
+      "sha256": "d256213b832d08b3ca6c3fdc0e5b68990b841b8d2d1b48c34266e49d55bf5138",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/go/service/expected.json",
+      "bytes": 323,
+      "sha256": "74c2263b4d6f6a52c5ecc2f94a6dc47616e0ca63862aa954c0ae5d0ce5d9502e",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/go/service/go.mod",
+      "bytes": 35,
+      "sha256": "313284d19a1b133cf83706e921b957c81730ecdbba8dc1e7f3360068d170c227",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/go/service/internal/service/service_test.go",
+      "bytes": 70,
+      "sha256": "bc0962ad62e260abfbaf43370e4b374f0a4e235670ec8f5980535ffe01e1e681",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/go/service/internal/service/service.go",
+      "bytes": 30,
+      "sha256": "fdfef5e484290caba3edc5bb05eddcbb7e3f93c0cf8e71a3f482e48faafedbc3",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/java/spring-boot-maven/expected.json",
+      "bytes": 302,
+      "sha256": "3dc36ae2a77d8c51aefe859b02c977c5f8ba1cb9e62a528f687f78368088de77",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/java/spring-boot-maven/pom.xml",
+      "bytes": 952,
+      "sha256": "582792eb5319512211b6442f1a0e098f776dafff7985348b2d116cf96e42233a",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/java/spring-boot-maven/src/main/java/dev/speculo/orders/OrdersApplication.java",
+      "bytes": 305,
+      "sha256": "8274c374cef2bbeec7b59a02ed7b507ee03e1d73a1b30d7c75dda4000809109f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/java/spring-boot-maven/src/test/java/dev/speculo/orders/OrdersApplicationTest.java",
+      "bytes": 118,
+      "sha256": "214b650ca4a8bfdbbae531b56788ab50fe0353eb29546d190dbeaf15bc65b150",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/.github/workflows/ci.yml",
+      "bytes": 269,
+      "sha256": "992692c5957e92c70152dfb067bcc3ce849019f00b99fd884bf03f68e25c9911",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/apps/web/package.json",
+      "bytes": 161,
+      "sha256": "53e50390520491ea42514a57bf5344d52735a1bb269884507202d3ae677abe0f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/apps/web/src/App.vue",
+      "bytes": 95,
+      "sha256": "b547d4b54786864520b51b3d569f721b136463f62a2f165e2522eeb9c19002a7",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/apps/web/tsconfig.json",
+      "bytes": 80,
+      "sha256": "1095e141448a7b48811edd01bf1cb5ee9cfa72cbb866a146ee373b33309478f1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/expected.json",
+      "bytes": 307,
+      "sha256": "f2d172d235e6142b014ac91f5ed89f7181228c1c6f17c69ac8d05fe0826d5734",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/package.json",
+      "bytes": 171,
+      "sha256": "3a34efcdf64e751698866ad91e1d49297218dc924ac754cfb4ea746b8dcc8a52",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/pnpm-workspace.yaml",
+      "bytes": 23,
+      "sha256": "bea704eb6f74a5c026718988f9080741b79ef74d5f423b0f917aa30e7b55fa31",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/services/orders/pom.xml",
+      "bytes": 961,
+      "sha256": "9d3f535e1a162f2e1270e8ef101be5cb8c274811769b15258d2fa323a6059fdc",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/services/orders/src/main/java/dev/speculo/orders/OrdersApplication.java",
+      "bytes": 305,
+      "sha256": "8274c374cef2bbeec7b59a02ed7b507ee03e1d73a1b30d7c75dda4000809109f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/services/worker/go.mod",
+      "bytes": 35,
+      "sha256": "c9a0fd9b8f241583b60b97a69034b7e5a511dc9ef6ef6626bd7d854ea45d6ec1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/polyglot/monorepo/services/worker/main.go",
+      "bytes": 28,
+      "sha256": "15dfc4f51b4ed90211b566886f456d23d6984e1bb298460786c9740b01ac183e",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/README.md",
+      "bytes": 1722,
+      "sha256": "d395ebb27493a68a0e9a6933150e778b320de189a90a67bc3eec3f1ebbab9cf5",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/rust/workspace/Cargo.toml",
+      "bytes": 127,
+      "sha256": "fb1ba83f9c453efd921122aa067c26930d85164dd962a7db69339c8e021b1304",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/rust/workspace/crates/cli/Cargo.toml",
+      "bytes": 156,
+      "sha256": "8720dd2f23b6231acb4546d9b3a20b78710d220f5640ac9796f9f84479497838",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/rust/workspace/crates/cli/src/main.rs",
+      "bytes": 53,
+      "sha256": "43d8965dadae05e02dc2f60416b312ca272f2ff6d9cb1f12896b5a6bb11b71b9",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/rust/workspace/crates/core/Cargo.toml",
+      "bytes": 105,
+      "sha256": "fa4967f9105e82ac4089c5e58f28edba20442920aa4c7d0c63b40a8a30e0794d",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/rust/workspace/crates/core/src/lib.rs",
+      "bytes": 122,
+      "sha256": "2d172aaf3ed3d84060db62693b60268e48ad78110df8e1d51eba39e500e6b523",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/rust/workspace/expected.json",
+      "bytes": 184,
+      "sha256": "c67a1b0702bc118522415c83bedef0ccf6d5878f392c80f5d209ddaa0c85c447",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/rust/workspace/rust-toolchain.toml",
+      "bytes": 64,
+      "sha256": "55298905deb5fab7ccb177ffc719cc501277d8d5cf9c7ed38ccccc418f1ea76f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/react-vite/expected.json",
+      "bytes": 282,
+      "sha256": "2769f956698b96cd0ec82c6e68d7d39b1dba4551ffabffac8c399025758deafd",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/react-vite/package.json",
+      "bytes": 380,
+      "sha256": "e4c557d294914be0f463a0612b3e79ed242a9c6ee98404bbd60978e13dc2b07a",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/react-vite/src/App.test.tsx",
+      "bytes": 120,
+      "sha256": "a064ef8fd4e0603d7c276bf74cccdafe951e74bb701e7a35d48e63579c3fdff1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/react-vite/src/App.tsx",
+      "bytes": 70,
+      "sha256": "82145afa74eb390d02d34632eb62ec90bae9ee8b89e627d800ecf9275383b035",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/react-vite/src/main.tsx",
+      "bytes": 116,
+      "sha256": "90b860cef3d2d702be24b154d2b5540f0d63003971b072dcf6226d02c95b4d53",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/react-vite/tsconfig.json",
+      "bytes": 128,
+      "sha256": "26b301674d6513a7880a777624f87019ad9967eed558ce25c081359772bf87a6",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/vue-vite/expected.json",
+      "bytes": 295,
+      "sha256": "33f9296c0182bcce438d2d4d06a50e8fba1fc82868db4d029d64f8295c4a1bb5",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/vue-vite/package.json",
+      "bytes": 411,
+      "sha256": "ff114f0e858f98e4df6a56e18c86931862d2beb0feb165afc807e18440473959",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/vue-vite/src/App.test.ts",
+      "bytes": 120,
+      "sha256": "a064ef8fd4e0603d7c276bf74cccdafe951e74bb701e7a35d48e63579c3fdff1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/vue-vite/src/App.vue",
+      "bytes": 283,
+      "sha256": "e9502d30cc05f5f7f19c7f91982e9d55385a2adec29410ad7ba9a90d05d6b198",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/vue-vite/src/main.ts",
+      "bytes": 144,
+      "sha256": "a134c4f1ad7e239c0386b6ff28b74f7a0528869272ff90663b1363f16f7d28db",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/vue-vite/tsconfig.json",
+      "bytes": 156,
+      "sha256": "361c15fb3d6cdb53c2c71dd6ea23c45bf766673f2c540b612a56586d63eab55b",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/examples/typescript/vue-vite/vite.config.ts",
+      "bytes": 68,
+      "sha256": "3d5c1fbc88676d8973b398b145e26d2a17c80070c39c6c54dfbc1cdec7a496cd",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/manifest.txt",
+      "bytes": 5526,
+      "sha256": "6d0242330654d2b2e2db9038e263a31b9ba3cb5ef7e71ac6353e74696f814b20",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/README.md",
+      "bytes": 1024,
+      "sha256": "bfe8988b172befa1ad4f5eb4d6ee80c2c3cd8d57edfc8596e1a512d0e3d4fa6f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/go/00-detection-and-scope.md",
+      "bytes": 1207,
+      "sha256": "467fe9a9068300c82a1989264cde03a39f5c970d1b2a7c5730e3605f8f5ddb24",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/go/01-language-and-idioms.md",
+      "bytes": 1686,
+      "sha256": "65cd91741b6dd725b9b17a3639d39e8ac075b181765e3e83eb8102403a5785a2",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/go/02-modules-packages-and-layout.md",
+      "bytes": 1654,
+      "sha256": "86db840c2f047c921a7a3daa8035579710f0256c2436917d5d3e4914054d4e7f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/go/03-errors-context-and-concurrency.md",
+      "bytes": 2156,
+      "sha256": "ee7c0726620df9edbedaf79d8a1628a9dcd4bac3b373ba94bce419a2422c1a3d",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/go/04-testing-tooling-quality-gates.md",
+      "bytes": 1760,
+      "sha256": "038c45d6847c7948ac05758747a6dba913f4394f00de5e62300c6c63a56af27b",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/go/README.md",
+      "bytes": 414,
+      "sha256": "3ccb069a5a690e746b81b9ada5320c4e86b9365a91e5356f643031e124daedf0",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/java/00-detection-and-scope.md",
+      "bytes": 1551,
+      "sha256": "a528b2f2928bbbe38cd6b52ddd3eaa8afa47f10dba3e81d225d01d71a62e185d",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/java/01-language-packages-and-api.md",
+      "bytes": 2113,
+      "sha256": "c1668f48c3137b54899fd52e3f0c9afb7467c4bee155b5a20eddc11a8b6e309a",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/java/02-build-modules-and-dependencies.md",
+      "bytes": 1892,
+      "sha256": "5072887164ffb624469ba920770eede161205f3fe95a8086bc1b33104e0e4e5b",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/java/03-errors-nullability-resources-concurrency.md",
+      "bytes": 2054,
+      "sha256": "dac2e02d0738871b5012e5f8971ec0dcdae02c15098fd62344b2e4109901d8f8",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/java/04-testing-tooling-quality-gates.md",
+      "bytes": 1500,
+      "sha256": "122e7c18a8980b36f60eb10559f37275ddb7b1ddadb0c7cc7c06ef54e7c0d0da",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/java/frameworks/spring-boot.md",
+      "bytes": 3944,
+      "sha256": "007fc54e1a84dcfc25acae97bf2f3a6dd642b064fffd746ef4ca3f20fbdb660b",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/java/README.md",
+      "bytes": 499,
+      "sha256": "51cb3026b6c9baf023eb5ca96b280be017592603f71e87b82c8da54317a59dff",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/00-governance-and-precedence.md",
+      "bytes": 2134,
+      "sha256": "e84b37d48225babaaa84871330c06c6f50d31c13e5ddb730b6386a6c77c15b3a",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/01-project-discovery.md",
+      "bytes": 2337,
+      "sha256": "b704c0d241b248cf1b8617a3d68ef59f60fd44c604cc5b1fbbc571234d286e95",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/02-evidence-topology-and-scope.md",
+      "bytes": 1842,
+      "sha256": "315311edcca8214e06979b8c189d46c8b9f5be528b31bfbe573d8610939883f5",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/03-interview-and-decisions.md",
+      "bytes": 2785,
+      "sha256": "fe2c1d14c75489cfb6a2e4e6da044556f7ae7051f3d3acde85fa4c51f4bd9976",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/04-architecture-and-dependency-boundaries.md",
+      "bytes": 1904,
+      "sha256": "5b74ab12228345111f2e983aaeddb5584f91ed6f76153dac9b4b420a1181c81c",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/05-files-directories-and-naming.md",
+      "bytes": 1834,
+      "sha256": "25468174252b1c2ae51616a1043f690828cc1e3c88bd25c431e94083d9db1607",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/06-apis-errors-resources-and-concurrency.md",
+      "bytes": 1781,
+      "sha256": "59742d6fc13387cb81b26f5aba14621ebcb36a3473882cb8fd27697b40f58363",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/07-documentation-and-comments.md",
+      "bytes": 1174,
+      "sha256": "84c8c8db1bf91911c8c2fe8bafe26a5704c52b713d4eaae9748e9622d2c2c494",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/08-testing-strategy.md",
+      "bytes": 1796,
+      "sha256": "ebcfb29753908982b40a23c08a5d6f0229a132bdc584036824989737081f5ac8",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/09-mechanical-guardrails.md",
+      "bytes": 1058,
+      "sha256": "faefb6fd44cc936a73d5ff2924fa3fa438f788289ef3351c7aa3393289b2935e",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/09-security-configuration-and-data.md",
+      "bytes": 1687,
+      "sha256": "81f7a910d0c3a7685d45c246957593e7e4c63041f26c5710dce0d49cc0457dc3",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/10-performance-observability-and-i18n.md",
+      "bytes": 1416,
+      "sha256": "a9296ddbb3390b8686941f61b5b638610a77165da314bf297f71432dd75a0be6",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/11-tooling-quality-gates-and-ci.md",
+      "bytes": 1929,
+      "sha256": "3b96a12a60a20e0abe3e1525366348d3c5ef9e6e9cc93bca2f46c2fa26c03d93",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/12-git-review-and-delivery.md",
+      "bytes": 1217,
+      "sha256": "dc1e646eb2d29c6baa9e274faef4efd28c633d3cccd92206b9f98743789de6f9",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/13-adoption-exceptions-and-ratchets.md",
+      "bytes": 1533,
+      "sha256": "9d1ec3a3fe15b883d8e0bb82b20c7b4f1f9fbd73f7cd4a0fbd8950c8d819d208",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/14-generation-contract.md",
+      "bytes": 3333,
+      "sha256": "b0bf6648ff349eb275c0c59d14338112c227a8c1faafd2df341352367d7272c8",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/15-validation-contract.md",
+      "bytes": 1897,
+      "sha256": "1142d19a6ac8989f92ca884361589d67e8de1ccfd7f0aff402e4dcb9c4b87441",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/16-language-adapter-contract.md",
+      "bytes": 1018,
+      "sha256": "ff05e0158de46beafb8450578444cfac1a1ebd343ffb63dfacdd0cf412f27568",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rules/README.md",
+      "bytes": 1365,
+      "sha256": "d076f896eeb84ca7e7c6d38d2aba098bdec1b31bdebba07119c444b1701385ae",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rust/00-detection-and-scope.md",
+      "bytes": 1206,
+      "sha256": "e22abff645945e4fb4593fda809d76212f6d8a79bef59e0ddb428d7ab9e5d7de",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rust/01-language-api-and-safety.md",
+      "bytes": 1871,
+      "sha256": "ccc30b264431a1deeef01e1fa5877536ec71937f134f6eadea2534528c70939a",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rust/02-crates-workspaces-and-layout.md",
+      "bytes": 2005,
+      "sha256": "80eef6cbb0bc6e4478883addf1a2dc8e4187cfeb46252bc1e3645a9643cb5f7d",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rust/03-errors-ownership-and-concurrency.md",
+      "bytes": 2006,
+      "sha256": "ac35dbd95ebba1a6b3f540342dd5bb344215477d8156ce1faaf5eafa46bd1c3d",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rust/04-testing-tooling-quality-gates.md",
+      "bytes": 1725,
+      "sha256": "4c00864f16f3e2588ad986d5d794decd10a1011b0de5a4376b205eb4d915e1d1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/rust/README.md",
+      "bytes": 435,
+      "sha256": "c19c98b47c63236df8e9edfb9cda443319f9128bc39998f6517ab3ed9c9463e7",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/00-detection-and-scope.md",
+      "bytes": 1869,
+      "sha256": "1b11419223b4c22fc6ccf5bf6ebac3b6d53022285f235d15412995cbc2525471",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/01-language-and-type-system.md",
+      "bytes": 2560,
+      "sha256": "2274475d4c3896a7f18807aff3e667070451840c7aa448c87d10f17c384eab3c",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/02-modules-packages-and-runtime-boundaries.md",
+      "bytes": 2400,
+      "sha256": "961a3eeb1b956f56bf44c1bc4f3f0b35c2b6155f586ebd048a82fcb3ba4abf12",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/03-functions-async-errors-resources.md",
+      "bytes": 2333,
+      "sha256": "90025956529a67909e2c141b43e9b1229f64184c19f87249ff5b60c6c0941ded",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/04-testing-tooling-quality-gates.md",
+      "bytes": 1858,
+      "sha256": "181856a789a3880ef54efdc7376c5d7c94506d41597770b24f56bc81d7f735f0",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/app-types/cli.md",
+      "bytes": 863,
+      "sha256": "46bf267c10ae0a7e6b1824549887820c06ab2cc9224fcc965ed27e84c3121803",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/app-types/library.md",
+      "bytes": 891,
+      "sha256": "c00e57e54e0d1ed92f7325459229e98ac561c8512529fe8c3df21e4ccac05ddb",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/frameworks/react.md",
+      "bytes": 3661,
+      "sha256": "1b76a0c60a28d5264ec36626ade6eb46b2f8fa5a668380eb2fc6910dcbcf6033",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/frameworks/vue.md",
+      "bytes": 9084,
+      "sha256": "b15ddc224f60432c7bf173aa9b09e19776d78f2dc562d084d747de8fcf25efa5",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/README.md",
+      "bytes": 850,
+      "sha256": "b36e7fc29fe787405aad97e519a7a6fbe07ab0e81493343f4a0d5e2e93be57fe",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/runtimes/browser.md",
+      "bytes": 1102,
+      "sha256": "9c523662bd6dcd07f8b642cee6c856a40d5bb13cefa5f93e3fba2945ba80e571",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/runtimes/electron.md",
+      "bytes": 1450,
+      "sha256": "9ccfb3a59d5653acd42d5a9be8bf203f86d364a0f896f10fd68513cb9d73cae0",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/references/typescript/runtimes/node.md",
+      "bytes": 1058,
+      "sha256": "2ea23a5542b488d7be14dc63cb973063c254ab41be6ecfcb68e39d19b33c8934",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/scripts/discover-project.mjs",
+      "bytes": 47975,
+      "sha256": "a671651a87fb2bb66406174b8b8875d9d99237c38d050862e65e9ebb592071c1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/scripts/self-test.mjs",
+      "bytes": 17594,
+      "sha256": "e3ec60c4f90ad67b6c74821b649436eae8c45e1a48c58d81745a2615c9826880",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/scripts/sync-manifest.mjs",
+      "bytes": 4350,
+      "sha256": "745a98115ec015b60cc2bba5a475239fe912cc157f7bc4378b1a37736cbc6b5f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/scripts/validate-builder.mjs",
+      "bytes": 12706,
+      "sha256": "fac14b6ef055f0a9f8f273da028b1342fe8c092a0dbf9549c8ede191d1c48b5f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/scripts/validate-generated-skill.mjs",
+      "bytes": 18819,
+      "sha256": "2992fe283fda14ad1805526e8b2127d9d3c78173e4bba82de94a11c9ef72a140",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/compatibility/agents-typescript--standards.md",
+      "bytes": 251,
+      "sha256": "67a8ea10566d4d292552f4b9a33d6d5ab351996d76e52e203634ecc1e68320a0",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/compatibility/agents-typescript-standards.md",
+      "bytes": 235,
+      "sha256": "a17b2ebfbb837c669a1c6eaac45a37a2ad7c8a04303030d6084f91c448183100",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/compatibility/claude-engineering-standards.md",
+      "bytes": 220,
+      "sha256": "5f513592c0779a432577605303a6f32a9dd2aed10e0cd4af7363283e8d4d74ca",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/compatibility/claude-typescript-standards.md",
+      "bytes": 255,
+      "sha256": "1a0c43571fafa0716d4f98e536cb1c54daceea8b32d2729c98391e349099e090",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/domain-skill/SKILL.md.template",
+      "bytes": 730,
+      "sha256": "e801fb71affc44ff18f8c81a7104d8b01cdfcbb170f8b59e8be8c0c4807c72db",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/generated-skill-set.json.template",
+      "bytes": 111,
+      "sha256": "129b51e2bb058a70d6ffa29dd6bff4367e8e2065d1a40ab5c9ff5144a4c05a2b",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/references/project/00-project-profile.md.template",
+      "bytes": 653,
+      "sha256": "116bd320aa26609626bb7e76f47be793f7a368082608bfe5c389f84aad0b6fe2",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/references/project/01-module-map.md.template",
+      "bytes": 477,
+      "sha256": "50d606612608e2f5f409a5b5e9fb50a269041b19e5bcbfbb48fbbcda3d05f425",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/references/project/02-decisions-and-exceptions.md.template",
+      "bytes": 567,
+      "sha256": "e348e02f388a9e1d08fec11a20f51fe2d6dbe4499f6db9cfb6c373b2ddc89243",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/references/project/03-skill-map.md.template",
+      "bytes": 412,
+      "sha256": "b509e5ee699ffa4f5f411c5e21ab28f11a9fe00610f5d439b79a48c929b59f0b",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/references/project/04-source-and-template-map.md.template",
+      "bytes": 582,
+      "sha256": "bc9ac56a37b85025f0e3c371f146328eba70e7b5ac9d814e29760677a9a348ba",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/references/project/review-checklist.md.template",
+      "bytes": 972,
+      "sha256": "88bb9ad0c2a51901847ee84b2f7d662be35d2947293ad9fe64463b3ca4cff754",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/project-skill/SKILL.md.template",
+      "bytes": 1884,
+      "sha256": "47e29a17984672c3f99d940d9566ac0fe9b55fdc7222796c55316b6dd418d579",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/engineering-standards-builder/templates/README.md",
+      "bytes": 1418,
+      "sha256": "32302890e06ac736ca3021fcdca3e6cb5f0538f71ea79bb05ce1ff6c84c46717",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/agents/openai.yaml",
+      "bytes": 43,
+      "sha256": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/assets/request-template.json",
+      "bytes": 362,
+      "sha256": "e85648db506198753b5e616bb31a023ff7f31433787b54d4bbaec9f574918d91",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/COMMAND.md",
+      "bytes": 4584,
+      "sha256": "a4832acbb19d5551c1cd6656584eb25b2ab3dcbb29bea20c6906351cbc56695c",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/references/operation-contract.md",
+      "bytes": 6664,
+      "sha256": "4e59c7881006798d75ec901fa638e07ce0d7e92eb4f52f9de3d1aa9bb07332c6",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/references/recovery-contract.md",
+      "bytes": 2219,
+      "sha256": "322e7b17bc8305a4a163dea9f44b8f5dc3d3b6e13ce858a3e2b16ca8ef14cc2e",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/references/rewrite-contract.md",
+      "bytes": 6709,
+      "sha256": "1bdaa1cf9b0f08f87ed950e637ab962c9e55f82bf835f56cefe6e8a247152ba9",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/references/submodule-contract.md",
+      "bytes": 2771,
+      "sha256": "8a9ed3c8c9fd1ad4aa69256198406680133440ae936e2089daca5e8322ab995e",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-history-squash/scripts/git-history-squash.mjs",
+      "bytes": 63066,
+      "sha256": "0f856e1b5372472cdae78a2ee2e31a22f11f424d0219eef5127a232e908d71dd",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-repository-audit/COMMAND.md",
+      "bytes": 3374,
+      "sha256": "dc1c43a3129f7eab647c0381616f9aa3fa778bb1f61483bcc02b79f73cfd5fd6",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/git-repository-audit/references/procedure.md",
+      "bytes": 16849,
+      "sha256": "f2b0a1581f2d496f50a603e28becb6d385f2dcf9a3cc44f3a9f518a41b92a0fa",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/handoff/COMMAND.md",
+      "bytes": 5979,
+      "sha256": "f2b497c556f5e0c96ecad6e0044cac880caf5e961c546ee36fc543db179a0fdc",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/manifest.json",
+      "bytes": 386,
+      "sha256": "1128021e164ee3aa8938a7b4141c114f3c48d13975754fb17af44660cf6ac7f5",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/retro/COMMAND.md",
+      "bytes": 4516,
+      "sha256": "59e130f88515924e0872051b13d0fd8ec2c93f6701e88a0633d872e006146979",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/source-code-zip/COMMAND.md",
+      "bytes": 1882,
+      "sha256": "93a85142fce7d3c9325e5e6c4d9f7987783a109b511ec7a6e4bef5173d23c14f",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/source-code-zip/references/cli-reference.md",
+      "bytes": 12795,
+      "sha256": "e03882e6bb2bc606d84c3bac7a6edece2f0f650cc774c45b3776dedba88ff76a",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/source-code-zip/scripts/zip_source_code.js",
+      "bytes": 42590,
+      "sha256": "296b447fc366ade8cd790c9a0dd0ad229799c18f94d4bc4a020f42b6acb7b401",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/status/COMMAND.md",
+      "bytes": 3947,
+      "sha256": "c81f5001417c6bff05f9a1f4874a89dd2fbed529bef1a5d9138e92a1c4ec4b97",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/upstream-fork-sync/COMMAND.md",
+      "bytes": 5546,
+      "sha256": "921426f3527d4a25e42cc8df9e0f0f7f6a8725fd9f4ddfb02ed6d7d240d2a5db",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/upstream-fork-sync/references/report-contract.md",
+      "bytes": 1598,
+      "sha256": "b3df689862944f1d22bf794301b79681d285682e7c2a1fcd845163fa253550bc",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/upstream-fork-sync/references/repository-contract.md",
+      "bytes": 2639,
+      "sha256": "2dbbfbbc1ffe6e23ecfd509c2fda05a3545a0ed4026e05f11827782023a873c1",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/upstream-fork-sync/references/state-schema.md",
+      "bytes": 1767,
+      "sha256": "5364cc506eeeb187532cb957c126b57a4d68432a545a86e3679e291eeb45a470",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "commands/upstream-fork-sync/scripts/upstream-sync.mjs",
+      "bytes": 37449,
+      "sha256": "b3d7da757d0f98a0d5d3d59acf4490cd1265f34c502425e68c0353474ebee566",
+      "mode": 436,
+      "owner": "core/commands",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "lib/design-validators.mjs",
+      "bytes": 258481,
+      "sha256": "ccd17a7259c4ba81e6a38ec9c60d62e4741718d6c1f313635cb6f83a0564ebe9",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "lib/legacy-status-validator.cjs",
+      "bytes": 148905,
+      "sha256": "1117f0b9c22697aafb64f1299db1b27965e9b62178a480fd9d74d1fb44a5849a",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "lib/speculo-runtime.mjs",
+      "bytes": 311982,
+      "sha256": "b004d352101a7938181fa2b5d7bcc07c6cdced9cd7d620c774c7ed4ee1bee1b9",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/coordination-contract.md",
+      "bytes": 7957,
+      "sha256": "fd5779ba164e07865b528660ded5ae0f57d1d680818c3c418da385ed76d8ec7e",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/exchange/external-web.md",
+      "bytes": 9822,
+      "sha256": "2bd583fccb66d6532ec4779faf4e2c77e0489b56080a932af18cab639b2ca304",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/exchange/source-package.md",
+      "bytes": 12986,
+      "sha256": "d4b853356b8cd87356044cc93134049df5146b264a778f22d29e298d2236d1c8",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/modes/cli.md",
+      "bytes": 2886,
+      "sha256": "4ef22b846b3e3ae62594c559febe8818495fa509ac98211c28df81df70975e3b",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/modes/herdr.md",
+      "bytes": 4940,
+      "sha256": "70d023d9578e19391349aeb0fbc7f409d7085e0c52b454172590894571538840",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/modes/orca.md",
+      "bytes": 7271,
+      "sha256": "8747f9d6c5c9125f5b2ed2cdafb4a345c4b6e8122b3224cbba61805f50b6fd19",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/project-facts.example.json",
+      "bytes": 75,
+      "sha256": "0793a50001fa0414f5e5097da1c3e8320712096cb3b018640a703ee131232919",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/project-facts.schema.json",
+      "bytes": 2252,
+      "sha256": "fc7d0ea8861a8ba533444707408c7dc3d91bac955d3f1a324666faa8e9e85b12",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/report-template.md",
+      "bytes": 852,
+      "sha256": "cde0444acefb7de12cda86ca1e2fe3881403276c5e23fdf3cdeef580c56ad6c5",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/result-and-recovery.md",
+      "bytes": 5247,
+      "sha256": "632e064a39bcbafba3a3ff1dd8d34f9b5d539b3424ebe7216a770d6cff96152f",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/session-files.md",
+      "bytes": 9899,
+      "sha256": "e1b25d2c52c21c8ea4a6100e3ae5214f237032b4076009c386402a5d40f2aed2",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/task-brief.md",
+      "bytes": 5182,
+      "sha256": "61725700ce78909f0b8bca350d71d5ed577a1e5aa9d730477a4d085db4dc50ce",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/coordination/task-template.md",
+      "bytes": 1507,
+      "sha256": "dec5c2f0bd6bcaae1ce924c234222f6cdc7a4cdb4afe6567b649728c5a23b225",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/retrospective/references/friction-taxonomy.md",
+      "bytes": 4790,
+      "sha256": "c881634620dee182ce1f2a955395d0e2be15b8ecb59e053d87fe9a69b92af476",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/retrospective/references/issue-drafting-sop.md",
+      "bytes": 3234,
+      "sha256": "ed7da6b40abbad3f8421f569e404be5035bdfb4cb6b9b62da42b52cbe6fe6b6b",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/retrospective/retrospective-contract.md",
+      "bytes": 2632,
+      "sha256": "0afed288b6d487850eb40c037967e021daa41b206aa97d73a8b448d5cced4c49",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/writing-for-agents/GLOSSARY.md",
+      "bytes": 18237,
+      "sha256": "0c77762e96ee4c83c73e0488c4ecfd7837ff4d83c02775f4f53919b20f7065e4",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/writing-for-agents/references/authoring-principles.md",
+      "bytes": 8262,
+      "sha256": "be7acf469528fb710e15d6da98caf6ba9ed530ce90f63fde70706545ef065f13",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/writing-for-agents/references/current-facts-docs.md",
+      "bytes": 3661,
+      "sha256": "c3f68cecea9aff778c352972f8eb4cfec5648b2a044a34ba22d51cb9895f8d5c",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/writing-for-agents/references/document-contract.md",
+      "bytes": 2556,
+      "sha256": "e57de9602774bdc4b8be2d2d2b12cf86d886fc0bf8f994a770c0cbb6ffb668bc",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/writing-for-agents/references/project-skill-maintenance.md",
+      "bytes": 3663,
+      "sha256": "5ecb5eb6dbc993d771d71649848e3e93ddd73b51e8197620507035e2ef3ac9c7",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "references/writing-for-agents/writing-contract.md",
+      "bytes": 2173,
+      "sha256": "6df971e35af67bc10eeed4e67aaa481fac4a9081d61f5887e21eef328c66ebf7",
+      "mode": 436,
+      "owner": "core/assets",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/README.md",
+      "bytes": 5937,
+      "sha256": "b449029099c3f4467eed2ac2025cf695b95d9d7294e01678773bed7bab39bb64",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/activation-and-memory.md",
+      "bytes": 2846,
+      "sha256": "a032297d1b3abaab273592416d4a00479943de8fd21673108b376a5789b75996",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/adr-format.md",
+      "bytes": 1727,
+      "sha256": "0ca5fb535d42980e8d2528956f98d6fac97f5d05bd3e7c3573bcfc832896ad54",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/agent-experience.md",
+      "bytes": 3155,
+      "sha256": "f66f3c165b7cda1e90253637883c16ca7cd5aa18a8d238108290216c13a096c9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/artifact-contract.md",
+      "bytes": 15021,
+      "sha256": "d7f050aa5fce414074aceba8be5b3146ce5652900fd45c9948afb1869b4ce0b9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/change-completion.md",
+      "bytes": 8439,
+      "sha256": "612635a8d9357dc798086c60baaf58e543c2f2ff5d24ad4e338bf511f344e572",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/code-commenting-rule.md",
+      "bytes": 1589,
+      "sha256": "ed82371e5a6d2302511f4aefc82e96b1a12885a05c9cf04f59f320e2cd9f648a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/codebase-design.md",
+      "bytes": 10653,
+      "sha256": "1ba17270e8df0a27280debafecfcbe4a9c0a3e14b71a87502e6afc5520432791",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/context-format.md",
+      "bytes": 976,
+      "sha256": "4121807da396674adb9d564a1204b27c40973e688c6d6ecf94c39e943311f607",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/deployment-handoff.md",
+      "bytes": 2587,
+      "sha256": "e8e51db477b13aa54fda318af81e8d78af0414bbb049bf8ded6360d7279d19a7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/design-contract.md",
+      "bytes": 7274,
+      "sha256": "10d961892c212bd00780746ee09be8bd6fad99aa1327c43e6dbef27f3d3e396c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/design-it-twice.md",
+      "bytes": 3251,
+      "sha256": "c2656cdff5eea4c358c1f1324aecf99cab29ccf13624511e32c8a2dd43b83d2a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/design-portability.md",
+      "bytes": 9684,
+      "sha256": "e2b4f93c9d793d05f277610019534f154d83720699007af6a963667327040cc2",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/deviation-control.md",
+      "bytes": 2819,
+      "sha256": "f84b88d7504c77dda02b5efe7851014eea5bca3ce272ff9f7dd83e5e36521e84",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/documentation-standard.md",
+      "bytes": 4070,
+      "sha256": "41c7a3ce7e795a5b8ca450b24cfc914c9495c4460e01509803bd2e8481d7c825",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/domain-modeling.md",
+      "bytes": 1531,
+      "sha256": "97018978bd034f50cc5fdea959df3ef63497ce0f5ebe8dfae04caba769af112f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/domain-runtime.md",
+      "bytes": 5723,
+      "sha256": "5463d0f8af69d9a1f7373ef3f1e94b936dbe477b7f00b33a5af47bae09e9b909",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/engineering-evidence.md",
+      "bytes": 4138,
+      "sha256": "8065c3fb1c8939fd0e59b8432c05e41349f69479106cffb8236882b4feb798d9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/error-handling.md",
+      "bytes": 4077,
+      "sha256": "e6e86a0d34dad87e299563120101011e40f3de223bf11e85f8a82ad06e428059",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/evidence-and-verification.md",
+      "bytes": 5888,
+      "sha256": "409266c60a864c4e1c12958b7243337cc37d7600fc143faf3f4c14c434bfa304",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/execution-policy.md",
+      "bytes": 5700,
+      "sha256": "a73d6bfdf247e31e790fec7fe796cc9e90e58e29cbdd1fa60acb01ad1d801dfb",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/operating-governance.md",
+      "bytes": 4061,
+      "sha256": "07e161b2dd64f76a119a49f9a128adbe0f3fa793e7cc8cd60d7a7c622b1b25ec",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/parent-implementation-orchestration.md",
+      "bytes": 2960,
+      "sha256": "0c4b3f2b981e74df9b06560309831f7ce033f4233384bdc4336762cd5a239ac6",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/path-ownership.md",
+      "bytes": 2916,
+      "sha256": "db92d58c0d7c20b531665ff58de40ac5bf2dae66cdbd8cb680c31a9263da7f45",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/path-reference-contract.md",
+      "bytes": 7664,
+      "sha256": "7b68df9a1ede061bdcdaa6127540f7486c973892d86acb8f06b2340b9f4c3566",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/planning-principles.md",
+      "bytes": 2912,
+      "sha256": "81be419c887c0fd4a0328929252350044252c3ea54fffdce22edaef518395a73",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/readiness-and-depth.md",
+      "bytes": 3234,
+      "sha256": "0e14150d62a542a69caa6c184cfde30c02b34f21338e806946a32fb1723e21ac",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/skill-invocation.md",
+      "bytes": 3048,
+      "sha256": "4bd2d64a6fab378dea044b07bd07198d8c359517eda9b3d4401450ca170047bc",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/test-reliability.md",
+      "bytes": 4038,
+      "sha256": "23e3ef9bd7fbbf32e01764aae43361e990c3fec551ea116c81562010a605f3e3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/workflow-routing.md",
+      "bytes": 4153,
+      "sha256": "4a07e7020422c9622b6d11e44a68a524e2cf67ddbfe2064dcfacfba2c4904f5f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/rules/workflow-state-and-lifecycle.md",
+      "bytes": 6375,
+      "sha256": "da5fd3d7ad522ed49f985f8e660c8ef8c1e6d8ecdcdd74b9b363f29817780771",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/capture.schema.json",
+      "bytes": 527,
+      "sha256": "17282ae29b0683f093cea41d5b0024cb5ef01abe816514e7aff998c6599cbacf",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/change-design.schema.json",
+      "bytes": 5146,
+      "sha256": "42fef5e539296a526a99c7c70c59f59b03695f4bf045eeca88b798521def6758",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/change-status.schema.json",
+      "bytes": 8780,
+      "sha256": "8ce33f3c4b51f2b5d69b8803caf7b1241b35b6bd9c81391c19d6ec81939cdc80",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/code-review.schema.json",
+      "bytes": 1234,
+      "sha256": "453a0b41bfa89fdc2cff64e5193f50ff6ffdb2827d30a8e285f995732ee2f0f2",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/config.schema.json",
+      "bytes": 3634,
+      "sha256": "f6cf51167000a0a38c144a8f258c6638a74d844b2ef3dc9f4060f9b779c4f07f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/design-tree.schema.json",
+      "bytes": 1481,
+      "sha256": "996de47638b9b8b53af77cedc2690a2be34f9d5651f46deaece0dadc02183bd7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/diagnosis.schema.json",
+      "bytes": 938,
+      "sha256": "e2b1cd2e2dc3d6a69dda142fff97505b14c2e381fb14c54bd5ef92b00bfeed8e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/execution-context.schema.json",
+      "bytes": 1343,
+      "sha256": "112308f6f5b7769b0c06b7e7a9dc941259fbbef6a9c5065423b42dea5e8aa96c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/execution-record.schema.json",
+      "bytes": 2882,
+      "sha256": "bae270f6291831fa2796d4ed0d53f284462c88c78a6b4ece7d9ee6dece942d8d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/goal-plan.schema.json",
+      "bytes": 2369,
+      "sha256": "bfc8eed00873a089cb8b3d8d3c194624287e1be4883dbf0a009a2d7a557fd6eb",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/goal-tickets-map.schema.json",
+      "bytes": 807,
+      "sha256": "3f59886edb43d6ed8a860af7b7611e146212eca833a5362b442f0db62a42ffc8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/implementation-map.schema.json",
+      "bytes": 1352,
+      "sha256": "8fb337d72b7e6d51fe4d6f9d828a469ecb3d3705d2bb10acea9f292a2e77e23d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/implementation-plan.schema.json",
+      "bytes": 2216,
+      "sha256": "5a211d7f69d84e44fe863f8f3b0c85cd9adf08a5ccea9a84cb5aabea217c81df",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/initiative.schema.json",
+      "bytes": 1930,
+      "sha256": "ec55ba7af0a205bd844703b986201283e4b826b0ec28194ddad1add198cd545f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/logic-prototype.schema.json",
+      "bytes": 1138,
+      "sha256": "86e9d44c80f5b999fde61c01a5488d9627425005b248dd7ca46bec1268dab83d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/project-design.schema.json",
+      "bytes": 3529,
+      "sha256": "2fd6a47aa5d03f6d0e200e81d747555e3e3f9a113d63cee46a455aa64178832d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/prototype-browser-evidence.schema.json",
+      "bytes": 3287,
+      "sha256": "a598f724ce6365d89ef84f2d6496563527eaf784426de9b9de2420489a2dcf82",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/publish.schema.json",
+      "bytes": 961,
+      "sha256": "99c88fe18dedb1cb611cd0834626befed8c356fb287b34e4f068d95030df87bd",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/pull-request.schema.json",
+      "bytes": 1647,
+      "sha256": "c5b7efd583fbdd3f9879119bdcdfb1bbf8aa3192ae372aba96ab53b22f05144f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/retro-approval.schema.json",
+      "bytes": 828,
+      "sha256": "7567746a5e725e59b05a1bc4f51ead055ca780338a57fa407a31691a760c026b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/retro-archive.schema.json",
+      "bytes": 1968,
+      "sha256": "3edd82776ab12dc29a88a0e7a81664bec779ec65ca2a210cfaded718e116cb2c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/retro-execution.schema.json",
+      "bytes": 2331,
+      "sha256": "1a2dd6ab8981a7e17bcdc1b0ca26bb1335c596a9ce434f81f0f3da621ae4f7c9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/retro-upgrade.schema.json",
+      "bytes": 3601,
+      "sha256": "b0a5a3dd3e96ca27564ffca2426820d42f78f9693c17954d751ca393eea5a075",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/retrospective.schema.json",
+      "bytes": 3532,
+      "sha256": "5f1d54c261150114f7df2e807b52f2ea0084179414632f1c05e251292ab19bdc",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/session-locator.schema.json",
+      "bytes": 285,
+      "sha256": "65802d61fc593df17aba2484675870377e1ae4d2dd03dcc08e94830e70331f6e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/source.schema.json",
+      "bytes": 1067,
+      "sha256": "346e65dfd754efa47ae814d8d63d4c01d46c3744b36a9fbbf2dbcf69c76c89b0",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/spec.schema.json",
+      "bytes": 707,
+      "sha256": "c9b3060853afa1c1e7cccb11585d739531ac5acd4a6e9b295cc55d0113ab6502",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/status.schema.json",
+      "bytes": 932,
+      "sha256": "11c4cc0e99915adacdd25f032132e1b1833fd79a25c67a5676e5b9d5aea6d7dd",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/ticket.schema.json",
+      "bytes": 7105,
+      "sha256": "511839c1fa33e9259e965c0a3e49cd6a967e545d4c68138d6561dee8453d002f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/tickets-map.schema.json",
+      "bytes": 1542,
+      "sha256": "58e5ed9963be927ce9e4f8a26385ac00d76200eff78077a9799fc1f5c4c92638",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/triage-run.schema.json",
+      "bytes": 2829,
+      "sha256": "9145dada2b73cfc9966d373ea139749ea48b5a2202059f30593180596cb808b3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/triage.schema.json",
+      "bytes": 2289,
+      "sha256": "7233c57112217bebc2d8c3a516452958d5e3a641ce3f8e4c20f118a416c76538",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/schemas/wayfinder-ticket.schema.json",
+      "bytes": 914,
+      "sha256": "d4f346417a60bb3853cea4052da5ef52bd44c85a8bf2b99de540cb3a45f80892",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/references/fowler-smells.md",
+      "bytes": 1410,
+      "sha256": "bcf1cf1b8ff7304266a4951bd3ce7dea57163a8ecf4b39641c6c796563389815",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/references/result-reuse.md",
+      "bytes": 1822,
+      "sha256": "841882a2fa1aa8f7444525844316deeb1072e5f5601cca790ac72330605052f7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/references/review-evidence.md",
+      "bytes": 4983,
+      "sha256": "e81d124de9795aaa2e5175b5adfc89ee861d782c37244f75ba3575bb6738808f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/references/reviewer-contracts.md",
+      "bytes": 2239,
+      "sha256": "9ccc5c146df32198bd39bdc220a8d9ab2075716185508503ef2cfde10c2a2a05",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/references/risk-review.md",
+      "bytes": 1950,
+      "sha256": "f4e5a2509481afb9a179bfc3c3b64c6831a10ab1d248ace7361e314727e6163b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/references/source-discovery.md",
+      "bytes": 1910,
+      "sha256": "13a9c45b524c037f55440a6d143645a6c3660915585c319f66025d0895bde506",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/references/working-tree-review.md",
+      "bytes": 2165,
+      "sha256": "f24a2d7eedb4ea76d4b416e8bfebc88eb13fe534590ff622e259b72063ab2e4d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/code-review/SKILL.md",
+      "bytes": 5152,
+      "sha256": "d9fa790e5dda275bc104623f9f5bdfd0075ad2c46bdd7d2d51561493c504cdb4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/dev-worktree/references/create.md",
+      "bytes": 3089,
+      "sha256": "d178c5e3baa64016ddec002cdb2bc62a3581439a3c6b1d9171d6f9ffaa638cc0",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/dev-worktree/references/finalize.md",
+      "bytes": 1693,
+      "sha256": "7338407714f2a58421ba3c37832ca913516637056000a4fac155d5390b7182f1",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/dev-worktree/SKILL.md",
+      "bytes": 2403,
+      "sha256": "f3cc7f49b54d0553ad105dc4714528765498f8662e63838b16c3f38146e090c5",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/plan-quality-review/references/checklist.md",
+      "bytes": 1321,
+      "sha256": "715a24c26f2c0f68d6cdafe3035988fee0b6ad34ee9ff217f94bea034f0380eb",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/plan-quality-review/SKILL.md",
+      "bytes": 935,
+      "sha256": "cca61e097dd6fa81edffd739974553ffc56ecd2e75f396e077541e00365d7e54",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/skills/research/SKILL.md",
+      "bytes": 1983,
+      "sha256": "163d23c98446df816f621050e48873c7f1863f7515102f42a5e342e693e0cb02",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/change-artifacts.mjs",
+      "bytes": 13214,
+      "sha256": "3a7755cccc62ba56c20f8fbb3208b9ebed3170c04c1729eba44d9178aed4485b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/delivery-artifacts.mjs",
+      "bytes": 6499,
+      "sha256": "fb2773e3f9454da1a5ee987e1e0747e39ade8b821b6671ed296c7bce24d42cc8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/design-artifacts.mjs",
+      "bytes": 20848,
+      "sha256": "d1a44e9af159421d6aaedcf4816f295119190ac9ab08cd23632b1756347e4db3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/engineering-evidence.mjs",
+      "bytes": 9911,
+      "sha256": "ba283d623a88b4b2feb51e84f64fafe362b6ea1c2c35e8ffc4d0dc72bad7c17c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/execution-context.mjs",
+      "bytes": 10065,
+      "sha256": "5452b5a2bfec5d6edc44790c52eef1e1b8ca2d30b870cf65fa162001a06bb23c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/plan-contract.mjs",
+      "bytes": 30294,
+      "sha256": "c3a424b8e09acf87b22a5774b1958bed10d572081ba1114dacb9d61073f0cf27",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/publish-design.mjs",
+      "bytes": 24704,
+      "sha256": "54a709e0faceca33f8981ed5a4f030bf1d9c37721919457018de04ba2ef05145",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/README.md",
+      "bytes": 12454,
+      "sha256": "24a696a199bb5075d6df22caeefbebaf82d2fd885129ce68a106c7cd36a37b09",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/review-evidence.mjs",
+      "bytes": 9964,
+      "sha256": "6b8497a8ecf932c6805d7f97d215f4e82b918341071787042143384864b97a9c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/review-scope.mjs",
+      "bytes": 13648,
+      "sha256": "b8ba534ecb02f097f0923b69a9ce69c6e78ed899055edc8ee6b1afdacb34a0a6",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/tests/engineering.test.mjs",
+      "bytes": 19041,
+      "sha256": "fef9d443a6107b67b0fe29da729528e93a948938c4beddd401d38b80a80d147d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/tests/review-evidence.test.mjs",
+      "bytes": 5648,
+      "sha256": "4e01b0675467a11ec00ef4f63bd5fc0cb529ef3c429a23895b09c100bad514bc",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/tests/review-fixture.mjs",
+      "bytes": 3357,
+      "sha256": "a3c7ae33bffd8bc52ebdf0c17e34ac421bf95c52f90b5d11d6c30c3cdd3ad6a1",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/tests/review-source-files.test.mjs",
+      "bytes": 5006,
+      "sha256": "13d98254e6b97eaafc5d843546f6103da61c5518a103ac64dadf3605130679eb",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/tests/review-working-tree.test.mjs",
+      "bytes": 4611,
+      "sha256": "1ec46e2088ff48b7a2d591729cda97b27c0c3193c37b722559f044f595c8f20a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/ticket-control.mjs",
+      "bytes": 17202,
+      "sha256": "480502028bbdbbde6a1b476800a53a99c9720fa378f0974fb7a76989964383ad",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/validate-handoff.mjs",
+      "bytes": 7948,
+      "sha256": "df26ea86c91862e8ed471defce7cd4e29568b620a3581cff90f81644789f683d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/validate-retro.mjs",
+      "bytes": 23683,
+      "sha256": "f5fb2fc85983d3e5f05e88694a2afa896771cb86a834890c5380620326a94a96",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/common/tools/validate-specdev.mjs",
+      "bytes": 176065,
+      "sha256": "063435a39541ad5ea0a44e4bba06bad35ca5359c40f726966870540bd35e8127",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/manifest.json",
+      "bytes": 3102,
+      "sha256": "24e4077baccab5ea5772fe0a7d0ba48d248be4a383e73564ee79136d824973b9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/runtime-contract.json",
+      "bytes": 818,
+      "sha256": "5fe84adf681770f396b99d80c24487346e1a48c72382cde17921c8abd789a00e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "contract",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/SKILL.md",
+      "bytes": 3657,
+      "sha256": "6d9a5f92ced7f6d622374ada5b89a6e97796009abf8580de95a861209d90c50e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/assets/archive-plan-template.md",
+      "bytes": 2316,
+      "sha256": "93af4a761c3d90bb0cdb1e31ad996cce6b85a0cab1af98c5626d3451607d809d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/assets/cleanup-candidate-template.md",
+      "bytes": 2518,
+      "sha256": "ed77091a5812c6387fb6f16e150acb2e95249113d5df31147d14bece72f3a996",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/assets/consolidation-plan-template.md",
+      "bytes": 2397,
+      "sha256": "7e77dc0afa021e221cfb006823a242084dfb0b78dd1f47c239ed13cf070498d3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/archive-receipt-contract.md",
+      "bytes": 2717,
+      "sha256": "e4e79782e37f01fa3de54a46a0b8e3699656c397a50d0bdcaa8362be9aa3618a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/archive-rules.md",
+      "bytes": 2193,
+      "sha256": "791dbff6c41eea7f5a144395bf244f0e18c6f7de8fcff41c2aeee1579871a20d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/cleanup-rules.md",
+      "bytes": 5052,
+      "sha256": "70c70e283a91beb81ab71f7f84b08d7ef98e0b395719d472ec3c2d6e1acefbf6",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/consolidation-interview.md",
+      "bytes": 5107,
+      "sha256": "45573df90d45f803203c3c8d1c373b5da4bdeb7bacfed204a18b8fd8b43040b3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/consolidation-rules.md",
+      "bytes": 6426,
+      "sha256": "b4e42f7ce422f1ef5ba713f71229fd1eda89f069ce03d1d88d066e8fbb16b1a4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/design-knowledge-gateway.md",
+      "bytes": 11042,
+      "sha256": "16f93c9afb55d01849de2b5dbd7f79ff86d7c8ed9bbe3e410f98c4d0b0cf36c5",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/knowledge-graduation.md",
+      "bytes": 3950,
+      "sha256": "05310e29b9bf1e48b9a15c95c62be8eb87a1eade7fdeffa6f4b7be418160e144",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/operation-contract.md",
+      "bytes": 6481,
+      "sha256": "45eb3e0c16bb674e123e31918ee4bdb92bc187404253738c4eeec132b87faa3d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/references/retro-archive.md",
+      "bytes": 4242,
+      "sha256": "f8de0756c5907292c773c54c1ed5607b93ef9ff8ff8f2e027d68acaa5113ea6e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-a-archive-and-consolidate/SKILL.md",
+      "bytes": 5575,
+      "sha256": "442594bb9e082894554e5a3e653a036e49636e52cb5d64291a6671c2165c8b83",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-c-code-review/assets/code-review-template.md",
+      "bytes": 2312,
+      "sha256": "6bba9236e6203092cd0ee2d27c777e4669479296a38456606f9c4f9df849350b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-c-code-review/references/source-files-review.md",
+      "bytes": 1867,
+      "sha256": "13ccb51df7513de764b7585085a558514f8822bf4465c25fd1dc201513189232",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-c-code-review/SKILL.md",
+      "bytes": 6459,
+      "sha256": "ef246d64f41bb1fad37612b0e33dd31665ec4502b7f58091f26f516f897ee0fd",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-d-diagnose-bugs/assets/diagnosis-template.md",
+      "bytes": 2098,
+      "sha256": "ca4d6569dc786ce0efb31e56071a2eb942e9ee9d4fc0f03d7f43522fe026e066",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-d-diagnose-bugs/references/feedback-loop.md",
+      "bytes": 2276,
+      "sha256": "232faeed02c5ebad842be87f1bb537832f95b18313c1367f785799777022e8dd",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-d-diagnose-bugs/references/hypothesis-and-instrumentation.md",
+      "bytes": 1667,
+      "sha256": "7c8c0437423beaa0ca082ba2e691335bd93e282d0bae61a24a86ef09b1293090",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-d-diagnose-bugs/references/incident-evidence.md",
+      "bytes": 2653,
+      "sha256": "e19443d5a199cb80d766656ab03443511d65a93763784c273576d52fa31e9168",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-d-diagnose-bugs/scripts/hitl-loop.template.sh",
+      "bytes": 782,
+      "sha256": "be9eb56e837ab5df73c5b78a0edf85a5e6cb1f64c4a3344968d121d77e704d85",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-d-diagnose-bugs/SKILL.md",
+      "bytes": 5823,
+      "sha256": "ed30e529ae66e24036775397bf3b1669cc9eab0e6502635e7157d3bf5c345cd7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-g-grill-with-docs/assets/design-tree-template.json",
+      "bytes": 131,
+      "sha256": "6ecde12513b6626b3f23f6967b2c980c6c3227fd93595e5d5779068a84ff4061",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-g-grill-with-docs/references/grilling-protocol.md",
+      "bytes": 2719,
+      "sha256": "e587f5d038f2dedfa7305e64242682d841144a9eafc1fa9b2c5f39107842363d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-g-grill-with-docs/references/interview-procedure.md",
+      "bytes": 9761,
+      "sha256": "36dc2d1e479411144e04427a20fa7e7ae13cd25c9045c0edee7510794f880a93",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-g-grill-with-docs/references/log-format.md",
+      "bytes": 832,
+      "sha256": "a91e48215be2214f8749f9f17677f805ff0565e5a92dff4508c59cb6ea6af579",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-g-grill-with-docs/references/stakeholder-questionnaire.md",
+      "bytes": 1744,
+      "sha256": "ee32b4073e1e2fa13e18267e18716068d5814e62ca9d5b737165c22f8e8b61bc",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-g-grill-with-docs/SKILL.md",
+      "bytes": 3065,
+      "sha256": "1fbdfe91aaac347715e702e332288d14c780163a97387b80be4df718cef0bfe2",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/assets/evidence-template.md",
+      "bytes": 10594,
+      "sha256": "e8dda2ad284575e5d492db2a8a4905792e67ef45d764e3f7ccd23cd473e692b9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/references/documentation-procedure.md",
+      "bytes": 2958,
+      "sha256": "d5b76a844fb16c94b0ae8bbacf8230b567e4560502904621187a5a5f2e016ffd",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/references/execution-preflight.md",
+      "bytes": 5655,
+      "sha256": "9f09a4d111cd6e3db8b50204bd290af6a5e4b74f5d28deeca5e01ef878448be7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/references/implementation-procedure.md",
+      "bytes": 14992,
+      "sha256": "e434f11e96becdd14db95a36dc37f894b8c6fe188049bc80e4c14b0f461cb414",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/references/merge-conflict-protocol.md",
+      "bytes": 1032,
+      "sha256": "ad4e64e58ccb427b58ba00f4e14864922c1455e73269a2fa9ad0c92470335993",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/references/tdd-mocking.md",
+      "bytes": 1287,
+      "sha256": "54a45152af6761da22263204c5094d9d75544bed90e39a728511d9f3b8b6ea6f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/references/tdd-rules.md",
+      "bytes": 1726,
+      "sha256": "ee44b52890380a459c7a93d9a4cddf00de90de0278923a9a566920c7d1a721c4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/references/tdd-test-design.md",
+      "bytes": 1580,
+      "sha256": "1aaff6c838634db073eb5a95681a34db154fed2bb5b512a191f239053ad226f3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-implement/SKILL.md",
+      "bytes": 5842,
+      "sha256": "b442c96906e45b9a70abb2216acca0c61fed21764cbc648ae9dc0e8f6073db17",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-init-setup/assets/change-readme-template.md",
+      "bytes": 1149,
+      "sha256": "ea6330348f2d8e57d1eccb2e49789161a183ea4eeb5eb8a9d992cbd3b5e5c663",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-init-setup/assets/config-template.json",
+      "bytes": 672,
+      "sha256": "f1a2bf4a456d1259a7a8d922eb43b427f4a906eb85300645166819e94c0e1544",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-init-setup/assets/domain-layout-template.md",
+      "bytes": 2551,
+      "sha256": "be7c9d89cf9fb123ea9e307f7b3c3bf94b8e5c210027293edd9126726fd1d234",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-init-setup/assets/tracking-template.md",
+      "bytes": 1990,
+      "sha256": "b7a7e614da016bc402320f3ab06f4246765a3d37b428ebed7a22dc591a8f8adc",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-init-setup/references/change-record-examples.md",
+      "bytes": 2472,
+      "sha256": "57e84fc0f32a1883837fa644c71634e25072f6c864ca0401060fd9f91e85931c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-init-setup/references/first-setup.md",
+      "bytes": 5610,
+      "sha256": "c68764369b7e28741a493858f07cd50320117fd1c7c690ac5ef6d24fb85c1997",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-i-init-setup/SKILL.md",
+      "bytes": 3831,
+      "sha256": "c5b208017a5540d1c2dd6d8468fcc810661a6f44e82e23c24b7e952c2e3fd334",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-l-learn/references/learning-change.md",
+      "bytes": 3934,
+      "sha256": "5eae712a0481bdbac25a923979a28de3a356f394c059ae699161d9faf8c18676",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-l-learn/references/lesson-format.md",
+      "bytes": 4364,
+      "sha256": "cb946f67befef6b61782ba40f9581dbc0c82131a48acdfa63827d979f136deb6",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-l-learn/SKILL.md",
+      "bytes": 4396,
+      "sha256": "b174aa51f1e28ae50c4604fa6f751d5124396c02d988025e9baa11cc8a0b2dd2",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/assets/goal-plan-template.md",
+      "bytes": 7518,
+      "sha256": "138f6b5f3fe5e72ae150d38c5c7530a7aaa1e179492c4a761ba3a4e0641083b3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/assets/lightweight-goal-plan-template.md",
+      "bytes": 1054,
+      "sha256": "2c4a8a62c042f625ebdb3ad5e0e5d46ba268b7f68f574b34ebd95dcfb502c358",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/completion-control.md",
+      "bytes": 3804,
+      "sha256": "e6a6ff97df3e60cc9e1f0ec46fd69a63232b9431f8958b906f307a1b513ae3e3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/goal-lifecycle.md",
+      "bytes": 3138,
+      "sha256": "a8a522b35ec6e65954dd79c003adfb7f97a395416840f7bb9b85c49ec51d5eff",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/goal-tickets-map-template.md",
+      "bytes": 879,
+      "sha256": "e70fe260f1a0aae59196fa9e8cf1802df03bf565aaae5361d9b86ba2ad96d60d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/lead-orchestration.md",
+      "bytes": 2491,
+      "sha256": "d9b39fe88af9c897708db6112bbab6c4107cf8ac089c3c12a4cbeeca946e4015",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/map-control.md",
+      "bytes": 3326,
+      "sha256": "e232873cbe360604d0baaa70f2ed4c46498fdee542f281ad17ad2d408ceec17d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/multi-change-plan.md",
+      "bytes": 10850,
+      "sha256": "f156a22cf8599db7c63242dad583bcff4e83e295de2bbad9efbb23ec1a357275",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/multi-conflict-and-drift.md",
+      "bytes": 1362,
+      "sha256": "0fef2a61493e0fe289d3fc96a11f65def96609e3d67235f3a2a6a4d0f84a79a9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/multi-execution-loop.md",
+      "bytes": 2463,
+      "sha256": "4b9f613e1b0dba98d81fd6feb1f6e44c9a395072ee95be5ced5168574f33b3c8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/multi-input-readiness.md",
+      "bytes": 2003,
+      "sha256": "1d3a151734cdb68cdb6213fc59ad62b8f291dfcb945551424ded31b7ce279e28",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/multi-super-dag.md",
+      "bytes": 1881,
+      "sha256": "bc7df2c3676b34e2e4f81ddee40dee72a388448e4890ff2719fb20b336f2aeca",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/orchestration-protocol.md",
+      "bytes": 2182,
+      "sha256": "a486f461e8967b268b98c40b3f3b29a52ee11aeaf7e2b06221f9b21a14325b9c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/planning-modes.md",
+      "bytes": 5973,
+      "sha256": "a06c890eceb81f5ead5b85ab6b3977d15b9b2d421f212e87e46d409e26e9f914",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/replan-and-recovery.md",
+      "bytes": 1196,
+      "sha256": "33876080e07ffda73cac91b0cfe197cf87f600ec7ad2182b0fdd0b69a13c3e04",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/references/single-change-plan.md",
+      "bytes": 10955,
+      "sha256": "959def90403e000f38deb6e171b004a8b31d06c5cd86cba5551a02b448c1c79b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-goal-plan/SKILL.md",
+      "bytes": 8501,
+      "sha256": "fa107ed4863cfeaf2bf43f8eaa6b4ff6e5ca6de2dee8727b28770bcf22850177",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/assets/change-design-template.md",
+      "bytes": 3904,
+      "sha256": "c692111c2a9b04266f12e56bac013058b3bac93411cca4cac4dd7e936c4a5217",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/assets/design-package.schema.json",
+      "bytes": 5144,
+      "sha256": "761487c0b10978433e4ac6c83e6fbb61b435e277b2b72af77396d1274503a9bf",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/assets/design-system-template.md",
+      "bytes": 13808,
+      "sha256": "bb4c912b800d6cf3ca5bca3c5969822cf050aa4be2c547d06f07ef79fd0b6fb1",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/assets/logic-template.md",
+      "bytes": 671,
+      "sha256": "2b8616904b436bac76082be294d24cb07687996a7636f9c795a837ba14a4a83a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/assets/project-design-template.md",
+      "bytes": 2169,
+      "sha256": "e68133a7f9643dc60b793848e148e4e84726782f5cf86e015aee60253769e949",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/catalog.json",
+      "bytes": 10473,
+      "sha256": "ddb2235887cfee004b8fee589fd1d785ac37718e8d02c91266937c6b6f8b2a2c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/catalog.schema.json",
+      "bytes": 2293,
+      "sha256": "f349c0755d720e426895adddaaa1493cd4fe9b5e9e5fc83a2367ebbfaa34a99c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/color-and-theme.md",
+      "bytes": 3851,
+      "sha256": "a9876d200083d9513442acb0d64b08411cba7debb9449885710b2d5616815ec4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/composition.md",
+      "bytes": 4099,
+      "sha256": "672de554d8aaf65453fd2b8a461e647a821bd2fd2110ed6b914b186ec7abbc97",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/foundations.md",
+      "bytes": 4665,
+      "sha256": "c6abfba16ab5880501fb709b175a70a8c4de664b6e2c2f2e3da74456c16a4f22",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/gallery.html",
+      "bytes": 23291,
+      "sha256": "05e12f6cb480ae6d9c4055e8b853c40aa67f910ea3bce18769c3e801bd368666",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/gallery.js",
+      "bytes": 3197,
+      "sha256": "030892a40304286d8298d2ef8c73026f3f762bf2e296240594dbf662421fcead",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/INDEX.md",
+      "bytes": 5394,
+      "sha256": "601785ca076f8ce11ecc8551f9c97372b202230eb72c25f5e7d95b96ede80f85",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/interaction-patterns.md",
+      "bytes": 4062,
+      "sha256": "07add20f46b5013ecb9d2337c526b8853055ed7d8b140bb0e566ec4e376f90ee",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/product-pattern-index.md",
+      "bytes": 7085,
+      "sha256": "33343230f39f0e9844353cd5b30ac7820721d7172d1bd1466ec84946be61a496",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-provenance.md",
+      "bytes": 4763,
+      "sha256": "d0d0f4f474cb700125844a7a297a5ac6b0189d08e55919552e7a5568cfcb70bf",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/data/extended-projects.json",
+      "bytes": 10798,
+      "sha256": "680724e8d1ef5bb3e266686e2ee9a382125beee8eb81d50477648fffce5be4d9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/data/projects.json",
+      "bytes": 11041,
+      "sha256": "ae3bb95b249f57bc4f7eeba60e4b79c44fd7f9a256864aa4e8c7e0336d10e90c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/METHODOLOGY.md",
+      "bytes": 4072,
+      "sha256": "efc9e9214463b78e9b5ee32b1fe6205f82663baa5abe865ecb133476fc1c50e7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/README.md",
+      "bytes": 2410,
+      "sha256": "db98e66f2e77c50d672a77c8466ada68937b4538ae96774792997ef063f10779",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/reference/design-tokens.css",
+      "bytes": 3778,
+      "sha256": "e2f1da40befe5c60897feb4ed275f01e5c279c19d808e2bfbb4d14efbafa2b56",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/reference/USAGE.md",
+      "bytes": 1849,
+      "sha256": "689a1bb8e7ce27741005a30eddb566b4e3259c34ab88313c7dab552a70885c0e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/report/OPEN_SOURCE_UI_RESEARCH_2026.md",
+      "bytes": 34848,
+      "sha256": "1a4ee8ed19135c5aa5155514822f812ae5244b242533aba2a96531b7c1ce66a4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/research/claude-code-modern-clients.md",
+      "bytes": 24503,
+      "sha256": "4d84582fd63b6c225659b6eabffdf543fe7dc91692ebc08b00d58d3538897ca5",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/research/creative-ai-communication.md",
+      "bytes": 49570,
+      "sha256": "9bacdfbe72e2a4a2fc4e787d2b477f8822359aad00407cc12a0b988b0d4ff1bf",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/research/data-dev-tools.md",
+      "bytes": 48477,
+      "sha256": "00460040e175719d9d11044505d0b7bbd355d7c1c11f7d9314da53ce66d4d63e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/research/personal-multiplatform-apps.md",
+      "bytes": 11261,
+      "sha256": "1e2de7c9db636ed8e69624953597a5e50462655e75809935c596c554a77a1d2a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/research/productivity-collaboration.md",
+      "bytes": 45681,
+      "sha256": "a7ffb10d0f939ced1f81d6db78b625c70e97c72cf974fe05735b77e79fb23e07",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/research/PROJECT_TEMPLATE.md",
+      "bytes": 359,
+      "sha256": "3fbfa0ea72e81fa22d11b369a2d8cd112d4a03c383fd72f3bd2f99afb100aba7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/research/README.md",
+      "bytes": 478,
+      "sha256": "59c222f5c1635956d625e1aa9279836adff371782480d305bb3977d68c4a40b4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/01-dense-ide.html",
+      "bytes": 9506,
+      "sha256": "e8708e203a4c885643e45b05171ed7c31eacace3291e1c51dba6bf3efb37ba34",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/02-monochrome-console.html",
+      "bytes": 6818,
+      "sha256": "5fac489e6bb4a5345ac0411db701de5925b81c287f7b7efa2e536792e378e146",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/03-soft-personal-ai.html",
+      "bytes": 7388,
+      "sha256": "099952d8613ddb23f00b213cff3ad4d60991ec9f4dfb8312261b28247130584f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/04-responsive-web.html",
+      "bytes": 7703,
+      "sha256": "48bcec3da96e8fc78cdd0d453658e25129f8413b712810d117527c0bef1a8976",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/05-mobile-supervisor.html",
+      "bytes": 5763,
+      "sha256": "517d6c1af9005a593fe04cf26463163eaf7ff4e094f1137f3a7646d61bb47a11",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/06-cross-platform-workspace.html",
+      "bytes": 8472,
+      "sha256": "bfa001909362a5d7147d2137ce7eccbecbc3bb7d134a1c2c13f106eb9757eb58",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/07-local-first-content.html",
+      "bytes": 6260,
+      "sha256": "01c043ac1d987faf3176566dcbc81686e6896a3138e4d10f7bbb849afb0228c3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/08-media-first.html",
+      "bytes": 5856,
+      "sha256": "016ab94e26319d672f527ebb98978cfad52d895395f780bbb99b5532730fcad2",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/assets/ATTRIBUTION.md",
+      "bytes": 513,
+      "sha256": "22c26f2b895d605f4acaeb424ecb016099d4cfa9d2ee09b18f8fc713b5ccc9af",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/assets/landscape.jpg",
+      "bytes": 429798,
+      "sha256": "6f9038d5f78b573c0ad51606a8a69afd32273bb9a89b3573930a9f3ca3a7e401",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/assets/lucide.js",
+      "bytes": 632343,
+      "sha256": "bc46398c5d7e5128279cea9cf184fce16be57223f892f064ee1b23fea3a4324e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/assets/mountain.jpg",
+      "bytes": 219688,
+      "sha256": "962914b4b02176869f604ec3cf3e54829fc68dec1d6804bd5d42c10ce11458f8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/assets/workspace.jpg",
+      "bytes": 143380,
+      "sha256": "81c84e1ad1a7e0f01ae903e04d789326338e187ed435c0ad51ab6bc4e4f16a33",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/index.html",
+      "bytes": 6500,
+      "sha256": "d69a53bc6a25fa514999ccdda5342995aded4d306bfe49e0469213a1f84910e9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/package-lock.json",
+      "bytes": 2264,
+      "sha256": "25f966128841a3111317f9d15b015f0ecf7d59ab8a78ae0a0a79da9ba7d06f76",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/package.json",
+      "bytes": 314,
+      "sha256": "559517d0f34ce1a80233befdf8c25107dd0f365e33ace25b995868a37d5b603c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/README.md",
+      "bytes": 2701,
+      "sha256": "098f7d83de20c24fa690c51ff961c8822d9a7e6be3da54bfdb350842a99c3359",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/screenshots/index-desktop.png",
+      "bytes": 106261,
+      "sha256": "cdc4292210841970d208b9376f9dd63fb0f951494a326814ca10f6719c9fe705",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/scripts/gallery.js",
+      "bytes": 4922,
+      "sha256": "1f8e075ecabe090daa3954746270cf27c12eead8abedd920816466ccf645d730",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/styles/base.css",
+      "bytes": 15405,
+      "sha256": "7fdceb64c24073e125f430b200d2773750a169f655c169420c5e5f3db9068927",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/styles/pages.css",
+      "bytes": 32903,
+      "sha256": "e03e1552afe1adbc7f3a0840240294c66f3d255dc3009d0b3768713c80da9f5b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/research-snapshot/ui-gallery/tests/gallery.spec.js",
+      "bytes": 2299,
+      "sha256": "2e3405433d6da709766b6dd43fed200339ab87b5585454dbbedad6fd756331e8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/responsive-and-platforms.md",
+      "bytes": 3847,
+      "sha256": "35219187ee596907805ce69a3f68f643817f86c68a48fb4f4914591b24421a1d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/style-index.md",
+      "bytes": 6774,
+      "sha256": "24fe45435af7b2777aa6b8c1fe7f7b290416b8819e2576ed1c3a48a680ad62e7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/assets/prototypes.css",
+      "bytes": 16440,
+      "sha256": "f9080f9fa3a6e979cde77b592797ad1c3079c1ee06571e295e9d5f7cfe1624b1",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/assets/prototypes.js",
+      "bytes": 8402,
+      "sha256": "8aeaffb3eb9f4bf6a03071d54f1e1933c141dd898d529343532090ef7561bb19",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/brand-editorial.html",
+      "bytes": 7465,
+      "sha256": "9c4c01e91e70079b6e8df856cf76085ff9c1e2b8e6858c1f0673a8ef446c2e7b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/brand-editorial.md",
+      "bytes": 1866,
+      "sha256": "25fbe99cdfccb01491f14d7f44f8ab4d7b4273d98e2c5f23189796b3dc4e980c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/commerce-service.html",
+      "bytes": 5973,
+      "sha256": "225b7a16f135469932bf4beb16be7a3ea977839a350b43abf528456fd959fc9c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/commerce-service.md",
+      "bytes": 1866,
+      "sha256": "4e9dec4e4b49b8f666c054f51bfd15b17c32f9068838e90f5a949ba74d6bbe76",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/cross-platform-workspace.md",
+      "bytes": 1847,
+      "sha256": "d0b206f9ece49d3fedf3d5a9876c7e84e0b990b2db6f34a9a3ecedb309dc93a8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/dense-ide.md",
+      "bytes": 1842,
+      "sha256": "1112b047760e859deb6cb950a106376445a5f5714078b1c701fbcaff922e8a96",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/enterprise-data.html",
+      "bytes": 7429,
+      "sha256": "45711b3117b38ff4ea49770f3e57a691a48ba19b7f93f1c5e1f13a9e3f400f64",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/enterprise-data.md",
+      "bytes": 1847,
+      "sha256": "ba7899e25066dab07cbf3b4d416d3882774101c0cbdacbd1a22016066f4597c5",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/local-first-content.md",
+      "bytes": 1779,
+      "sha256": "be14c19190018c579cade13affb4e50a024875e51cc45917a0c5cedd34c39504",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/marketing-conversion.html",
+      "bytes": 7348,
+      "sha256": "89dd7302033869bdcbffca7d0ab9c9d4c0a05f9935456fbb349484cce3252dab",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/marketing-conversion.md",
+      "bytes": 1911,
+      "sha256": "ed17d6e4980ff6300e11e6f852c7ec54c41888cfac53b54ba62ebf86dd03887f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/media-first.md",
+      "bytes": 1780,
+      "sha256": "ec96e7b2e1a87fc44b3a8d8a6929d0b2b1e4a197a6c180eee519f482c9684529",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/mobile-supervisor.md",
+      "bytes": 1755,
+      "sha256": "104cb9717e25f1e94a2dab3f8ea0f9d9b64f345d797bacb6098ac54108e15a11",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/monochrome-console.md",
+      "bytes": 1821,
+      "sha256": "0467978d5b371feaac9538035f6e05fc6dec3433c351b51cfd5dfbe8d7b0d824",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/responsive-web.md",
+      "bytes": 1838,
+      "sha256": "d554f3b68dc77a9d739bf2bdde719679df1667435bea7b179e33fa30b2698a74",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/templates/soft-personal-ai.md",
+      "bytes": 1780,
+      "sha256": "b227856fa2251ce83ef27f4ac6558920789026a1a771cd84815ed5c5d6e9981c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/airbnb/DESIGN.md",
+      "bytes": 30517,
+      "sha256": "add34130d67209ad105346d60fe2b290728b9711683969db4b7760e29477a5fe",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/apple/DESIGN.md",
+      "bytes": 37096,
+      "sha256": "83fbc614443a9b3d7569e9956a43e7b8740f9d0f939f58b8154f7a7cec3002b2",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/figma/DESIGN.md",
+      "bytes": 32316,
+      "sha256": "716ce8431f47eb8b8135552710e3c4d538bccccf1202e4ceac5428c9aada9972",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/ibm/DESIGN.md",
+      "bytes": 26481,
+      "sha256": "46f6fd65b5e7524fed1133b9b3c0dd619f9a0f145fbb2b87f3675c701a88f3bd",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/LICENSE",
+      "bytes": 1066,
+      "sha256": "6d4bdc9a9cf30e7beb593475fdcdbf29f981ea6bd7923f202866145409f87b44",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/linear/DESIGN.md",
+      "bytes": 24354,
+      "sha256": "30bd30e72c48a16e4bdbd010f2d1c85fab657c6fae3cc85389399aab10f9cb5f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/mintlify/DESIGN.md",
+      "bytes": 44083,
+      "sha256": "754ffcf35dcd39ef8aef450085ce936aaca5b872ff92caa66be99e91a5c3d5ec",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/notion/DESIGN.md",
+      "bytes": 35176,
+      "sha256": "fa9d6e78216d8f3e5d3990709ca2de6bc2e268e945bb94f255fd1bfb15455266",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/provenance.json",
+      "bytes": 4698,
+      "sha256": "447cf5fe745962bbc20156f32dd613e16d90373a1017261c3e57c95eaab86a87",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/README.md",
+      "bytes": 1202,
+      "sha256": "5b4bf3736a88b05f4e61f4d3a31d276125d97ba6cab2e0c33cf52b5ac400c449",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/spotify/DESIGN.md",
+      "bytes": 12955,
+      "sha256": "72e964a6cf551d0603f9854f2f42ee08e97ad4d9e17e037f50f6233508288295",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/stripe/DESIGN.md",
+      "bytes": 24606,
+      "sha256": "5c8806b7dd3e0c2554ccba9d1e2a7c78e7c6e50e44fcf6ff5daea6026f8a9ed9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/upstream/awesome-design-md/vercel/DESIGN.md",
+      "bytes": 41405,
+      "sha256": "d0951b93c2b4ce9840c715c9f9b3e58a386c6c58ae5cc0f804dec3b116b95bd8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/airbnb.md",
+      "bytes": 1768,
+      "sha256": "45e16ec8f6ab239b4016ed06eb5e34fae4c9ff416d5f6fa52f47e63e94cae621",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/apple.md",
+      "bytes": 1751,
+      "sha256": "a1566c341fab8c0d816563baf65273ef5e4240945a36976e52a9fb3ec5c23612",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/figma.md",
+      "bytes": 1770,
+      "sha256": "7b40e83b5429acdbb46b7834a40c300bf155150bf19ca6237cddd4398d5edb66",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/ibm.md",
+      "bytes": 2053,
+      "sha256": "cad5c025df3e38c4760a6897ae9d756d89e343de24a58799b073d5d8067e69f8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/linear.md",
+      "bytes": 1796,
+      "sha256": "877e224ddc33139e5e3359e30c14d6be03899eb39fdd607605d806534a38ce45",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/mintlify.md",
+      "bytes": 1770,
+      "sha256": "5e45f9a847c994fb9d4d8a13760cb11d9370857b6ff6e9f61b5893312abfcd33",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/notion.md",
+      "bytes": 1755,
+      "sha256": "47cd4aa2b8726d2c38be6a1e2059500b4315ef55c3450a5f876aabfb1b217130",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/spotify.md",
+      "bytes": 1750,
+      "sha256": "74793883f4fab687bed9a48e5823aa71640b147e7501bb17ed740b82f5630bc0",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/stripe.md",
+      "bytes": 1785,
+      "sha256": "a508838ed689c4267b0a0f2acc606b2abfa0fdd566f2b4be01c7cb172a323f6e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/design-library/visual-references/vercel.md",
+      "bytes": 1998,
+      "sha256": "8151821b469e277807b7535a3a524f71e92fff4213b2dca3c581dd6eca4a9b1d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/references/detect-existing-style.md",
+      "bytes": 3525,
+      "sha256": "6c76d97dcdfd4872582de4ee230495b550009738b5f5def36d3b4284b79c6c7b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/references/generate-design-package.md",
+      "bytes": 9618,
+      "sha256": "489469cb82ce0e1a80469c16ac2456e59026e9d2edde56a842b371865c33c6f2",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/references/logic-protocol.md",
+      "bytes": 1460,
+      "sha256": "1c4a76fe37efe7e926ec12ac162740addc985b51ea7a8294f15516ea9450d900",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/references/project-preview-protocol.md",
+      "bytes": 1265,
+      "sha256": "7372c3bd34f05a259b8c9d113fd62a8ffc7da4e6874151c3c3248e7806253c36",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/references/style-selection-protocol.md",
+      "bytes": 4352,
+      "sha256": "6c926ae54b549b9c1ce93350f318b5da7d8541d08ce7d2e9362e67464483d1d4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/scripts/materialize-prototype.mjs",
+      "bytes": 4581,
+      "sha256": "0eb0d1003a1155b5682ab94f9904eb71f10ad58b18f556e69302ed19dffeabca",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/scripts/validate-design-package.mjs",
+      "bytes": 11025,
+      "sha256": "65dd3e0cfcaca9f97f6c8f30d203966580e6d45464aaaebf2df76f861dc153d1",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-p-prototype/SKILL.md",
+      "bytes": 7801,
+      "sha256": "d80efe3d425f6b563c9baa75a1587c4c4bbc01ab983e654ec33295aa86ae878e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-retro/assets/retro-template.md",
+      "bytes": 1866,
+      "sha256": "22b8c5178719b40c56561e5b1ec9827fda0b90e49ea604f282eb29bd7e805bee",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-retro/assets/upgrade-plan-template.md",
+      "bytes": 2103,
+      "sha256": "f31afad2fa9ac75e7fe73d8cab17c73dc62c12785f2e2fca43e011b095fd4fed",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-retro/references/development-retrospective.md",
+      "bytes": 5156,
+      "sha256": "6b2f700f7a6a3c13fbeb460a1ee36fb66a8a5a60b177eb9bd7f7719b7a506992",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-retro/references/records.md",
+      "bytes": 5967,
+      "sha256": "7c4af215c87fa88038bae183e090e147561d8bb4ee9ec1122c9a5e8904dd8440",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-retro/references/skill-upgrade.md",
+      "bytes": 2927,
+      "sha256": "42c2541faad5e3045153a55bc920b0fd9dfbb1144e073314be3536a60d2ecea9",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-retro/SKILL.md",
+      "bytes": 4112,
+      "sha256": "bbde94f5a5572b2627edeb47cbf65c078b309085dc0f8705d5b7a7a7e7855b2d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-review-architecture/assets/architecture-review-template.md",
+      "bytes": 3127,
+      "sha256": "26206edc8385f47760531cdccf860b6f8ebe4e3db3c779c4b7d4e6bbb850761b",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-review-architecture/references/performance-review.md",
+      "bytes": 3333,
+      "sha256": "5a36b719d1567041f4204288dcea468fca646699552159ce549fd6eb2663c1b8",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-review-architecture/references/proposal-to-ticket.md",
+      "bytes": 1228,
+      "sha256": "dc68083132a005673c2071e11183ba3ad41d591160701a4c2d55c86c60f0ba1a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-review-architecture/references/review-rubric.md",
+      "bytes": 2959,
+      "sha256": "0a9b4f5e5e35a476349bdb61264925ff44cbfcb29f8657f2e14d64c54ca8a190",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-review-architecture/references/selected-design.md",
+      "bytes": 1986,
+      "sha256": "7415a637519cee2c01203aca5ecbc8fc81026e869e94add6c2b7ed87be6cd9ab",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-r-review-architecture/SKILL.md",
+      "bytes": 8266,
+      "sha256": "43f43d0b2cd5537d0254ba133198ce323791fc7fd711688685e2ba19a02b9ca3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-s-spec/assets/spec-template.md",
+      "bytes": 1703,
+      "sha256": "4ad1df6bc00adb5183c41ce9f859748e51ecfdb904ddf6e5a4c65415a7073b0f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-s-spec/references/spec-readiness.md",
+      "bytes": 1334,
+      "sha256": "5f9f488d052ff94c3b569c9c85c03baa96b79e16cd7e9f75637a112b2b49cde5",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-s-spec/SKILL.md",
+      "bytes": 5813,
+      "sha256": "ea0e0eeb9abf1496fc1f7f83701f298a627bd770adbc993e56add2af82e7bc70",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-tickets/assets/ticket-template.md",
+      "bytes": 3044,
+      "sha256": "a8b8a8f75565e73d5032dc6cb5d2922bf72c14608f0c3c98166df7472705a77a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-tickets/assets/tickets-map-template.md",
+      "bytes": 7338,
+      "sha256": "08319ebb57c6e5f00d3cf292fdfaaa109e1197a913a7739009d3f760e7132738",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-tickets/references/decomposition-rules.md",
+      "bytes": 2592,
+      "sha256": "5fa61b84a688845cd4cdb803745ddb324221ed06cdd6560f5663c6887e149470",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-tickets/references/planning-procedure.md",
+      "bytes": 12922,
+      "sha256": "ff7a53aec7a99e2b41f21402d22b354b28a5cbed0102ee41f988ba3b75a52654",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-tickets/references/ticket-readiness.md",
+      "bytes": 3777,
+      "sha256": "932b0614c1c2b57f94a165461d6e89ee269efd0bb3ce54d467d2b37374db6e54",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-tickets/SKILL.md",
+      "bytes": 6361,
+      "sha256": "d52f22d795f28879151fe7838486279e63eef02fd799c41c908664460425d344",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/capture-template.md",
+      "bytes": 1181,
+      "sha256": "fa63327891bcb604efc58e7881f2ca7e847f1b49631774945f91767b6670af21",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/close-comment-template.md",
+      "bytes": 1167,
+      "sha256": "8a9a57db0c168f834ca71491184ae223ca5a7de501ab0dcc3a95a7792782664a",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/issue-body-template.md",
+      "bytes": 1016,
+      "sha256": "144a0a8c5466710b0e9fa4050d73b80d9bec299ae2e9ba3b8bd3b82aa60239e7",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/issue-record-template.md",
+      "bytes": 1069,
+      "sha256": "2c1bc03c1e84f9d1c63e527a47d3d6ce88c1a35fdc479cf9ad6e2ade93554910",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/pr-record-template.md",
+      "bytes": 866,
+      "sha256": "fa8cf0fd5a69c494c623b7a6bf2ec3feaedcaaa8bf54815c69698e104fa833df",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/publish-template.md",
+      "bytes": 1358,
+      "sha256": "ee7f250daaee2b7b5bf56e7ab845e8d3354c31a3ef2c6213a3e0f58f683405de",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/source-template.md",
+      "bytes": 1246,
+      "sha256": "b6675ffa8016806bd7688b492b65a2cdb344480d160e075cc46a65df22db2d59",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/triage-run-template.md",
+      "bytes": 1327,
+      "sha256": "3c10d21ca307f2ded699c926733eea4a468cb558dd6f1a47c7a522dd4879b703",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/assets/triage-template.md",
+      "bytes": 1952,
+      "sha256": "7a7979c90f222cf3fa81706c05b59a9ffdd3ab7fb20d6a577cf50de90fe833e1",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/capture-protocol.md",
+      "bytes": 5471,
+      "sha256": "8521d581711a5133a0ec17aadab9c70efb0be5e65895789bb35a2f9534ffcd30",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/ci-security-protocol.md",
+      "bytes": 1979,
+      "sha256": "84fd2619fd06d0e8f75737f67c80bf13971df5c83b2a76ddef4a73d5d4998fca",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/classification-map.md",
+      "bytes": 2939,
+      "sha256": "38b805a73a154fa0ae2ae7468b76e75e7213794d9462c252c44644d45d0b5946",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/intake-protocol.md",
+      "bytes": 5884,
+      "sha256": "654e752ea5b8cf8c0cbfef0c6ba289638e56c4b015853c4f630cf5779f57444d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/issue-pr-policy.md",
+      "bytes": 1967,
+      "sha256": "13c6f7d66f52e2cca6fc61995bf4da86bda76db9a5a247f53873c2400b7d7df4",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/pr-delivery-protocol.md",
+      "bytes": 2157,
+      "sha256": "f1844c519f0e53fe031e59bc17c257e8e9652995f49bedb27d42ab0bdd82bd90",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/public-projection.md",
+      "bytes": 2773,
+      "sha256": "cf92587ab58c7c0337e6fc95545e869106be2f9257f503f1e236b3b73e223e3f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/publish-protocol.md",
+      "bytes": 5941,
+      "sha256": "ec97c03cca9c09108c843ddc7c214b4febc8649eaa80c25c79cb806891c5d84c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/queue-protocol.md",
+      "bytes": 914,
+      "sha256": "2d785770f82bcdf5f1d865565a448ee43868ca0bcd114b6aadb159b56cc8139f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/reconcile-protocol.md",
+      "bytes": 2212,
+      "sha256": "e16491bb8cba01fafd4aa74fed407c3068aac122b1f6164368d9b6a99659f495",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/release-authentication.md",
+      "bytes": 1053,
+      "sha256": "fb1f9e26f0c114f10bf338c2824514599a9c4e1ea104d01d72cc3dfb4302ed08",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/release-notes-injection.md",
+      "bytes": 1536,
+      "sha256": "f19831d3e77e46aa680e1b13a864330e4c6942e5b41f8262ceb7f7aa3ac904cd",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/release-preflight.md",
+      "bytes": 2068,
+      "sha256": "b27abbd88459aff82d26d0bbfabb721c7f93573b98c41eaf022f2ccef0835240",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/release-protocol.md",
+      "bytes": 2276,
+      "sha256": "319a9376a36b21f49c69d4a78b7510e59785e52fcca16ec5fce1050226fce35d",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/release-recovery.md",
+      "bytes": 2035,
+      "sha256": "a0431a26f200609f776d7fac609877ce77bbeddc0c77719830539ed0064c8fd3",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/remote-operations.md",
+      "bytes": 2240,
+      "sha256": "98435ae9cb6e9e35e846b6c5d01d75ed39272f8aad14eb7ad75c557462dc832e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/references/workflow-yaml-reference.md",
+      "bytes": 2366,
+      "sha256": "73f54166e36a11a205aac22d2a1a9ca71a9eaf8fab4e7b2e54b870a9bb3e7823",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/scripts/capture-status.mjs",
+      "bytes": 3586,
+      "sha256": "60c9c3bacb7d4075a60242140b6ba7e0d794b5e90a32ff6cbe1d8ac9b8287912",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/scripts/github-transport.mjs",
+      "bytes": 14717,
+      "sha256": "778b30396c30f2a1f1a94777f01f583fd43ff09ac3e2b2f3b70ff01a2c99be34",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/scripts/publish-status.mjs",
+      "bytes": 4391,
+      "sha256": "061573c9c69660993dfb9c0e2625833163d6fe07afb83fa72dd4a7f58bae69a6",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-t-triage/SKILL.md",
+      "bytes": 5415,
+      "sha256": "30f567709eaf46a841c369898913ae1652b88e77bf935bf6bc0366d65f3cc18c",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/assets/investigation-ticket-template.md",
+      "bytes": 552,
+      "sha256": "ba1dc6efd178a4ddb6951387d2442f5c6c90670db99af90966f495e4193967df",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/assets/solution-comment-template.md",
+      "bytes": 631,
+      "sha256": "22c1c1b6e086f2c17ef53c7fc25da68dd469df36486b34b101291813a07b7fcc",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/assets/wayfinder-map-template.md",
+      "bytes": 1387,
+      "sha256": "48035d56f329b905bbf8ddbb9d80034c4e205687abc4f663116b6430738a9214",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/references/initiative-discovery.md",
+      "bytes": 2946,
+      "sha256": "a42c201e6e0cdc52a742047a2b0a4bee516d75f2cb9146eb86329e03bdafbdd6",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/references/initiative-template.json",
+      "bytes": 165,
+      "sha256": "22bdd17ca94284389a56f6e317dd30b5f490f3023bee6311a4faade3a8daa25e",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/references/local-tracker-contract.md",
+      "bytes": 2212,
+      "sha256": "7ddd0a5282d86fb5ee92dada4c7d19a3d94d3e6cbfddcaea3d606dc40a0915c1",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/references/map-traversal.md",
+      "bytes": 8635,
+      "sha256": "e692cd90e72cdf53d723348d641d6a97b055f7d2b8d0fda11f82a977d04c65de",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    },
+    {
+      "path": "workflows/specdev/specdev-w-wayfinder/SKILL.md",
+      "bytes": 4664,
+      "sha256": "8dadb9b0b496f1d2df2f59ac6fceea5b853df10dc3808d7694ef74564d16fb2f",
+      "mode": 436,
+      "owner": "workflow/specdev",
+      "kind": "static",
+      "package_version": "2.1.0"
+    }
+  ]
+}

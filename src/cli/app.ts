@@ -12,7 +12,7 @@ import type { ManagementAction } from '../core/npm-manager.js';
 import { ProcessCancelledError } from '../core/executor.js';
 
 function help(language: 'en' | 'zh-CN'): string {
-  const text = `${language === 'zh-CN' ? 'fastcli — AI CLI 启动与 npm 管理' : 'fastcli — AI CLI launcher and npm manager'}\n\nfastcli\nfastcli <claude|codex|gemini|grok|opencode|pi> [args...]\nfastcli install <tool> [--dry-run]\nfastcli upgrade <tool> [--dry-run]\nfastcli uninstall <tool> [--yes] [--dry-run]\nfastcli list\nfastcli info <tool>\nfastcli config [--language en|zh-CN]\nfastcli --help\nfastcli --version\n\n${language === 'zh-CN' ? '工具名后的所有参数原样传递；管理仅作用于当前 npm 全局环境。\n交互启动检查自身更新；FASTCLI_NO_UPDATE_CHECK=1 可关闭。' : 'All arguments after a tool name pass through. Management targets only the current global npm environment.\nInteractive starts check for updates; FASTCLI_NO_UPDATE_CHECK=1 disables this.'}`;
+  const text = `${language === 'zh-CN' ? 'fastcli — AI CLI 启动与 npm 管理' : 'fastcli — AI CLI launcher and npm manager'}\n\nfastcli\nfastcli <claude|codex|gemini|grok|opencode|pi> [args...]\nfastcli install <tool> [--dry-run]\nfastcli uninstall <tool> [--yes] [--dry-run]\nfastcli list\nfastcli info <tool>\nfastcli config [--language en|zh-CN]\nfastcli --help\nfastcli --version\n\n${language === 'zh-CN' ? '工具名后的所有参数原样传递；管理仅作用于当前 npm 全局环境。\n交互启动检查自身更新；FASTCLI_NO_UPDATE_CHECK=1 可关闭。' : 'All arguments after a tool name pass through. Management targets only the current global npm environment.\nInteractive starts check for updates; FASTCLI_NO_UPDATE_CHECK=1 disables this.'}`;
   return wrapTerminalText(text.split('\n').map((line, index) => index === 0 ? color.bold(color.cyan(line)) : line.startsWith('fastcli') ? line.replace(/^fastcli/, color.cyan('fastcli')) : line).join('\n'), process.stdout.columns || 80);
 }
 
@@ -47,7 +47,7 @@ export async function runCli(argv: string[], options: { prompts?: PromptUI; inte
     if (['run', 'add', 'edit', 'remove', 'view', 'web', 'pi-coding-agent', 'copilot', 'cursor', 'codebuddy', 'openwiki', 'speculo'].includes(command!) || argv.some(arg => /^(--source|--tag|--category)(=|$)/.test(arg)) || (command === 'config' && id === 'edit')) {
       console.error(t(ctx.language, 'retired')); return 1;
     }
-    if (['install', 'upgrade', 'uninstall'].includes(command!)) {
+    if (['install', 'uninstall'].includes(command!)) {
       if (id === '--help' && !rest.length) { console.log(help(ctx.language)); return 0; }
       if (!id || rest.some(arg => arg !== '--dry-run' && !(command === 'uninstall' && arg === '--yes'))) { console.error(t(ctx.language, 'usageError')); return 1; }
       const target = findTool(id);

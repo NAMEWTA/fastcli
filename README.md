@@ -4,7 +4,7 @@
 
 **一个入口，启动和管理常用 AI CLI。**
 
-不必记住每个工具的全权限参数和 npm 包名。在项目目录运行 `fastcli claude` 即可启动 Claude Code；输入 `fastcli`，从本机已安装的工具中选择，或安装、升级、卸载支持的工具。
+不必记住每个工具的全权限参数和 npm 包名。在项目目录运行 `fastcli claude` 即可启动 Claude Code；输入 `fastcli`，从本机已安装的工具中选择，或安装、卸载支持的工具（已安装时再次安装即更新）。
 
 ```bash
 fastcli claude
@@ -72,7 +72,7 @@ fastcli claude -p "解释当前项目"
 fastcli
 ├─ Yolo 启动
 │  └─ 本机已安装工具（版本、位置）
-├─ 安装 / 卸载 / 升级
+├─ 安装 / 卸载
 │  ├─ 选择操作
 │  └─ 选择支持的工具
 ├─ 设置
@@ -80,15 +80,15 @@ fastcli
 └─ 退出
 ```
 
-菜单使用方向键与 Enter 操作，适配终端大小和中文显示宽度。青色表示主要操作，绿色表示成功，黄色表示提醒，红色表示错误；`NO_COLOR=1` 可关闭颜色。子菜单可返回，工具退出和管理操作结束后回到菜单。安装、升级直接执行；卸载会展示目标位置并要求确认。Ctrl+C 取消菜单。
+菜单使用方向键与 Enter 操作，适配终端大小和中文显示宽度。青色表示主要操作，绿色表示成功，黄色表示提醒，红色表示错误；`NO_COLOR=1` 可关闭颜色。子菜单可返回，工具退出和管理操作结束后回到菜单。安装直接执行，已安装时更新到最新版；卸载会展示目标位置并要求确认。Ctrl+C 取消菜单。
 
 Yolo 列表只显示发现可执行入口的工具。版本读取失败时显示“版本未知”及原因，仍可尝试启动；没有已安装工具时可以转入安装管理。
 
-## 安装、升级、卸载
+## 安装与卸载
 
 ```bash
 fastcli install claude
-fastcli upgrade codex
+fastcli install codex
 fastcli uninstall gemini
 fastcli uninstall gemini --yes
 fastcli install opencode --dry-run
@@ -105,7 +105,7 @@ fastcli install opencode --dry-run
 | `opencode` | `opencode-ai` |
 | `pi` | `@earendil-works/pi-coding-agent` |
 
-安装与升级使用 `npm i -g <包名>@latest`；卸载使用 `npm uninstall -g <包名>`。Claude 保留以下参数：
+`install` 统一用于首次安装和更新，使用 `npm i -g <包名>@latest`；卸载使用 `npm uninstall -g <包名>`。Claude 保留以下参数：
 
 ```bash
 npm i -g @anthropic-ai/claude-code@latest --ignore-scripts=false --include=optional --allow-scripts=@anthropic-ai/claude-code
@@ -117,7 +117,7 @@ OpenCode 同样显式启用本次安装所需的脚本与可选依赖，npm ≥1
 
 安装其他来源已存在的工具会新增 npm 安装，PATH 默认入口可能仍指向旧位置。卸载仅删除当前 npm 包，不删除 AI 工具的账号、配置、会话，其他来源的安装可能继续存在。
 
-每次操作结束后重新检查目标：安装与升级验证 npm 对应的可执行入口，卸载验证目标包已移除。失败或取消后报告实际状态，不自动重试，也不宣称已回滚。如果无法确认进程树已终止，会明确提示观察到的安装状态仍可能变化。
+每次操作结束后重新检查目标：安装验证 npm 对应的可执行入口，卸载验证目标包已移除。失败或取消后报告实际状态，不自动重试，也不宣称已回滚。如果无法确认进程树已终止，会明确提示观察到的安装状态仍可能变化。
 
 ## 查看安装位置与版本
 

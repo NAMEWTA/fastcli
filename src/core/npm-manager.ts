@@ -15,7 +15,7 @@ function isInside(parent: string, child: string): boolean {
   return path !== '' && path !== '..' && !path.startsWith(`..${sep}`) && !isAbsolute(path);
 }
 
-export type ManagementAction = 'install' | 'upgrade' | 'uninstall';
+export type ManagementAction = 'install' | 'uninstall';
 
 export interface NpmContext {
   file: string;

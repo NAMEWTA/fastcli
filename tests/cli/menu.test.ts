@@ -40,11 +40,10 @@ it('starts with actions, lists only found executables and keeps version failures
 
 it('offers installation from the empty state and always chooses the action before all supported tools', async () => {
   await fakeNpm(f);
-  const p = prompts(['yolo', 'install', 'upgrade', 'claude', ':back', ':back', 'exit']);
+  const p = prompts(['yolo', 'install', 'install', ':back', ':back', 'exit']);
   expect(await runCli([], { prompts: p.ui, interactive: true, env: f.env })).toBe(0);
   expect(p.messages.join('\n')).toContain('No installed tools');
-  expect(p.messages.join('\n')).toContain('current npm environment');
-  expect(p.menus[2]!.map(choice => choice.value)).toEqual(['install','uninstall','upgrade',':back']);
+  expect(p.menus[2]!.map(choice => choice.value)).toEqual(['install','uninstall',':back']);
   expect(p.menus[3]!.map(choice => choice.value)).toEqual(['claude','codex','gemini','grok','opencode','pi',':back']);
 });
 

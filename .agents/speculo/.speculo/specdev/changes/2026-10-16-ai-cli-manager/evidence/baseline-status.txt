@@ -1,0 +1,13 @@
+ M .gitignore
+ M AGENTS.md
+?? .agents/skills/specdev-c-code-review/
+?? .agents/skills/specdev-d-diagnose-bugs/
+?? .agents/skills/specdev-g-grill-with-docs/
+?? .agents/skills/specdev-i-implement/
+?? .agents/skills/specdev-p-goal-plan/
+?? .agents/skills/specdev-r-retro/
+?? .agents/skills/specdev-s-spec/
+?? .agents/skills/specdev-t-tickets/
+?? .agents/skills/specdev-t-triage/
+?? .agents/skills/speculo-handoff/
+?? .agents/speculo/

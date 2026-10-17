@@ -1,0 +1,242 @@
+{
+  "schema_version": 2,
+  "assets": [
+    {
+      "id": "command/archive-and-consolidate",
+      "kind": "command",
+      "name": "speculo-archive-and-consolidate",
+      "entry": "commands/archive-and-consolidate/COMMAND.md",
+      "description": "将用户选择的归档或知识整理请求交给 owning workflow Work，并返回其计划与执行回执。",
+      "stages": []
+    },
+    {
+      "id": "command/docs-sync",
+      "kind": "command",
+      "name": "speculo-docs-sync",
+      "entry": "commands/docs-sync/COMMAND.md",
+      "description": "用户手动触发的一次全局文档盘点、整理与管理；按授权审计、更新或提交本次目标。",
+      "stages": []
+    },
+    {
+      "id": "command/engineering-standards-builder",
+      "kind": "command",
+      "name": "speculo-engineering-standards-builder",
+      "entry": "commands/engineering-standards-builder/COMMAND.md",
+      "description": "Generate or refresh project-specific engineering skills after the user explicitly invokes the builder.",
+      "stages": []
+    },
+    {
+      "id": "command/git-history-squash",
+      "kind": "command",
+      "name": "speculo-git-history-squash",
+      "entry": "commands/git-history-squash/COMMAND.md",
+      "description": "Plan and execute a confirmed first-parent Git history squash with recoverable refs and exact remote leases.",
+      "stages": []
+    },
+    {
+      "id": "command/git-repository-audit",
+      "kind": "command",
+      "name": "speculo-git-repository-audit",
+      "entry": "commands/git-repository-audit/COMMAND.md",
+      "description": "Produce a read-only reproducible audit for explicitly selected local Git repositories.",
+      "stages": []
+    },
+    {
+      "id": "command/handoff",
+      "kind": "command",
+      "name": "speculo-handoff",
+      "entry": "commands/handoff/COMMAND.md",
+      "description": "Persist a compact handoff when the user asks another agent or session to continue the current work.",
+      "stages": []
+    },
+    {
+      "id": "command/retro",
+      "kind": "command",
+      "name": "speculo-retro",
+      "entry": "commands/retro/COMMAND.md",
+      "description": "Analyze confirmed Speculo usage friction and propose or create GitHub issues through the T-triage remote operation protocol.",
+      "stages": []
+    },
+    {
+      "id": "command/source-code-zip",
+      "kind": "command",
+      "name": "speculo-source-code-zip",
+      "entry": "commands/source-code-zip/COMMAND.md",
+      "description": "Create a requested source ZIP using the bundled Node script and its ignore rules; do not install dependencies.",
+      "stages": []
+    },
+    {
+      "id": "command/status",
+      "kind": "command",
+      "name": "speculo-status",
+      "entry": "commands/status/COMMAND.md",
+      "description": "Summarize installed workflows, active changes, anomalies, and next routes without activating a workflow.",
+      "stages": []
+    },
+    {
+      "id": "command/upstream-fork-sync",
+      "kind": "command",
+      "name": "speculo-upstream-fork-sync",
+      "entry": "commands/upstream-fork-sync/COMMAND.md",
+      "description": "Assess a requested fork/upstream checkpoint and produce reproducible diff, conflict, and customization-risk evidence.",
+      "stages": []
+    },
+    {
+      "id": "domain/specdev",
+      "kind": "domain-skill",
+      "name": "specdev",
+      "domain": "specdev",
+      "entry": "workflows/specdev/SKILL.md",
+      "description": "用于需求澄清、规格、任务规划、实现、审查、交付及项目与参考资料学习的工程协作；只读发现不启动 Goal。",
+      "stages": []
+    },
+    {
+      "id": "specdev/archive-and-consolidate",
+      "kind": "work-skill",
+      "name": "specdev-a-archive-and-consolidate",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-a-archive-and-consolidate/SKILL.md",
+      "description": "核对并封存已完成或取消的 change、已处置 RETRO，或独立审计维护 ADR、context 与当前 docs；拥有设计基线网关，明确要求时从代码访谈形成知识 change。",
+      "stages": []
+    },
+    {
+      "id": "specdev/code-review",
+      "kind": "work-skill",
+      "name": "specdev-c-code-review",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-c-code-review/SKILL.md",
+      "description": "按用户指定文件或 PR、单 commit、区间、基线冻结真实审查范围，派遣未参与实现的 Agent 执行标准轴与规范轴审查；有效空差异诚实返回，不实施修复或发布。",
+      "stages": [
+        "review"
+      ]
+    },
+    {
+      "id": "specdev/diagnose-bugs",
+      "kind": "work-skill",
+      "name": "specdev-d-diagnose-bugs",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-d-diagnose-bugs/SKILL.md",
+      "description": "调查故障并建立精确症状的红灯回路，以单变量实验确认根因；无法安全复现时仅收集事件证据，不将解释冒充根因，也不实施生产修复。",
+      "stages": []
+    },
+    {
+      "id": "specdev/goal-plan",
+      "kind": "work-skill",
+      "name": "specdev-p-goal-plan",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-p-goal-plan/SKILL.md",
+      "description": "为简单目标、单个已拆票 change 或多个 Ready change 规划、执行或恢复 Goal；只在用户要求目标计划、交付编排或已有 map 需推进时使用，不代替需求探索和 Ticket 编写。",
+      "stages": [
+        "plan",
+        "run",
+        "resume",
+        "replan",
+        "verify"
+      ]
+    },
+    {
+      "id": "specdev/grill-with-docs",
+      "kind": "work-skill",
+      "name": "specdev-g-grill-with-docs",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-g-grill-with-docs/SKILL.md",
+      "description": "一个已界定 change 仍有产品、领域或架构决定待确认时进行可恢复访谈；跨 change 边界未清晰时先用 W。",
+      "stages": []
+    },
+    {
+      "id": "specdev/implement",
+      "kind": "work-skill",
+      "name": "specdev-i-implement",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-i-implement/SKILL.md",
+      "description": "执行已授权的 Ready Ticket 或获批 Direct Spec，覆盖代码实现与文档维护，产生可回读验收证据；不从模糊需求或只读审查直接写入。",
+      "stages": [
+        "implementation",
+        "repair",
+        "verification",
+        "integration"
+      ]
+    },
+    {
+      "id": "specdev/init-setup",
+      "kind": "work-skill",
+      "name": "specdev-i-init-setup",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-i-init-setup/SKILL.md",
+      "description": "发现项目事实，选择或复用可选协作方式并复用用户指定目录中的对应 Skill；仅在明确请求时建立当前工程 docs 基线。",
+      "stages": []
+    },
+    {
+      "id": "specdev/learn",
+      "kind": "work-skill",
+      "name": "specdev-l-learn",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-l-learn/SKILL.md",
+      "description": "围绕需求参考、本项目代码、已有 change 或外部项目与文章开展学习，讲清功能、实现思路和运行机制，并用面向零专业背景读者的 Markdown 与 ASCII 图解记录理解。",
+      "stages": []
+    },
+    {
+      "id": "specdev/prototype",
+      "kind": "work-skill",
+      "name": "specdev-p-prototype",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-p-prototype/SKILL.md",
+      "description": "按需验证离线逻辑模型，或继承项目设计基线、按任务自动组合模板生成 HTML，经集中确认后形成 change DESIGN 并通过归档网关沉淀永久设计。",
+      "stages": []
+    },
+    {
+      "id": "specdev/retro",
+      "kind": "work-skill",
+      "name": "specdev-r-retro",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-r-retro/SKILL.md",
+      "description": "复盘开发会话并积累有原文来源的独立 RETRO；明确要求时汇总未归档报告，先提出项目 Skill 升级方案，确认后更新或新增 Skill 并归档已处置报告。",
+      "stages": []
+    },
+    {
+      "id": "specdev/review-architecture",
+      "kind": "work-skill",
+      "name": "specdev-r-review-architecture",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-r-review-architecture/SKILL.md",
+      "description": "审查指定代码范围的结构与维护成本，或测量真实用户操作的性能并形成候选；只报告或深入用户选定的设计，不直接实施优化。",
+      "stages": []
+    },
+    {
+      "id": "specdev/spec",
+      "kind": "work-skill",
+      "name": "specdev-s-spec",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-s-spec/SKILL.md",
+      "description": "综合已知事实、设计决定、诊断与代码现状，产出以外部行为和验收合同为权威的 Ready Spec。",
+      "stages": []
+    },
+    {
+      "id": "specdev/tickets",
+      "kind": "work-skill",
+      "name": "specdev-t-tickets",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-t-tickets/SKILL.md",
+      "description": "将已澄清的 Spec 或等价获批计划拆为可验收的实施 Ticket，并绑定真实项目 Skill；不用于探索未知需求或执行代码。",
+      "stages": []
+    },
+    {
+      "id": "specdev/triage",
+      "kind": "work-skill",
+      "name": "specdev-t-triage",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-t-triage/SKILL.md",
+      "description": "摄入与核验外部请求、投影本地完成事实、交付 PR，或按明确目标处理 CI、安全告警、npm/GitHub Release 预检、发布和恢复；清晰的本地需求直接进入对应 Work。",
+      "stages": []
+    },
+    {
+      "id": "specdev/wayfinder",
+      "kind": "work-skill",
+      "name": "specdev-w-wayfinder",
+      "domain": "specdev",
+      "entry": "workflows/specdev/specdev-w-wayfinder/SKILL.md",
+      "description": "大需求的 change 边界或实施路线尚不可见时建立探索地图，并分别澄清各 change；已有清晰 Spec 时不触发。",
+      "stages": []
+    }
+  ]
+}
