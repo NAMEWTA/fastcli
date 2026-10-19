@@ -1,13 +1,42 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { readFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fixture, fakeCli } from '../helpers.js';
 import { runCli } from '../../src/cli/app.js';
-import { CancelledError } from '../../src/cli/prompts.js';
+import { CancelledError, type PromptUI } from '../../src/cli/prompts.js';
+import * as registry from '../../src/core/update-check.js';
 
 let f: Awaited<ReturnType<typeof fixture>>;
 beforeEach(async () => { f = await fixture(); vi.stubEnv('FASTCLI_HOME', f.env.FASTCLI_HOME!); });
-afterEach(async () => { vi.unstubAllEnvs(); await f.cleanup(); });
+afterEach(async () => { vi.restoreAllMocks(); vi.unstubAllEnvs(); await f.cleanup(); });
+
+it('shows the two version labels before the main menu and update later continues despite a legacy ignored version', async () => {
+  vi.spyOn(registry, 'fetchRelease').mockResolvedValue({ version: '9.9.9' });
+  await mkdir(f.env.FASTCLI_HOME!, { recursive: true });
+  const state = join(f.env.FASTCLI_HOME!, 'update-state.json');
+  const original = JSON.stringify({ version: 1, ignoredVersion: '9.9.9' });
+  await writeFile(state, original);
+  const menus: Array<{ message: string; values: string[] }> = [];
+  const prompts: PromptUI = {
+    async select(message, choices) {
+      menus.push({ message, values: choices.map(choice => choice.value) });
+      return choices.some(choice => choice.value === 'skip') ? 'skip' : 'exit';
+    },
+    confirm: async () => { throw new Error('Unexpected confirmation'); },
+    info() {}, error() {}, intro() {}, outro() {},
+  };
+  for (let attempt = 0; attempt < 2; attempt++) {
+    expect(await runCli([], { version: '1.0.0', packageRoot: f.dir, prompts, interactive: true,
+      env: { ...f.env, CI: '', FASTCLI_NO_UPDATE_CHECK: '' } })).toBe(0);
+  }
+  expect(menus.map(menu => menu.values)).toEqual([
+    ['update', 'skip'], ['yolo', 'manage', 'settings', 'exit'],
+    ['update', 'skip'], ['yolo', 'manage', 'settings', 'exit'],
+  ]);
+  expect(menus[0]!.message).toContain('Current version: v1.0.0');
+  expect(menus[0]!.message).toContain('Latest version: v9.9.9');
+  expect(await readFile(state, 'utf8')).toBe(original);
+});
 
 it('does not check updates for help, version, JSON config, previews, invalid arguments or non-TTY', async () => {
   const checkUpdate = vi.fn(async () => undefined);

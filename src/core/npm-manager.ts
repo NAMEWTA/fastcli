@@ -67,6 +67,8 @@ export function buildNpmInvocation(
     }
   }
   if (!context) return { file: 'npm', args };
+  // An explicit prefix also prevents shims from redirecting global package ownership.
+  args.push('--prefix', context.prefix);
   const env = { ...context.env };
   for (const key of Object.keys(env)) {
     if (key.toLowerCase() === 'npm_config_prefix') delete env[key];
@@ -78,7 +80,7 @@ export function buildNpmInvocation(
 /** Inspect only the named package in this npm scope; never inspect PATH aliases. */
 export async function inspectNpmPackage(
   tool: Pick<ToolDefinition, 'npmPackage' | 'executable'>,
-  context: NpmContext,
+  context: Pick<NpmContext, 'prefix' | 'root'>,
 ): Promise<NpmPackageState> {
   const packageDir = join(context.root, tool.npmPackage);
   const binDir = process.platform === 'win32' ? context.prefix : join(context.prefix, 'bin');

@@ -1,8 +1,9 @@
 import { color, wrapTerminalText, terminalWidth } from './terminal.js';
 import { homedir } from 'node:os';
+import { realpath } from 'node:fs/promises';
 import { relative } from 'node:path';
 import { BUILTIN_TOOLS } from '../builtin/tools.js';
-import { discoverTool, detectTools, installationEnv } from '../core/detection.js';
+import { discoverTool, detectTools, installationEnv, probeInstallation } from '../core/detection.js';
 import { runProcess, formatInvocation, ProcessCancelledError } from '../core/executor.js';
 import { getNpmContext, inspectNpmPackage, buildNpmInvocation, manageTool, managementBlockReason, type NpmPackageState, type NpmContext, type ManagementAction } from '../core/npm-manager.js';
 import type { ToolDefinition, DetectedInstallation, ToolDetection } from '../core/types.js';
@@ -59,6 +60,36 @@ export async function launchTool(tool: ToolDefinition, args: string[], ctx: CliC
   return result.code;
 }
 
+/** Report launch selection independently from npm's verified mutation result. */
+async function reportInstalledLaunch(tool: ToolDefinition, version: string | undefined, npm: NpmContext, ctx: CliContext): Promise<void> {
+  const state = await inspectNpmPackage(tool, npm);
+  console.error(`${t(ctx.language, 'npmExecutable')}: ${version ?? t(ctx.language, 'versionUnknown')} · ${state.entryPath ?? t(ctx.language, 'versionUnknown')}`);
+  const detection = await discoverTool(tool, discoveryOptions(ctx, npm));
+  const selected = detection.installations.find(entry => entry.isPathDefault);
+  if (!selected) {
+    console.error(t(ctx.language, 'noDefaultEntry'));
+    console.error(t(ctx.language, 'entryAdvice'));
+    return;
+  }
+  const current = await probeInstallation(tool, selected, { env: ctx.env });
+  console.error(`${t(ctx.language, 'defaultExecutable')}: ${installationLabel(current, ctx.language)}`);
+  let sameEntry = false;
+  if (state.entryPath && !state.reason) {
+    try {
+      const managedPath = await realpath(state.entryPath);
+      sameEntry = process.platform === 'win32'
+        ? managedPath.toLowerCase() === current.realPath.toLowerCase()
+        : managedPath === current.realPath;
+    } catch { /* An entry that changed during verification cannot prove alignment. */ }
+  }
+  if (!sameEntry) {
+    console.error(t(ctx.language, 'defaultOtherEntry'));
+    console.error(t(ctx.language, 'entryAdvice'));
+  } else if (current.error || !current.version || current.version !== version) {
+    console.error(t(ctx.language, 'defaultUnverified'));
+  } else console.error(t(ctx.language, 'defaultMatches'));
+}
+
 export async function manageAction(tool: ToolDefinition, action: ManagementAction, ctx: CliContext,
   options: { dryRun?: boolean; yes?: boolean; npm?: NpmContext } = {}): Promise<number> {
   if (options.dryRun) {
@@ -80,10 +111,12 @@ export async function manageAction(tool: ToolDefinition, action: ManagementActio
     }
   }
   const result = await manageTool(tool, action, npm);
-  if (ctx.interactive) (result.code === 0 ? ctx.prompts.success ?? ctx.prompts.info : ctx.prompts.error)(t(ctx.language, result.message));
-  else console.error(t(ctx.language, result.message));
+  const message = action === 'install' && result.code === 0 ? 'npmInstallSuccess' : result.message;
+  if (ctx.interactive) (result.code === 0 ? ctx.prompts.success ?? ctx.prompts.info : ctx.prompts.error)(t(ctx.language, message));
+  else console.error(t(ctx.language, message));
   if (result.details) console.error(result.details);
   console.error(`${tool.name}: ${t(ctx.language, result.installed ? 'installed' : 'notInstalled')}${result.version ? ` · ${result.version}` : ''}`);
+  if (action === 'install' && result.code === 0) await reportInstalledLaunch(tool, result.version, npm, ctx);
   if (action === 'uninstall' || result.code !== 0) {
     const after = await discoverTool(tool, discoveryOptions(ctx, npm));
     if (after.installations.length) console.error(`${t(ctx.language, 'remaining')}: ${after.installations.map(item => item.path).join(', ')}`);
@@ -109,6 +142,7 @@ export async function printTools(ctx: CliContext, only?: ToolDefinition): Promis
       if (npm.context) {
         const state = await inspectNpmPackage(result.tool, npm.context);
         console.log(`  ${t(ctx.language, 'npmTarget')}: ${result.tool.npmPackage} · ${npm.context.prefix} · ${t(ctx.language, state.installed ? 'installed' : 'notInstalled')}`);
+        console.log(`  ${t(ctx.language, 'npmExecutable')}: ${state.entryPath ?? managementProblem(state, 'uninstall', ctx.language) ?? t(ctx.language, 'notInstalled')}`);
       } else console.log(`  ${t(ctx.language, 'npmUnavailable')}: ${npm.error}`);
     }
   }

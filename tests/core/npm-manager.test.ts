@@ -122,7 +122,7 @@ describe('npm management', () => {
     expect(invocation).toEqual({
       file: '/isolated/bin/npm', cwd: '/project',
       env: { PATH: '/isolated/bin', npm_config_prefix: '/isolated' },
-      args: ['i', '-g', 'opencode-ai@latest', '--ignore-scripts=false', '--include=optional'],
+      args: ['i', '-g', 'opencode-ai@latest', '--ignore-scripts=false', '--include=optional', '--prefix', '/isolated'],
     });
     expect(buildNpmInvocation(tool, 'install').args).toContain('--allow-scripts=opencode-ai');
     expect(buildNpmInvocation(tool, 'install', { ...context, version: '11.16.0' }).args)
@@ -178,7 +178,7 @@ describe('npm management', () => {
       .toEqual({ code: 0, message: 'success', installed: true, version: '9.8.7' });
     const events = (await readFile(log, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
     expect(events).toEqual([{ args: ['i', '-g', '@anthropic-ai/claude-code@latest', '--ignore-scripts=false',
-      '--include=optional', '--allow-scripts=@anthropic-ai/claude-code'], prefix: scoped.prefix, cwd: fixture }]);
+      '--include=optional', '--allow-scripts=@anthropic-ai/claude-code', '--prefix', scoped.prefix], prefix: scoped.prefix, cwd: fixture }]);
   });
 
   it('refuses uninstall when this npm scope does not own the package', async () => {
@@ -252,7 +252,7 @@ describe('npm management', () => {
     expect(await manageTool(claude, 'uninstall', { ...scoped, version: '10.0.0' }))
       .toEqual({ code: 0, message: 'success', installed: false });
     const event = JSON.parse((await readFile(log, 'utf8')).trim());
-    expect(event.args).toEqual(['uninstall', '-g', '@anthropic-ai/claude-code']);
+    expect(event.args).toEqual(['uninstall', '-g', '@anthropic-ai/claude-code', '--prefix', scoped.prefix]);
   });
 
   it('rejects npm success without a verified version while preserving installed state', async () => {

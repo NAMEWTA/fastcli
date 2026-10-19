@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "mode": "working-tree",
+  "review_mode": "working-tree",
+  "outcome": "changes",
+  "base_sha": "d78bc053263e957066b466b70a80c5f48c5c0638",
+  "observed_head": "d78bc053263e957066b466b70a80c5f48c5c0638",
+  "selection": "explicit-files",
+  "scope_paths": [
+    "CHANGELOG.md",
+    "README.md",
+    "src/cli/actions.ts",
+    "src/core/npm-manager.ts",
+    "src/core/self-update.ts",
+    "src/i18n.ts",
+    "tests/cli/management.test.ts",
+    "tests/core/npm-manager.test.ts",
+    "tests/core/update.test.ts",
+    "tests/helpers.ts"
+  ],
+  "changed_paths": [
+    "CHANGELOG.md",
+    "README.md",
+    "src/cli/actions.ts",
+    "src/core/npm-manager.ts",
+    "src/core/self-update.ts",
+    "src/i18n.ts",
+    "tests/cli/management.test.ts",
+    "tests/core/npm-manager.test.ts",
+    "tests/core/update.test.ts",
+    "tests/helpers.ts"
+  ],
+  "excluded_paths": [
+    ".agents/speculo/.speculo/specdev/changes/2026-10-17-npm-launch-alignment/README.md",
+    ".agents/speculo/.speculo/specdev/changes/2026-10-17-npm-launch-alignment/evidence/direct-spec.md"
+  ],
+  "working_snapshot": [
+    {
+      "path": "CHANGELOG.md",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "dc6450f4f9d90c5e0ed1ecc7100f0c54053b304b",
+        "sha256": "1ab0dd4bb1f8e466b89839765707ce80fc3b957bbeaf0e403bc059bc8afc1ffd"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "341486da2c2086d225e3f06fa27fd3d083bb96149a93c8131f6fc646235361fc",
+        "bytes": 8722
+      }
+    },
+    {
+      "path": "README.md",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "b104991ca8d868e06ad427f303618e8a323a5757",
+        "sha256": "f33c89837e9739e2706e65fb04f9a9f8a1cb197d20fe94701b455b79628f2dc9"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "40bf1bff188e96b1084f3eb1569d19dce64e47e046faf5053c766aa716a82895",
+        "bytes": 10724
+      }
+    },
+    {
+      "path": "src/cli/actions.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "326d630dd4082aebfaba87fce1bb7588f7c4e81d",
+        "sha256": "264a91c56ff23fff19d2aa168d73bc225eccc0563b9831cebb8a3d541e4baaa9"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "7cdfaa040c70bcbafc6dbd9257a4d2bbb59963cd543f59dda6133084e7062faa",
+        "bytes": 9390
+      }
+    },
+    {
+      "path": "src/core/npm-manager.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "6b142fb579c080fd06eea5e7fa8e7b815292db99",
+        "sha256": "06726904b34def1c3115b88417602fef95b7a7bf69d03e07f299cda8b4f0bd9a"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "c9b5606450161b3b8619a9f71e9b296c639ca83b7d0a316b4f3f8980b0ef2a76",
+        "bytes": 12847
+      }
+    },
+    {
+      "path": "src/core/self-update.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "f2da1492254297e189b3b1a9fe891458cbde56e7",
+        "sha256": "e0d63040b7f852c4e09d8f29321a7af7c93c321ba27fe2bf6e20dc661add0222"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "7b4c54b3cf0157ae9040bf968af211f1c85edc142f18ce2dd093df17fafc6c0b",
+        "bytes": 2868
+      }
+    },
+    {
+      "path": "src/i18n.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "dac7f339e4d1a7dcf1efdcee5f003c46a0bdb16b",
+        "sha256": "791832ffad6b3e44bd6354c08531db1d7d151c9506a640374c29962d43015187"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "4ef4afbef952584661e238d2ae441c6ae3aed3626e854cc4139be4c0ed69a217",
+        "bytes": 7173
+      }
+    },
+    {
+      "path": "tests/cli/management.test.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "4badb29a5fbdeb3fcebe5bb369bd89c716a1112d",
+        "sha256": "22af0d2f9e360fa11875315ebaa57ce9703db1e5afeac0c09d30faee3a328d81"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "06b4a4d8dddbee2f1dc09d9d3dd02d1a55d814d4a502250dbc34fd63f7b07c16",
+        "bytes": 8462
+      }
+    },
+    {
+      "path": "tests/core/npm-manager.test.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "a431fcc8eb1aaf92b940ad7b9920e075a1ab2375",
+        "sha256": "4ff2ce523ddc224e719f47f9a2c6ddca4af7c6ca7a059d0f6757aac88af0b6e0"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "2ad9976291421c6bcffa389e8e9b8468e5c8d5b669d1fca4a3732adfe39ab28e",
+        "bytes": 18169
+      }
+    },
+    {
+      "path": "tests/core/update.test.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "6ed37e8fc87c150bc2e482706ed434a01abe906d",
+        "sha256": "a29a2e050d40158b0d5fe15b397ccbd822295aedf9931fcb344238f8dad27941"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "4a9ad25614933d18b58a0f0c164ff9fda515e2e9ef087d05d206e56b489a46a1",
+        "bytes": 14967
+      }
+    },
+    {
+      "path": "tests/helpers.ts",
+      "change": "modified",
+      "before": {
+        "mode": "100644",
+        "oid": "3c378fd1f106a47dd4fb29ced8eeeb1d9c847a40",
+        "sha256": "46325cf8883ddfd3c7cfdfdaab72a65e37d3707d5084da156d030e0ef42a09f0"
+      },
+      "after": {
+        "kind": "file",
+        "mode": "100644",
+        "sha256": "88cd9780c439c03eba1d5dacfe70ad0840fc657000a9ecc044e570779c26ecdf",
+        "bytes": 4514
+      }
+    }
+  ],
+  "index_sha256": "b620650adf35e9291efcbf547acd073b7b4dbb5c237122365849c187d2ec3c6f",
+  "inventory_sha256": "cac33f6be4ba5dd6802f0ce00f10aeea427100f35b54e247b536f41f71567624",
+  "tracked_diff_sha256": "f41ffe3ef84348dbc2e4d556828b9f37859c456078fe80027d0574376f82b0f1",
+  "tracked_diff_command": [
+    "git",
+    "diff",
+    "--no-color",
+    "--no-ext-diff",
+    "--no-textconv",
+    "--binary",
+    "--no-renames",
+    "d78bc053263e957066b466b70a80c5f48c5c0638",
+    "--",
+    ":(literal)CHANGELOG.md",
+    ":(literal)README.md",
+    ":(literal)src/cli/actions.ts",
+    ":(literal)src/core/npm-manager.ts",
+    ":(literal)src/core/self-update.ts",
+    ":(literal)src/i18n.ts",
+    ":(literal)tests/cli/management.test.ts",
+    ":(literal)tests/core/npm-manager.test.ts",
+    ":(literal)tests/core/update.test.ts",
+    ":(literal)tests/helpers.ts"
+  ],
+  "input_sha256": "7ff6eb6531fd444e5e570d8349d710d03a6d8e2de0f6f2470bc5631f5f95a57d"
+}

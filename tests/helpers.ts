@@ -54,7 +54,7 @@ else if(args[0]==='prefix') console.log(prefix);
 else if(args[0]==='root') console.log(root);
 else {
   const name=args[2].replace(/@latest$/,''), executable=({'@anthropic-ai/claude-code':'claude','@openai/codex':'codex','@google/gemini-cli':'gemini','@xai-official/grok':'grok','opencode-ai':'opencode','@earendil-works/pi-coding-agent':'pi'})[name];
-  if(!executable || process.env.npm_config_prefix !== prefix) process.exit(99);
+  if(!executable || process.env.npm_config_prefix !== prefix || args[args.indexOf('--prefix')+1] !== prefix) process.exit(99);
   const target=path.join(root,name), bin=process.platform==='win32'?prefix:path.join(prefix,'bin'), entry=path.join(bin,executable+(process.platform==='win32'?'.cmd':''));
   if(args[0]==='uninstall') { fs.rmSync(target,{recursive:true,force:true});fs.rmSync(entry,{force:true}); }
   else if(args[0]==='i') {
