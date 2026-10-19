@@ -6,6 +6,8 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+## [3.2.11] - 2026-10-19
+
 ### 修复
 
 - Volta 自身更新后通过包声明的 JavaScript 入口续跑，修复 Windows 下将 npm 的 `.cmd` 启动器交给 Node.js 执行而失败的问题。
