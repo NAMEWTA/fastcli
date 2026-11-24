@@ -66,7 +66,7 @@ else {
     if(process.platform==='win32') fs.writeFileSync(entry, '@ECHO off\\r\\nSET "dp0=%~dp0"\\r\\n"'+process.execPath+'" "%dp0%\\\\'+path.relative(bin,script)+'" %*\\r\\n');
     else fs.symlinkSync(script,entry);
   } else process.exit(98);
-  process.exitCode=Number(process.env.TEST_NPM_FAIL||0);
+  if(!process.env.TEST_NPM_FAIL_PACKAGE || process.env.TEST_NPM_FAIL_PACKAGE===name) process.exitCode=Number(process.env.TEST_NPM_FAIL||0);
 }
 `);
   return { prefix, root, log };

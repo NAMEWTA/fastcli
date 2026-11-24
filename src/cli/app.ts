@@ -13,7 +13,9 @@ import { ProcessCancelledError } from '../core/executor.js';
 
 function help(language: 'en' | 'zh-CN'): string {
   const text = `${language === 'zh-CN' ? 'fastcli — AI CLI 启动与 npm 管理' : 'fastcli — AI CLI launcher and npm manager'}\n\nfastcli\nfastcli <claude|codex|gemini|grok|opencode|pi> [args...]\nfastcli install <tool> [--dry-run]\nfastcli uninstall <tool> [--yes] [--dry-run]\nfastcli list\nfastcli info <tool>\nfastcli config [--language en|zh-CN]\nfastcli --help\nfastcli --version\n\n${language === 'zh-CN' ? '工具名后的所有参数原样传递；管理仅作用于当前 npm 全局环境。\n交互启动检查自身更新；FASTCLI_NO_UPDATE_CHECK=1 可关闭。' : 'All arguments after a tool name pass through. Management targets only the current global npm environment.\nInteractive starts check for updates; FASTCLI_NO_UPDATE_CHECK=1 disables this.'}`;
-  return wrapTerminalText(text.split('\n').map((line, index) => index === 0 ? color.bold(color.cyan(line)) : line.startsWith('fastcli') ? line.replace(/^fastcli/, color.cyan('fastcli')) : line).join('\n'), process.stdout.columns || 80);
+  const menu = language === 'zh-CN' ? '运行 fastcli 打开菜单，批量管理工具或保存并运行自定义命令。'
+    : 'Run fastcli to manage tools in batches or save and run custom commands.';
+  return wrapTerminalText(`${text}\n${menu}`.split('\n').map((line, index) => index === 0 ? color.bold(color.cyan(line)) : line.startsWith('fastcli') ? line.replace(/^fastcli/, color.cyan('fastcli')) : line).join('\n'), process.stdout.columns || 80);
 }
 
 export async function runCli(argv: string[], options: { prompts?: PromptUI; interactive?: boolean; env?: NodeJS.ProcessEnv; version?: string; packageRoot?: string; checkUpdate?: () => Promise<number | undefined> } = {}): Promise<number> {

@@ -10,14 +10,44 @@ const messages = {
   goodbye: ['Done · fastcli --help for commands', '已退出 · fastcli --help 查看命令'],
   choose: ['Choose an action', '选择操作'],
   yolo: ['Yolo launch', 'Yolo 启动'],
-  manage: ['Install / Uninstall', '安装 / 卸载'],
+  manage: ['Install / Update / Uninstall', '安装 / 更新 / 卸载'],
   settings: ['Settings', '设置'],
   exit: ['Exit', '退出'],
   back: ['Back', '返回'],
   install: ['Install', '安装'],
+  installOrUpdate: ['Install / Update', '安装 / 更新'],
+  updateTool: ['Update', '更新'],
   uninstall: ['Uninstall', '卸载'],
   language: ['Language', '语言'],
   chooseTool: ['Choose a tool', '选择工具'],
+  chooseTools: ['Choose tools', '选择工具'],
+  chooseCommands: ['Choose commands to run', '选择要运行的命令'],
+  multiselectHelp: ['↑↓ Move · Space Toggle · Enter Submit · Esc Back', '↑↓ 移动 · 空格 勾选 · Enter 提交 · Esc 返回'],
+  multiselectCompactHelp: ['↑↓ Space ↵ Esc', '↑↓ 空格 ↵ Esc'],
+  multiselectSearchHelp: ['Type to search · Backspace to erase', '输入文字搜索 · Backspace 删除字符'],
+  selectedCount: ['Selected: {count}', '已选 {count} 项'],
+  searchQuery: ['Search: {query}', '搜索：{query}'],
+  noMatches: ['No matches', '无匹配项'],
+  batchItem: ['[{current}/{total}] {name}', '[{current}/{total}] {name}'],
+  batchError: ['{name} failed: {reason}', '{name} 执行失败：{reason}'],
+  batchSummary: ['Completed: {succeeded} succeeded, {failed} failed.', '批量操作完成：成功 {succeeded} 项，失败 {failed} 项。'],
+  customCommands: ['Custom commands', '自定义命令'],
+  customRun: ['Run commands', '运行命令'],
+  customAdd: ['Add a command', '添加命令'],
+  customEdit: ['Edit a command', '编辑命令'],
+  customDelete: ['Delete a command', '删除命令'],
+  customEmpty: ['No custom commands saved yet.', '还没有保存的自定义命令。'],
+  customName: ['Command name', '命令名称'],
+  customShell: ['Choose a shell', '选择命令解释器'],
+  customLine: ['Command line', '整行命令'],
+  customInvalidName: ['Enter a non-empty name on one line.', '请输入单行非空名称。'],
+  customInvalidLine: ['Enter a non-empty command on one line.', '请输入单行非空命令。'],
+  customSaved: ['Command saved.', '命令已保存。'],
+  customDeleted: ['Command deleted.', '命令已删除。'],
+  customConfirmDelete: ['Delete the saved command “{name}”?', '删除已保存的命令「{name}」？'],
+  customCorrupt: ['Invalid custom command file: {path}', '自定义命令文件无效：{path}'],
+  customChanged: ['The saved command changed in another session. Select it again.', '该命令已在其他会话中变更，请重新选择。'],
+  customShellMissing: ['Shell is unavailable: {shell}', '命令解释器不可用：{shell}'],
   choosePath: ['Multiple installations found; choose one for this launch', '发现多个安装位置，选择本次启动使用的位置'],
   noTools: ['No installed tools found.', '尚未发现已安装的工具。'],
   notFound: ['Tool is not installed. Run: fastcli install {id}', '未发现工具入口，请运行：fastcli install {id}'],
@@ -67,7 +97,6 @@ const messages = {
 export type MessageKey = keyof typeof messages;
 
 export function t(language: Language, key: MessageKey, values: Record<string, string | number> = {}): string {
-  let text: string = messages[key][language === 'zh-CN' ? 1 : 0];
-  for (const [name, value] of Object.entries(values)) text = text.replaceAll(`{${name}}`, String(value));
-  return text;
+  const text: string = messages[key][language === 'zh-CN' ? 1 : 0];
+  return text.replace(/\{(\w+)\}/g, (placeholder, name: string) => Object.hasOwn(values, name) ? String(values[name]) : placeholder);
 }

@@ -1,10 +1,13 @@
-import { select, confirm, isCancel, intro, outro } from '@clack/prompts';
+import { select, confirm, text, isCancel, intro, outro } from '@clack/prompts';
 import { color, fitChoices, logMessage, promptMessage, visibleChoiceCount, withProgress, wrapTerminalText, terminalWidth } from './terminal.js';
 import type { Language } from '../i18n.js';
+import { chooseMany } from './multiselect.js';
 
-export interface Choice { value: string; label: string; hint?: string; tone?: 'selected' | 'action' }
+export interface Choice { value: string; label: string; hint?: string; tone?: 'selected' | 'action'; disabled?: boolean; searchText?: string }
 export interface PromptUI {
   select(message: string, options: Choice[]): Promise<string>;
+  multiselect(message: string, options: Choice[], settings?: { search?: boolean }): Promise<string[] | null>;
+  text(message: string, options?: { initialValue?: string; validate?: (value: string) => string | undefined }): Promise<string>;
   confirm(message: string): Promise<boolean>;
   info(message: string): void;
   error(message: string): void;
@@ -23,6 +26,14 @@ export function createTerminalPrompts(language: Language = 'en'): PromptUI { ret
     const help = language === 'zh-CN' ? '↑↓ 移动 · Enter 选择 · Esc 取消' : '↑↓ Move · Enter Select · Esc Cancel';
     const body = `${message}\n${color.dim(help)}`;
     const result = await select({ message: promptMessage(body), options: fitChoices(options), maxItems: visibleChoiceCount(options.length, body) });
+    if (isCancel(result)) throw new CancelledError();
+    return result;
+  },
+  multiselect(message, options, settings) {
+    return chooseMany(message, options, language, settings?.search ?? false);
+  },
+  async text(message, options) {
+    const result = await text({ message: promptMessage(message), ...options });
     if (isCancel(result)) throw new CancelledError();
     return result;
   },

@@ -1,6 +1,6 @@
 {
   "name": "@namewta/fastcli",
-  "version": "3.2.11",
+  "version": "3.2.12",
   "description": "AI CLI launcher and npm manager for Claude, Codex, Gemini, Grok, OpenCode and Pi",
   "type": "module",
   "author": {
@@ -48,6 +48,7 @@
     "@clack/prompts": "^0.9.0",
     "cross-spawn": "^7.0.6",
     "picocolors": "1.1.1",
+    "proper-lockfile": "4.1.2",
     "read-cmd-shim": "^5.0.0",
     "semver": "^7.7.0",
     "string-width": "7.2.0",
@@ -56,6 +57,7 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",
     "@types/node": "^25.5.0",
+    "@types/proper-lockfile": "4.1.4",
     "@types/semver": "^7.7.0",
     "tsup": "^8.5.1",
     "typescript": "^6.0.2",

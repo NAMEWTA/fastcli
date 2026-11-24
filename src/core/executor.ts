@@ -20,12 +20,15 @@ export class ProcessCancelledError extends Error {
 }
 
 /** Executes literal argv with inherited terminal streams. Returns failures instead of throwing. */
-export async function runProcess(invocation: ProcessInvocation, options: { terminateTree?: boolean } = {}): Promise<ProcessResult> {
-  console.error(`$ ${formatInvocation(invocation)}`);
+export async function runProcess(invocation: ProcessInvocation, options: {
+  terminateTree?: boolean; windowsVerbatimArguments?: boolean; quiet?: boolean;
+} = {}): Promise<ProcessResult> {
+  if (!options.quiet) console.error(`$ ${formatInvocation(invocation)}`);
   return new Promise(resolve => {
     let child: ChildProcess;
     try {
-      child = spawn(invocation.file, [...invocation.args], { cwd: invocation.cwd, env: invocation.env, stdio: 'inherit', detached: options.terminateTree && process.platform !== 'win32' });
+      child = spawn(invocation.file, [...invocation.args], { cwd: invocation.cwd, env: invocation.env, stdio: 'inherit',
+        detached: options.terminateTree && process.platform !== 'win32', windowsVerbatimArguments: options.windowsVerbatimArguments });
     } catch (error) {
       resolve({ code: 1, error: String(error) });
       return;

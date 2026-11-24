@@ -6,6 +6,13 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## [Unreleased]
 
+## [3.2.12] - 2026-11-24
+
+### 新增
+
+- 交互菜单支持按列表顺序批量安装、更新和卸载工具。卸载整批确认一次。
+- 可以保存、编辑和删除整行自定义命令，按名称或内容模糊搜索并批量运行。
+
 ## [3.2.11] - 2026-10-19
 
 ### 修复
@@ -197,7 +204,8 @@ fastcli 的变更记录遵循 [Keep a Changelog](https://keepachangelog.com/) �
 
 ## 版本链接
 
-- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.6...HEAD)
+- [Unreleased](https://github.com/namewta/fastcli/compare/v3.2.12...HEAD)
+- [3.2.12](https://github.com/namewta/fastcli/releases/tag/v3.2.12)
 - [3.2.6](https://github.com/namewta/fastcli/releases/tag/v3.2.6)
 - [3.2.5](https://github.com/namewta/fastcli/releases/tag/v3.2.5)
 - [3.2.4](https://github.com/namewta/fastcli/releases/tag/v3.2.4)

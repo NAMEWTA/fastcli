@@ -91,7 +91,7 @@ async function reportInstalledLaunch(tool: ToolDefinition, version: string | und
 }
 
 export async function manageAction(tool: ToolDefinition, action: ManagementAction, ctx: CliContext,
-  options: { dryRun?: boolean; yes?: boolean; npm?: NpmContext } = {}): Promise<number> {
+  options: { dryRun?: boolean; yes?: boolean; npm?: NpmContext; batch?: boolean } = {}): Promise<number> {
   if (options.dryRun) {
     console.log(`$ ${formatInvocation(buildNpmInvocation(tool, action))}`);
     console.error(t(ctx.language, 'dryRun'));
@@ -121,6 +121,7 @@ export async function manageAction(tool: ToolDefinition, action: ManagementActio
     const after = await discoverTool(tool, discoveryOptions(ctx, npm));
     if (after.installations.length) console.error(`${t(ctx.language, 'remaining')}: ${after.installations.map(item => item.path).join(', ')}`);
   }
+  if (options.batch && result.cancelled) throw result.cancelled;
   return result.code;
 }
 

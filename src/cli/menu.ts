@@ -6,37 +6,44 @@ import { inspectNpmPackage, type ManagementAction } from '../core/npm-manager.js
 import { launchTool, manageAction, optionalNpm, scanTools, installationLabel, managementProblem, type CliContext } from './actions.js';
 import { ProcessCancelledError } from '../core/executor.js';
 import { CancelledError } from './prompts.js';
+import { runBatch } from './batch.js';
+import { customCommandsMenu } from './custom-commands.js';
 
 const back = (ctx: CliContext) => ({ value: ':back', label: t(ctx.language, 'back') });
 
 async function managementMenu(ctx: CliContext): Promise<void> {
   while (true) {
-    const action = await ctx.prompts.select(t(ctx.language, 'choose'), [
-      ...(['install', 'uninstall'] as const).map(value => ({ value, label: t(ctx.language, value) })), back(ctx),
+    const choice = await ctx.prompts.select(t(ctx.language, 'choose'), [
+      { value: 'install', label: t(ctx.language, 'installOrUpdate') },
+      { value: 'uninstall', label: t(ctx.language, 'uninstall') }, back(ctx),
     ]);
-    if (action === ':back') return;
-    while (true) {
-      const npm = await optionalNpm(ctx);
-      if (!npm.context) { ctx.prompts.error(`${t(ctx.language, 'npmUnavailable')}: ${npm.error}`); break; }
-      const context = npm.context;
-      const states = await Promise.all(BUILTIN_TOOLS.map(tool => inspectNpmPackage(tool, context)));
-      const detections = await scanTools(ctx, context);
-      const options = BUILTIN_TOOLS.map((tool, index) => {
-        const state = states[index]!;
-        const entry = detections[index]!.installations.find(item => item.isPathDefault) ?? detections[index]!.installations[0];
-        const problem = managementProblem(state, action as ManagementAction, ctx.language);
-        return { value: tool.id, label: tool.name,
-          hint: `${problem ? `${problem} · ` : ''}${entry ? installationLabel(entry, ctx.language) : t(ctx.language, 'notInstalled')}` };
-      });
-      const id = await ctx.prompts.select(t(ctx.language, 'chooseTool'), [...options, back(ctx)]);
-      if (id === ':back') break;
-      const index = BUILTIN_TOOLS.findIndex(tool => tool.id === id);
-      const problem = managementProblem(states[index]!, action as ManagementAction, ctx.language);
-      if (problem) { ctx.prompts.error(problem); continue; }
-      const code = await manageAction(BUILTIN_TOOLS[index]!, action as ManagementAction, ctx, { npm: context });
-      if (code === 130 || code === 143) throw new ProcessCancelledError(code === 130 ? 'SIGINT' : 'SIGTERM');
+    if (choice === ':back') return;
+    const action = choice as ManagementAction;
+    const npm = await optionalNpm(ctx);
+    if (!npm.context) { ctx.prompts.error(`${t(ctx.language, 'npmUnavailable')}: ${npm.error}`); continue; }
+    const context = npm.context;
+    const states = await Promise.all(BUILTIN_TOOLS.map(tool => inspectNpmPackage(tool, context)));
+    const detections = await scanTools(ctx, context);
+    const options = BUILTIN_TOOLS.map((tool, index) => {
+      const state = states[index]!;
+      const entry = detections[index]!.installations.find(item => item.isPathDefault) ?? detections[index]!.installations[0];
+      const problem = managementProblem(state, action, ctx.language);
+      const operation = t(ctx.language, action === 'install' && state.installed ? 'updateTool' : action);
+      const status = entry ? installationLabel(entry, ctx.language) : t(ctx.language, 'notInstalled');
+      return { value: tool.id, label: tool.name, disabled: Boolean(problem), hint: problem ?? `${operation} · ${status}` };
+    });
+    const ids = await ctx.prompts.multiselect(t(ctx.language, 'chooseTools'), options);
+    if (!ids) continue;
+    const tools = BUILTIN_TOOLS.filter((tool, index) => ids.includes(tool.id) && !options[index]!.disabled);
+    if (!tools.length) continue;
+    if (action === 'uninstall' && !await ctx.prompts.confirm(t(ctx.language, 'confirmUninstall', {
+      name: tools.map(tool => tool.name).join(', '), prefix: context.prefix,
+    }))) {
+      ctx.prompts.info(t(ctx.language, 'cancelled'));
       return;
     }
+    await runBatch(ctx, tools, tool => manageAction(tool, action, ctx, { npm: context, yes: true, batch: true }));
+    return;
   }
 }
 
@@ -67,12 +74,14 @@ export async function runInteractiveMenu(ctx: CliContext): Promise<number> {
     const section = await ctx.prompts.select(t(ctx.language, 'choose'), [
       { value: 'yolo', label: t(ctx.language, 'yolo'), hint: t(ctx.language, 'yoloHint'), tone: 'action' },
       { value: 'manage', label: t(ctx.language, 'manage'), hint: t(ctx.language, 'manageHint') },
+      { value: 'custom', label: t(ctx.language, 'customCommands') },
       { value: 'settings', label: t(ctx.language, 'settings'), hint: t(ctx.language, 'settingsHint') }, { value: 'exit', label: t(ctx.language, 'exit') },
     ]);
     if (section === 'exit') { ctx.prompts.outro(t(ctx.language, 'goodbye')); return 0; }
     try {
       if (section === 'yolo') await yoloMenu(ctx);
       else if (section === 'manage') await managementMenu(ctx);
+      else if (section === 'custom') await customCommandsMenu(ctx);
       else if (section === 'settings') {
         const language = await ctx.prompts.select(t(ctx.language, 'language'), [
           { value: 'en', label: 'English' }, { value: 'zh-CN', label: '简体中文' }, back(ctx),

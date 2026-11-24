@@ -39,6 +39,7 @@ export interface ManagementResult {
   installed: boolean;
   version?: string;
   details?: string;
+  cancelled?: ProcessCancelledError;
 }
 
 /** Shared preflight for menu affordances, confirmation, and the mutation boundary. */
@@ -232,7 +233,11 @@ export async function manageTool(
   const invocation = buildNpmInvocation(tool, action, context);
   const execution = await runProcess(invocation);
   const after = await inspectNpmPackage(tool, context);
-  if (execution.cleanupError) return { code: 1, message: 'cleanup-failed', installed: after.installed, details: execution.cleanupError };
+  if (execution.signal === 'SIGINT' || execution.signal === 'SIGTERM') {
+    const cancelled = new ProcessCancelledError(execution.signal, execution.cleanupError);
+    return { code: cancelled.code, message: execution.cleanupError ? 'cleanup-failed' : 'npm-failed',
+      installed: after.installed, details: execution.cleanupError, cancelled };
+  }
   if (execution.code !== 0) {
     return { code: execution.code, message: 'npm-failed', installed: after.installed,
       ...(execution.error ? { details: execution.error } : {}) };
@@ -252,7 +257,7 @@ export async function manageTool(
       env: installationEnv(installed, invocation.env), cwd: context.cwd });
   } catch (error) {
     if (!(error instanceof ProcessCancelledError)) throw error;
-    return { code: error.code, message: error.cleanupError ? 'cleanup-failed' : 'npm-failed',
+    return { code: error.code, message: error.cleanupError ? 'cleanup-failed' : 'npm-failed', cancelled: error,
       installed: (await inspectNpmPackage(tool, context)).installed, ...(error.cleanupError ? { details: error.cleanupError } : {}) };
   }
   const output = stripVTControlCharacters(`${probe.stdout}\n${probe.stderr}`).trim();

@@ -23,6 +23,8 @@ it('shows the two version labels before the main menu and update later continues
       return choices.some(choice => choice.value === 'skip') ? 'skip' : 'exit';
     },
     confirm: async () => { throw new Error('Unexpected confirmation'); },
+    multiselect: async () => { throw new Error('Unexpected multiselect'); },
+    text: async () => { throw new Error('Unexpected text input'); },
     info() {}, error() {}, intro() {}, outro() {},
   };
   for (let attempt = 0; attempt < 2; attempt++) {
@@ -30,8 +32,8 @@ it('shows the two version labels before the main menu and update later continues
       env: { ...f.env, CI: '', FASTCLI_NO_UPDATE_CHECK: '' } })).toBe(0);
   }
   expect(menus.map(menu => menu.values)).toEqual([
-    ['update', 'skip'], ['yolo', 'manage', 'settings', 'exit'],
-    ['update', 'skip'], ['yolo', 'manage', 'settings', 'exit'],
+    ['update', 'skip'], ['yolo', 'manage', 'custom', 'settings', 'exit'],
+    ['update', 'skip'], ['yolo', 'manage', 'custom', 'settings', 'exit'],
   ]);
   expect(menus[0]!.message).toContain('Current version: v1.0.0');
   expect(menus[0]!.message).toContain('Latest version: v9.9.9');
