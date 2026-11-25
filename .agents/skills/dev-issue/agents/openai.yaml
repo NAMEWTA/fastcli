@@ -1,0 +1,4 @@
+interface:
+  display_name: "编写与维护 Issue"
+  short_description: "把想法与证据整理为可认领工单，并发布、更新或评论"
+  default_prompt: "请使用 $dev-issue 阅读目标项目规范、代码和已有讨论，把我的需求整理成可独立认领的完整 Issue，明确范围、复用依据、实施任务与验收；已有规格和票据沿用原记录，按我授权的创建、更新或评论操作完成并回读核对。"

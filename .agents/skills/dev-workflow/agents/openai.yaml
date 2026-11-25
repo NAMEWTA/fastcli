@@ -1,0 +1,4 @@
+interface:
+  display_name: "开发任务协调"
+  short_description: "路由多 Change 批次、协调跨阶段交付、接续后未明阶段的任务，或复核任务决定与实际证据"
+  default_prompt: "使用 $dev-workflow 理清这个需求并持续推进到约定交付结果，完成后整理项目知识。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "开发进展"
+  short_description: "按真实证据回顾指定范围的工作、列明待决事项，并按明确请求制作进展视频"
+  default_prompt: "使用 $dev-status 根据本次任务的已有证据说明进展、仍待我决定的事项及你的建议。"

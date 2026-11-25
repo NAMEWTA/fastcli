@@ -1,0 +1,4 @@
+interface:
+  display_name: "技能编写与个人工程方式"
+  short_description: "编写或优化职责明确的项目技能，按需从已授权记录提炼个人工程偏好"
+  default_prompt: "使用 $dev-personalize 按目标编写或修改项目技能；需要个人工作方式时，再从已授权记录提炼偏好并验证适用边界。"

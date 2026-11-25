@@ -1,0 +1,4 @@
+interface:
+  display_name: "形式化验证与模型维护"
+  short_description: "为高风险行为选择验证工具并维护假设属性代码映射及反例证据"
+  default_prompt: "使用 $dev-formal-verify 选择当前代码中值得验证的属性，实际执行检查并维护模型与代码的一致性。"

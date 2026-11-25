@@ -1,0 +1,4 @@
+interface:
+  display_name: "票据与实施计划"
+  short_description: "逐票保存交付与验收，从票据依赖组装实施计划"
+  default_prompt: "请使用 $dev-plan 沿用已有规格和决定，先解决影响出票的前提，再为每个切片保存一份本地票据，从已保存票据组装 plan.md 的依赖 DAG，并核对规格覆盖和整体验收。只有一个切片时保存一张票与单节点计划。"

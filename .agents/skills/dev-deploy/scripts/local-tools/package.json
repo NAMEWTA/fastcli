@@ -1,0 +1,11 @@
+{
+  "name": "@namewta/skills-hub-deployment-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "watch-pr": "node watch-pr/watch-pr.mjs"
+  },
+  "engines": {
+    "node": ">=22.14"
+  }
+}

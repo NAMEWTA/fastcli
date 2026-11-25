@@ -1,0 +1,4 @@
+interface:
+  display_name: "工程约束与代码纪律"
+  short_description: "将重复工程错误与关键约束落实到类型、接口或检查，并验证真实防错效果"
+  default_prompt: "使用 $dev-guardrails 将这个已识别的重复错误落实为成本相称的结构约束，并证明它能捕获对应问题。"

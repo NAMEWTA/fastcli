@@ -1,0 +1,4 @@
+interface:
+  display_name: "追溯设计理由"
+  short_description: "追溯代码背后的决定、约束与取舍，并区分直接证据和推断"
+  default_prompt: "使用 $dev-why 调查这段代码为什么这样设计，查阅可用历史证据，明确哪些已知、哪些是推断，以及后续修改应保留的约束。"

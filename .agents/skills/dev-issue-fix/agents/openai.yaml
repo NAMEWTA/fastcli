@@ -1,0 +1,4 @@
+interface:
+  display_name: "可信报告复现与修复"
+  short_description: "核验来源与可信分诊，以双次真实 UI 和前后证据复现、验证或受限修复"
+  default_prompt: "请使用 $dev-issue-fix 处理这份已有可信分诊的 UI 报告，核对来源与实际控制能力，优先验证已有补丁，再按当前目标复现或修复。"

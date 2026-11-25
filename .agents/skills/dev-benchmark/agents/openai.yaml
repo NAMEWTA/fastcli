@@ -1,0 +1,4 @@
+interface:
+  display_name: "性能测量与持续优化"
+  short_description: "诊断性能回退、核验测量口径并持续优化指标，交付可复查的原因与前后结果"
+  default_prompt: "使用 $dev-benchmark 检查这项性能结论，并按真实工作负载设计或执行比较。"

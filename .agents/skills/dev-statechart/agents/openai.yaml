@@ -1,0 +1,4 @@
+interface:
+  display_name: "状态图与反例路径"
+  short_description: "运行 TLA+ 与 TLC 检查，以中文状态图展示约束违例、反例和模型边界"
+  default_prompt: "使用 $dev-statechart 检查已有 TLA+ 模型，生成带规则标记和反例轨迹的中文状态图，区分状态不变量与时序属性，并核对代码映射。"

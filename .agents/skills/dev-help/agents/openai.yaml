@@ -1,0 +1,4 @@
+interface:
+  display_name: "开发技能导航"
+  short_description: "按单项或多 Change 目标选择开发技能、完整操作流程与工程原则并提供可用提示词"
+  default_prompt: "使用 $dev-help 说明我当前应该怎样组合开发技能，并给出对应的本地方法和提示词。"

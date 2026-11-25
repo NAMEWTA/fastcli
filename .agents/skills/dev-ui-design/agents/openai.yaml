@@ -1,0 +1,4 @@
+interface:
+  display_name: "界面与设计系统"
+  short_description: "按产品、设计系统或营销目标选择完整方法，复用代码中的 token 与组件并验证真实界面"
+  default_prompt: "使用 $dev-ui-design 为当前需求确定界面设计规则，复用已有样式与组件，明确状态和响应式行为；完整 change 的交互确认交给 dev-prototype。"

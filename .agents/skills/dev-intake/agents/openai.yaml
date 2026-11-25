@@ -1,0 +1,4 @@
+interface:
+  display_name: "需求整理"
+  short_description: "整理散落材料中的来源、事实、目标、范围、已有决定与缺口，明确下一步"
+  default_prompt: "使用 $dev-intake 将这些材料整理成需求简报，沿用已有契约与决定，区分当前事实、目标、范围和缺口。"

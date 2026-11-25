@@ -1,0 +1,4 @@
+interface:
+  display_name: "行为规格"
+  short_description: "在同一权威记录中补足场景、边界和验收，形成可独立实施与审查的行为契约"
+  default_prompt: "请使用 $dev-spec 核对已有行为契约，只补足独立实施、审查和验收所需的缺口；契约充分时直接复用。"

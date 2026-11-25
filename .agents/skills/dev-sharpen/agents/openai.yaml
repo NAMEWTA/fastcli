@@ -1,0 +1,4 @@
+interface:
+  display_name: "请求改写"
+  short_description: "将已有意图改写为目标、范围、材料、方法和证据清楚的请求，不扩张任务"
+  default_prompt: "使用 $dev-sharpen 将这项任务改写为范围清楚、证据可核验的完整请求，保留未决选择；仅改写不开始开发。"

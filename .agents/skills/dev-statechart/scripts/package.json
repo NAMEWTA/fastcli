@@ -1,0 +1,14 @@
+{
+  "name": "@namewta/skills-hub-statechart",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "dependencies": {
+    "pele": "1.9.0"
+  },
+  "engines": {
+    "node": ">=22.14"
+  }
+}

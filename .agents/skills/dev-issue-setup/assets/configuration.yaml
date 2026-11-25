@@ -1,0 +1,108 @@
+# 非秘密配置示例。复制到项目资料目录再填写；此文件不会自动创建或启用任务。
+# schema_version 只表示此配置格式版本，不是工作流状态机。所有动作名称必须来自实际能力。
+schema_version: 2
+
+# 先保留实际目标，不能从来源平台推断要运行缺陷分诊。
+task:
+  purpose: "" # 用户要求的目标，例如每日需求汇总
+  method: "" # defect-triage / ui-reproduce / collection，或实际可读的用户方法
+  instructions: "" # 收集汇总的完整规则或已验证可读路径
+  output: "" # 实际运行输出或已授权的汇总目标；单份报告回复另按 source 核对
+
+automations:
+  collection_name: "" # 只选择收集汇总时填写，不创建额外缺陷任务
+  collection_id: ""
+  triage_name: "issue-triage"
+  triage_id: "" # 创建后回读实际标识，更新时复用
+  reproduce_name: "issue-reproduce"
+  reproduce_id: ""
+
+# 只填写所选模式实际需要的字段；动作名称由真实工具枚举，不是内置 API。
+source:
+  type: "manual" # manual / slack / issue / email / alert，或已经验证的其他适配器
+  scope: "" # 实际账号、工作区与频道／项目／邮箱等范围
+  report_reference: "" # 手工任务的原报告；持续任务从实际事件取得报告身份
+  read_action: ""
+  reply_action: ""
+  attachment_action: ""
+  reply_mode: "run-output" # origin 仅在原生回复及回读能力验证后使用
+  verdict_mode: "run-record" # source-reply / run-record；均须核验真实身份与报告关联
+  triage_identity: ""
+  optional_token_env: "" # 只填环境变量名，不填秘密值
+
+monitor:
+  mode: "manual" # manual / event / schedule / webhook
+  trigger: "" # 平台实际支持的事件或已验证接收入口
+  filter: "" # 范围、报告类型；排除本任务的结论和运维更新
+  schedule: ""
+  timezone: ""
+  checkpoint_path: ".agents/dev/project/issue-automation/monitor.md"
+
+operations:
+  target: "" # 可选，不能替换原报告身份
+  post_action: ""
+  edit_action: ""
+  optional_token_env: ""
+
+delegation:
+  allow_worker_external_writes: false
+
+repository:
+  url: "REPOSITORY_URL"
+  default_branch: "main"
+  pull_request_action: "配置的-草稿拉取请求动作"
+  pull_request_url_format: "由目标仓库平台返回并核实的规范拉取请求链接"
+  draft_only: true
+
+tracker:
+  type: "none" # 只读分类可以不配置；查重、建单须填实际追踪器
+  adapter_skill_name: "问题跟踪器适配技能占位值"
+  team: "团队占位值"
+  project: "项目占位值"
+  labels:
+    bug: "缺陷标签占位值"
+    performance: "性能标签占位值"
+    intake: "收件标签占位值"
+    needs_repro: "需要复现标签占位值"
+  status: "收件状态占位值"
+  source_link_title: "原始报告"
+  require_compensation_action: true
+
+routing:
+  map_path: ".agents/dev/project/issue-automation/routing.md"
+  owner_pings_default: false
+  allow_feature_owner_ping: false
+  allow_confirmed_regression_author_ping: false
+
+control:
+  skill_name: "control-target-app"
+  feature_map_path: ".agents/dev/project/issue-automation/feature-map.md"
+  environment: "安全测试环境占位值"
+  artifact_directory: "实际运行器的临时工件目录"
+  artifact_retention_hours: 24
+
+verdict_markers:
+  bug: "[issue:bug]"
+  performance: "[issue:performance]"
+  other: "[issue:other]"
+  tracker_attribute: "tracker"
+
+status_emoji:
+  seen: "👀"
+  reproducing: "🔎"
+  reproduced: "✅"
+  could_not_reproduce: "⚪"
+  blocked: "⛔"
+  fixing: "🛠️"
+  fix_failed: "❌"
+  pull_request_opened: "🔗"
+
+budgets:
+  poll_seconds: 45
+  verdict_wait_minutes: 45
+  triage_follow_up_minutes: 10
+  triage_total_minutes: 30
+  repro_minutes: 60
+  rejection_window_minutes: 10
+  fix_minutes: 90
+  operations_follow_up_minutes: 45

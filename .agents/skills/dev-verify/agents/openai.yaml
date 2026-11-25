@@ -1,0 +1,4 @@
+interface:
+  display_name: "真实行为验证"
+  short_description: "驱动真实应用验证用户行为，生成和维护可重复执行的功能验证方法"
+  default_prompt: "请使用 $dev-verify 验证当前实现的真实用户路径，记录动作、结果和副作用，并按需要维护项目验证方法。"

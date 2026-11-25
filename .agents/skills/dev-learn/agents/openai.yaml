@@ -1,0 +1,4 @@
+interface:
+  display_name: "学习项目与模块"
+  short_description: "沿真实业务路径讲清当前机制、关键约束与修改入口，按需保存模块导读"
+  default_prompt: "使用 $dev-learn 讲清这个功能的完整运行路径、关键边界及后续修改入口。"

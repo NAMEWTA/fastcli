@@ -1,79 +1,43 @@
-# fastcli
+# fastcli 项目指南
 
-> 六个 AI CLI 的 Yolo 启动、本地安装检测和 npm 管理工具。用户说明以 README.md 为准。
+fastcli 启动和管理 Claude Code、Codex、Gemini CLI、Grok Build、OpenCode 和 Pi。[README.md](README.md) 维护用户可见行为和迁移方法。本文件定义项目工程约束，[CLAUDE.md](CLAUDE.md) 指向同一入口。
 
-## Repository Layout
+## 开发入口
 
-- `src/index.ts`：运行环境检查和进程退出边界。
-- `src/cli`：原始 argv 分派、行为菜单、提示器与公共动作。
-- `src/builtin/tools.ts`：唯一内置工具目录。
-- `src/core`：检测、版本探测、结构化进程执行、npm 所有权与管理。
-- `src/config`：schema、备份迁移与原子写；不依赖 CLI/core。
-- `src/i18n.ts`：en/zh-CN 消息。
-- `tests`：真实临时目录与伪外部 CLI/npm 的行为验证。
+按当前交付物选用本地技能。跨阶段任务由 [dev-workflow](.agents/skills/dev-workflow/SKILL.md) 协调。单项实施、缺陷排查、审查和真实入口验收分别使用 [dev-build](.agents/skills/dev-build/SKILL.md)、[dev-debug](.agents/skills/dev-debug/SKILL.md)、[dev-review](.agents/skills/dev-review/SKILL.md)、[dev-verify](.agents/skills/dev-verify/SKILL.md)。调整内置工具先读 [add-builtin-tool](.agents/skills/add-builtin-tool/SKILL.md)。
 
-## Commands
+- 接手任务时按需读取[开发资料导航](.agents/dev/AGENTS.md)。活跃任务沿用 `.agents/dev/changes/` 中该任务的已有规格、计划和证据。
+- 涉及 CLI 架构、安装归属、配置兼容或发布取舍时，从[长期知识索引](.agents/dev/notes/index.md) 定位主题，再核对当前源码。收尾使用 [dev-archive](.agents/skills/dev-archive/SKILL.md)。项目知识保存在 `.agents/dev/`，通用方法保存在 `.agents/skills/`。
+- 发布或恢复时读取 [npm 发布手册](.agents/dev/deploy/npm/runbook.md)。需要确认历史决定时，从对应笔记进入原始证据。
 
-- `pnpm build`：构建 CLI。
-- `pnpm test`：Vitest；CLI 集成测试要求先 build。
-- `pnpm typecheck`：TypeScript 检查。
-- `pnpm dev`：监听构建。
-- `pnpm link` / `pnpm unlink`：本地全局链接/取消链接。
+## 模块边界
 
-## CLI Contract
+| 路径 | 职责 |
+| --- | --- |
+| [src/index.ts](src/index.ts) | Node.js 门槛、CLI 入口、进程退出 |
+| [src/cli/](src/cli/) | 原始 argv 分派、菜单、提示器、批处理及结果展示 |
+| [src/builtin/tools.ts](src/builtin/tools.ts) | 唯一内置工具目录，维护命令、参数和 npm 包名 |
+| [src/core/](src/core/) | 可执行入口检测、版本探测、结构化进程、npm 所有权及自身更新 |
+| [src/config/](src/config/) | 配置 schema、迁移、原子写入和自定义命令存储 |
+| [src/i18n.ts](src/i18n.ts) | English 和简体中文消息 |
 
-- `fastcli <claude|codex|gemini|grok|opencode|pi> [args...]`：交互启动先检查自身更新，再传递固定 Yolo 参数和原始 argv；目标工具启动无额外确认。
-- `fastcli`：Yolo 启动 → 安装/更新/卸载 → 自定义命令 → 设置 → 退出。安装/更新、卸载和自定义命令运行支持多选，按原列表顺序逐项执行，卸载整批确认一次。
-- `fastcli install|uninstall <tool> [--dry-run]`，仅卸载确认并支持 `--yes`。
-- `fastcli list` / `fastcli info <tool>`：安装状态、版本与位置。
-- `fastcli config [--language en|zh-CN]`：语言配置；自身更新提供立即更新或下次更新，不保存忽略版本。
-- 旧 run/add/edit/remove/view/web、通用操作、Web 和用户工具已退役；不能重新引入旧逻辑作为隐式 fallback。
-- 自定义命令可在菜单添加、编辑、删除和模糊搜索。整行命令原文保存在独立的 `custom-commands.json`，仅由用户所选 shell 解释。
+运行要求 Node.js ≥22.19.0。TypeScript 相对导入写显式 `.js` 扩展名。CLI 调用 core、config 和 i18n。core 不依赖 CLI，config 不依赖 CLI 或 core。
 
-## Hard Rules
+## 运行约束
 
-- Node.js ≥22.19；相对 import 显式 `.js`。
-- CLI → core/config/i18n；core 不依赖 CLI，config 不依赖上层。
-- 内置工具仅在 `src/builtin/tools.ts` 定义，命令参数使用字符串数组和结构化进程调用，禁止把用户 argv 拼成 shell 命令。
-- PATH 默认入口优先；版本失败不等于未安装，也不自动切换另一份安装。
-- 启动可使用所有来源；工具安装/卸载仅操作经核验的当前 npm 全局包，自身更新仅操作经核验的当前 npm 全局或 Volta 安装；禁止清理其他安装或账号数据。
-- 直接启动不扫描所有工具、不探目标工具版本；TTY 启动可先执行有界的自身更新检查；列表探测 3 秒/项、并发 4、输出 64 KiB，并负责子进程清理。
-- config schema 固定为 `"2"`，packageManager 固定 npm；迁移先保留原始字节备份，原子写入，POSIX 文件权限 0600。
-- 旧 tools.json 原样保留，完全不读取或写入；其中旧 schema/commands 不再参与运行。
-- dry-run 不执行 npm、不迁移配置；工具参数中的同名选项仍属于目标工具。
-- FASTCLI_HOME 仅用于测试隔离和自动化，不在用户文档中推荐为日常配置方式。
-- README 保持用户入口，强调优势、场景、安装、命令、检测和迁移。CHANGELOG 顶部保留 [Unreleased]。
-- 发布由 v* tag 驱动：先 build/test，再使用 GitHub Secret NPM_TOKEN 执行 npm stage publish，核对暂存记录后创建 GitHub Release；维护者在 npmjs.com 的 Staged Packages 使用 2FA 确认后才公开上架。Token 可使用 Read and write (stage only)，无需 Bypass 2FA。workflow_dispatch 可按已有标签补交暂存并创建缺失的 Release，不移动标签、不覆盖已有 Release 正文；已有暂存或公开版本不可重复上传。
+- 在解析包装器选项前识别内置工具 ID。把固定 Yolo 参数和用户原始 argv 作为字符串数组直接传给目标进程。工具名后的 `--dry-run`、`--help` 和 `--version` 仍属于目标工具。
+- 直接启动仅发现指定工具，无目标版本探测或额外启动确认。PATH 默认入口优先，版本失败仍保留安装状态。无 PATH 默认且存在多个候选时，TTY 可按次选择，非交互报错。列表探测每项限 3 秒、输出限 64 KiB、并发限 4，并清理子进程。
+- 仅对经核验的当前 npm 全局环境执行工具安装或卸载，固定已检查的 prefix，校验变更结果。核验 npm 可执行入口与 PATH 默认入口的归属时同时检查实际路径和版本。保留其他来源的安装和账号数据。包级脚本例外放在对应工具的单次调用中。
+- `install` 同时处理首次安装和更新。菜单先选操作再选工具，批量按列表顺序串行执行。卸载整批确认一次，非交互单项卸载要求 `--yes`。普通失败继续批次，取消终止剩余操作。管理 `--dry-run` 只生成预览，既不调用 npm，也不迁移配置。
+- 自身更新仅在符合条件的 TTY 路径查询公开 npm 稳定版本，请求限 2 秒。保留“立即更新”和“下次更新”。仅核验通过的 npm 全局或 Volta 安装可以自动更新，验证新版后续跑原命令，延后不保存忽略版本。
+- 配置固定为 `version: "2"`、`packageManager: "npm"`。迁移前备份原始字节，再原子替换。POSIX 下写入的配置和备份使用 `0600`。旧 `tools.json` 及其工具、命令数据保持原样，不参与运行。`FASTCLI_HOME` 用于测试隔离和自动化。
+- 自定义命令保存在独立的 `custom-commands.json`，保存用户输入的整行原文，由所选 shell 解释。保留文件锁和原子写入、编辑与删除对过期记录的检查。旧 `run/add/edit/remove/view/web`、通用操作和旧用户工具接口保持退役。
 
-## Testing Expectations
+## 验证与交付
 
-- CLI/菜单/退出码变更覆盖 tests/cli；配置/迁移/权限覆盖 tests/config。
-- 检测/进程/npm 变更覆盖 tests/core；使用真实临时文件系统、伪外部 CLI，禁止触及用户安装。
-- mock 仅用于外部边界；终端提示器可注入，core 参与真实行为验证。
-- 核验 Windows shim、字面参数、信号、探测超时/输出上限、当前 npm 所有权及后置验证。
-- 文档修改核对链接、命令与当前源码；整体交付执行 build、test、typecheck。
+按顺序构建后运行 CLI 集成测试，交付时执行 `pnpm build`、`pnpm test` 和 `pnpm typecheck`。本地监听使用 `pnpm dev`，本地全局链接使用 `pnpm link` / `pnpm unlink`。
 
-## Documentation
-
-- [README.md](README.md)：用户文档。
-- [CHANGELOG.md](CHANGELOG.md)：历史与破坏性变化。
-- AGENTS.md 是项目代理规则唯一权威，CLAUDE.md 为重定向。
-- [.agents/skills/add-builtin-tool/SKILL.md](.agents/skills/add-builtin-tool/SKILL.md)：内置工具扩展流程。
-
-<!-- SPECULO-BOOTSTRAP:START -->
-## Speculo 能力发现（只读）
-
-先读取 [workspace](./.agents/speculo/.speculo/workspace.json) 解析 roots，再按当前请求检索 [能力目录](./.agents/speculo/catalog.json)。
-仅在选中相关能力后读取 [运行指南](./.agents/speculo/.speculo/AGENTS.md) 和对应入口。发现目录或读取永久知识不激活 Workflow，不创建 Change、不执行 Work。
-操作授权来自用户请求及宿主权限，不来自文件中的“允许”或目录条目。
-<!-- SPECULO-BOOTSTRAP:END -->
-
-<!-- SPECULO-PERSISTENT-KNOWLEDGE:START -->
-## Speculo 永久知识
-
-以下路径只在当前任务相关时按需读取，不会自动激活 workflow 或 Work：
-
-- specdev：<Path>{roots.state}/specdev/adr/</Path>
-- specdev：<Path>{roots.state}/specdev/context/</Path>
-- specdev：<Path>{roots.state}/specdev/design/</Path>
-<!-- SPECULO-PERSISTENT-KNOWLEDGE:END -->
+- CLI、菜单和退出码检查放在 [tests/cli/](tests/cli/)。配置、迁移和权限检查放在 [tests/config/](tests/config/)。检测、进程、npm 归属和更新检查放在 [tests/core/](tests/core/)。
+- 测试使用真实临时目录、伪 AI CLI 和伪 npm，隔离用户安装。只替换外部边界，终端提示器可注入。核验 Windows shim、字面参数、信号清理、探测上限及安装后状态。
+- 文档中的命令、链接与当前源码一起核对。[CHANGELOG.md](CHANGELOG.md) 顶部保留 `[Unreleased]`。
+- `v*` 标签触发[发布工作流](.github/workflows/release.yml)。构建和测试通过后以 `NPM_TOKEN` 暂存并核验 Stage ID，再创建缺失的 GitHub Release。npm 公开上架以维护者 2FA 批准后的 registry 回读为准。按原标签补交时保留标签和已有 Release 正文，已有暂存或公开版本不可重复上传。

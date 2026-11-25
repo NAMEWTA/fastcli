@@ -1,0 +1,4 @@
+interface:
+  display_name: "报告来源与监控配置"
+  short_description: "按实际目标配置来源与触发，保留收集汇总、缺陷分诊和 UI 修复的边界"
+  default_prompt: "请使用 $dev-issue-setup 为当前项目配置所需来源、触发和实际任务目标，核实真实能力，再按已有授权准备收集汇总、缺陷分诊或 UI 修复任务。"

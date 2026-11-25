@@ -1,0 +1,4 @@
+interface:
+  display_name: "架构设计"
+  short_description: "从调用者体验设计模块边界，比较不同结构并保留关键取舍与依据"
+  default_prompt: "请使用 $dev-architecture 从调用者体验设计模块和接口，比较真正不同的结构并说明取舍。"

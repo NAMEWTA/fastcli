@@ -1,0 +1,4 @@
+interface:
+  display_name: "测试驱动开发"
+  short_description: "低成本缺陷回归先失败再修复；明确选择新功能 TDD 时逐切片推进"
+  default_prompt: "请使用 $dev-tdd 选择当前任务对应的缺陷回归或功能测试先行分支，保留失败与通过证据，不为不相称的测试路径搭建无关设施。"

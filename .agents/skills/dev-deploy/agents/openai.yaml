@@ -1,0 +1,4 @@
+interface:
+  display_name: "代码交付与环境部署"
+  short_description: "交付独立或堆叠 PR 队列、完成授权合并与推送，或部署指定环境并核实实际运行版本"
+  default_prompt: "使用 $dev-deploy 按本次目标交付代码或部署指定环境，复用有效证据并核对远端提交、PR 或真实服务结果。"

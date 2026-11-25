@@ -1,0 +1,4 @@
+interface:
+  display_name: "交互原型与可视化确认"
+  short_description: "把已对齐的需求转成遵循项目风格的完整交互 HTML，确认具体版本并贯穿实施验收"
+  default_prompt: "使用 $dev-prototype，完整理解当前 change 的最终文档，沿用项目实际布局、组件和配色，生成覆盖全部用户旅程的可交互 HTML；实际走查后请用户确认具体版本，并将该原型作为后续实施与验收依据。"

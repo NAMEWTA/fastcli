@@ -2,160 +2,93 @@
 
 [![npm version](https://img.shields.io/npm/v/@namewta/fastcli)](https://www.npmjs.com/package/@namewta/fastcli)
 
-**一个入口，启动和管理常用 AI CLI。**
+fastcli 在当前项目目录启动 Claude Code、Codex、Gemini CLI、Grok Build、OpenCode 或 Pi，省去记忆各工具的 Yolo 参数和 npm 包名。用同一个菜单管理 AI CLI，也可以保存、搜索和批量运行常用终端命令。
 
-不必记住每个工具的全权限参数和 npm 包名。在项目目录运行 `fastcli claude` 即可启动 Claude Code。输入 `fastcli` 可以批量安装、更新和卸载工具，也可以保存并运行常用终端命令。
+## 安装与上手
 
-```bash
-fastcli claude
-fastcli codex
-fastcli install gemini
-fastcli
-```
-
-## 安装与环境
-
-需要 **Node.js ≥22.19.0**。支持 macOS、Linux、Windows；各 AI CLI 自身的系统要求仍适用。
+需要 **Node.js ≥22.19.0**，支持 Windows、macOS 和 Linux。目标 AI CLI 的登录、组织策略和平台要求由各工具处理。
 
 ```bash
 npm install -g @namewta/fastcli
 fastcli --help
-```
-
-安装 Claude Code 需要 npm ≥11.16.0，以支持其包级安装脚本授权。fastcli 不自动升级 Node/npm，不使用 sudo，不修改全局 npm 配置。
-
-## 快捷启动
-
-| 命令 | 启动方式 |
-|---|---|
-| `fastcli claude` | `claude --dangerously-skip-permissions` |
-| `fastcli codex` | `codex --dangerously-bypass-approvals-and-sandbox` |
-| `fastcli gemini` | `gemini --yolo` |
-| `fastcli grok` | `grok --yolo --sandbox off` |
-| `fastcli opencode` | `opencode --auto` |
-| `fastcli pi` | `pi`（默认不逐次审批工具） |
-
-这些入口调用各工具的自动审批模式；交互终端会先检查 fastcli 自身更新，完成选择后启动目标工具。工具自己的显式禁止规则、组织策略或登录要求仍由工具处理。OpenCode 使用 `opencode-ai` 的交互式 `--auto`，旧版本如不支持该参数，需要升级。
-
-工具名之后的参数全部原样传递：
-
-```bash
-fastcli claude --resume
-fastcli codex --model your-model
-fastcli gemini --version
-fastcli claude -p "解释当前项目"
-```
-
-当前目录、环境变量和终端输入输出保留，退出码与目标程序一致。`fastcli --version` 显示 fastcli 版本，`fastcli codex --version` 则属于 Codex。
-
-直接启动只查找指定工具，不先扫描全部版本。找不到工具时给出安装命令，不会自动下载。
-
-## 启动检查与自身升级
-
-在交互终端启动时，fastcli 会查询自身 npm 最新稳定版本，包括 `fastcli codex` 等快捷命令。每次请求最多等待 2 秒；断网、超时或查询失败时继续使用当前版本，不影响启动。此检查不查询其他 AI CLI 的远端版本。
-
-发现新版本时，先分行明确显示「当前版本号」和「最新版本号」，使用 ↑↓ 移动、Enter 选择：
-
-- **立即更新**：核验当前安装方式，显示并执行对应更新命令，验证成功后用新版继续原命令，保留参数、当前目录和环境。
-- **下次更新**：立即继续原本交互，下次启动仍有新版时再次提醒。
-
-自动更新支持核验通过的当前 npm 全局安装和 Volta 安装。npm 安装执行 `npm install -g @namewta/fastcli@<最新版本> --prefix <已核验位置>`；Volta 安装通过 `volta run --node <当前 Node.js 版本> --bundled-npm npm install --global @namewta/fastcli@<最新版本>` 更新，保留当前 Node.js 运行版本。源码、链接、npx 或其他无法核验的安装同样先显示两个选项；选择立即更新后会提示按原安装方式处理并结束本次调用。更新失败或取消后不执行原命令；按提示修复后重新运行。更新不会自动使用 sudo 或更新 Node.js。
-
-非交互调用、CI、帮助、本地版本号、`config` 的 JSON 输出及管理命令 `--dry-run` 不触发自动检查。工具名后的参数始终属于目标工具，例如 `fastcli codex --version` 仍按快捷启动处理。设置 `FASTCLI_NO_UPDATE_CHECK=1` 可关闭自动检查。
-
-「下次更新」只影响本次启动，不写入忽略记录；旧版 `~/.fastcli/update-state.json` 中的忽略记录不再屏蔽提醒。
-
-## 按行为组织的菜单
-
-```text
-fastcli
-├─ Yolo 启动
-│  └─ 本机已安装工具（版本、位置）
-├─ 安装 / 更新 / 卸载
-│  ├─ 安装 / 更新（可多选）
-│  └─ 卸载（可多选）
-├─ 自定义命令
-│  ├─ 运行命令（可搜索和多选）
-│  └─ 添加、编辑、删除
-├─ 设置
-│  └─ English / 简体中文
-└─ 退出
-```
-
-菜单使用方向键移动，按 Enter 提交。多选列表中用空格勾选或取消勾选，按 Esc 返回。操作按列表顺序逐项执行。例如依次勾选 Pi、Claude Code 和 Codex，实际会先执行 Claude Code，再执行 Codex，最后执行 Pi。某项失败时继续执行其余项，结束后显示结果。Ctrl+C 取消当前操作和本批剩余项。
-
-安装／更新根据当前 npm 环境标记每项操作。卸载整批确认一次，确认时显示所有所选工具和 npm 目标位置。菜单适配终端大小和中文显示宽度，`NO_COLOR=1` 可关闭颜色。
-
-Yolo 列表只显示发现可执行入口的工具。版本读取失败时显示“版本未知”及原因，仍可尝试启动；没有已安装工具时可以转入安装管理。
-
-## 自定义命令
-
-在「自定义命令 → 添加命令」输入名称，选择解释器，然后粘贴整行命令。例如保存名为「项目测试」的 `pnpm test`。Windows 可选 CMD 或可用的 PowerShell，macOS 和 Linux 使用 `sh`。引号、管道和重定向遵循所选解释器的语法。
-
-在「运行命令」中直接输入文字，可按名称或命令内容模糊搜索。例如输入 `pnpmts` 可以匹配包含 `pnpm test` 的命令。筛选时保留已有勾选。每项从启动 fastcli 的目录运行，继承其环境和终端。命令保存在 `~/.fastcli/custom-commands.json`，可以在同一菜单编辑或删除。
-
-## 安装与卸载
-
-```bash
-fastcli install claude
 fastcli install codex
-fastcli uninstall gemini
-fastcli uninstall gemini --yes
-fastcli install opencode --dry-run
+fastcli codex
 ```
 
-`--dry-run` 仅预览命令，不运行 npm、不修改配置，也不验证当前环境。脚本中卸载必须使用 `--yes`。
+已经安装所需 AI CLI 时，直接在项目目录运行 `fastcli <工具 ID>`。运行 `fastcli` 打开交互菜单。
 
-| 工具 ID | 官方 npm 包 |
-|---|---|
-| `claude` | `@anthropic-ai/claude-code` |
-| `codex` | `@openai/codex` |
-| `gemini` | `@google/gemini-cli` |
-| `grok` | `@xai-official/grok` |
-| `opencode` | `opencode-ai` |
-| `pi` | `@earendil-works/pi-coding-agent` |
+## 启动 AI CLI
 
-`install` 统一用于首次安装和更新，使用 `npm i -g <包名>@latest`；卸载使用 `npm uninstall -g <包名>`。Claude 保留以下参数：
+快捷启动会加入工具的 Yolo 参数。按工具实现，这些模式允许执行工具操作而无需逐次审批，Grok 和 Codex 的快捷入口也会关闭各自的沙箱。
 
-```bash
-npm i -g @anthropic-ai/claude-code@latest --ignore-scripts=false --include=optional --allow-scripts=@anthropic-ai/claude-code
-```
+| 工具 ID | 启动命令 | npm 包 |
+| --- | --- | --- |
+| `claude` | `claude --dangerously-skip-permissions` | `@anthropic-ai/claude-code` |
+| `codex` | `codex --dangerously-bypass-approvals-and-sandbox` | `@openai/codex` |
+| `gemini` | `gemini --yolo` | `@google/gemini-cli` |
+| `grok` | `grok --yolo --sandbox off` | `@xai-official/grok` |
+| `opencode` | `opencode --auto` | `opencode-ai` |
+| `pi` | `pi`（使用工具默认审批行为） | `@earendil-works/pi-coding-agent` |
 
-OpenCode 同样显式启用本次安装所需的脚本与可选依赖，npm ≥11.16 时追加 `--allow-scripts=opencode-ai`。这使需要 postinstall 的安装能兼容 npm 12 的包级脚本授权。Pi 使用原始 npm 安装命令，不增加项目信任设置。
+工具 ID 后的参数原样传递。例如 `fastcli claude -p "解释当前项目"` 将提示词作为一个参数传给 Claude Code。`fastcli --version` 显示 fastcli 版本，`fastcli codex --version` 则由 Codex 处理。目标进程沿用当前目录和终端，fastcli 返回其退出码。旧版 OpenCode 若缺少交互式 `--auto`，可通过 `fastcli install opencode` 更新当前 npm 安装。
 
-**管理只作用于当前 npm 全局环境。** 原生安装器、Homebrew、Volta 或其他 Node 环境中的工具可以被发现和启动，但不会被当前 npm 升级或卸载。列表会说明无法执行的管理操作。
-
-fastcli 始终通过 npm 管理已核验的当前全局环境，并显式固定该次操作的 prefix；不接管用户的 Volta 等 Node 管理配置。安装其他来源已存在的工具会新增 npm 安装，PATH 默认入口可能仍指向旧位置。卸载仅删除当前 npm 包，不删除 AI 工具的账号、配置、会话，其他来源的安装可能继续存在。
-
-每次操作结束后重新检查目标：安装验证 npm 对应的可执行入口，卸载验证目标包已移除。安装成功后还会分别显示 npm 可执行入口和 PATH 默认启动入口及其版本；若默认入口不同，即使版本号相同也会提示无法确认归属，不会宣称该入口已经更新。没有 PATH 默认入口或版本读取失败时也会说明。失败或取消后报告实际状态，不自动重试，也不宣称已回滚。如果无法确认进程树已终止，会明确提示观察到的安装状态仍可能变化。
-
-如果 npm 安装成功但仍启动旧版，运行 `fastcli info codex`（或其他工具 ID），对照 PATH 默认入口与 npm 可执行入口。调整 PATH 使用 npm 对应的 bin 目录，或用原安装器/管理工具更新默认入口。fastcli 不自动修改 PATH、切换入口或删除其他安装。
-
-## 查看安装位置与版本
+直接启动只查找指定工具。找不到入口时会提示安装命令。要检查本机的入口、版本和来源，运行以下命令。
 
 ```bash
 fastcli list
-fastcli info claude
+fastcli info codex
 ```
 
-检测优先采用 PATH，并补查标准系统目录、用户安装目录、npm 全局目录及 nvm、fnm、Volta、mise 等常见布局。仅存在配置目录不算安装。
+fastcli 优先使用 PATH 中的第一个可执行入口，也会查找标准系统目录、用户安装目录、npm 全局目录和 nvm、fnm、Volta、mise 等常见位置。没有 PATH 默认入口时，只有一个候选就直接使用。若有多个候选，交互终端会让你选择本次入口，非交互调用会报错并列出候选路径。
 
-- PATH 中已有默认入口时，即使版本检测异常，也不会偷偷改用另一份安装。
-- PATH 中没有入口、只有一个候选时，直接使用该位置。
-- 无 PATH 默认且存在多个候选时，在交互终端选择本次使用的位置；非交互调用报错并列出路径，可通过调整 PATH 选择。
-- 版本探测每项最多 3 秒、最多同时运行 4 个，输出有上限；菜单检测不查询远程最新版本。
+版本探测失败会显示“版本未知”及原因，仍可尝试启动该入口。每个版本探测最多等待 3 秒，同时最多运行 4 个。
 
-## 配置与旧版迁移
+## 使用交互菜单
 
-配置位于 `~/.fastcli/config.json`：
+打开 `fastcli` 后，用方向键移动，Enter 确认，Esc 返回。多选列表用空格勾选，Enter 执行。
 
-```json
-{
-  "version": "2",
-  "packageManager": "npm",
-  "language": "en"
-}
+| 菜单 | 可执行的操作 |
+| --- | --- |
+| Yolo 启动 | 查看并启动本机已检测到的工具 |
+| 安装 / 更新 / 卸载 | 批量安装、更新或卸载，卸载整批确认一次 |
+| 自定义命令 | 添加、编辑、删除命令，搜索后单选或多选运行 |
+| 设置 | 切换 English 或简体中文 |
+
+多选按列表原顺序逐项执行。某项失败后继续执行其余选项，结束时显示结果。Ctrl+C 取消当前操作和批次剩余项。`NO_COLOR=1` 可以关闭菜单颜色。
+
+### 保存常用命令
+
+在「自定义命令 → 添加命令」输入名称，选择解释器，再粘贴整行命令。例如将 `pnpm test` 保存为「项目测试」。Windows 支持 CMD 和本机可用的 PowerShell，macOS 与 Linux 使用 `sh`。引号、管道和重定向按所选解释器的语法处理。
+
+在「运行命令」直接输入文字，按名称或命令内容模糊搜索。例如 `pnpmts` 可匹配 `pnpm test`。改变筛选条件时会保留已勾选的条目。每项在启动 fastcli 的目录中执行。原始命令行保存在 `~/.fastcli/custom-commands.json`。
+
+## 安装、更新和卸载 AI CLI
+
+```bash
+fastcli install codex
+fastcli install opencode --dry-run
+fastcli uninstall gemini
+fastcli uninstall gemini --yes
 ```
+
+`install` 将当前 npm 全局环境中的目标包装到最新版，适用于首次安装和更新。`uninstall` 删除该环境中经核验的目标包，保留其他来源的安装和 AI CLI 的账号、配置与会话。非交互卸载须传入 `--yes`。两条命令都支持 `--dry-run`，预览时不会运行 npm、核验当前 npm 环境或迁移配置。
+
+安装 Claude Code 需要 **npm ≥11.16.0**。fastcli 为本次调用显式启用安装脚本和可选依赖，并添加 `--allow-scripts=@anthropic-ai/claude-code`。OpenCode 的安装同样显式启用脚本与可选依赖，npm ≥11.16.0 时添加 `--allow-scripts=opencode-ai`。`--dry-run` 可查看命令预览。fastcli 不会更改全局 npm 配置、提升权限或自动升级 Node.js 和 npm。
+
+安装后 fastcli 会核验 npm 可执行入口，并单独检查 PATH 默认入口。即使两个入口显示同一个版本，也要核实它们指向同一个位置。安装成功后仍启动旧版时，运行 `fastcli info <工具 ID>` 对照两处路径。可调整 PATH，或用默认入口对应的原安装方式升级。原生安装器、Homebrew、Volta 或其他 Node 环境安装的工具仍可启动。
+
+失败或取消时，fastcli 会报告当前观测到的安装状态。若无法确认子进程已终止，实际状态仍可能变化。
+
+## 更新 fastcli 自身
+
+打开交互菜单或在交互终端执行快捷启动等命令时，fastcli 会用最多 2 秒查询 npm 上的自身稳定版本。查询失败时继续原命令。发现新版会显示当前版本和最新版本，并提供两个选项。
+
+- **立即更新**用于经核验的 npm 全局安装或 Volta 安装。验证新版成功后，fastcli 会保留参数、工作目录和环境，用新版继续原命令。Volta 更新沿用当前 Node.js 版本。无法核验的安装会提示用原安装方式更新，随后结束本次调用。更新失败或取消也会结束本次调用。
+- **下次更新**会继续本次命令，下次检查发现较新版本时再次提醒。
+
+非交互调用、CI、fastcli 自身的帮助和版本输出、`fastcli config` 的 JSON 输出以及管理 `--dry-run` 跳过检查。可设置 `FASTCLI_NO_UPDATE_CHECK=1` 关闭自动检查。旧版 `~/.fastcli/update-state.json` 中的忽略记录不再屏蔽提示。
+
+## 设置与旧版迁移
 
 ```bash
 fastcli config
@@ -163,42 +96,29 @@ fastcli config --language zh-CN
 fastcli config --language en
 ```
 
-首次使用直接进入菜单，不再选择包管理器。无配置时使用英文默认值；修改设置时才创建配置。
+`fastcli config` 显示当前配置。默认语言为英文，保存设置时写入 `~/.fastcli/config.json`，schema 为 `"2"`，包管理器固定为 npm。旧配置迁移时保留语言，并先保存原始备份 `config.json.bak.<时间>.<唯一标识>`。损坏配置和高于当前 schema 的版本保留原样。
 
-旧配置首次加载时先保存 `config.json.bak.<时间>.<唯一标识>` 原始备份，再原子迁移到 npm 并保留语言。POSIX 配置与备份权限为 `0600`。损坏配置或未来 schema 版本不会被覆盖。
-
-本次重构属于破坏性接口调整：
-
-| 旧用法 | 新用法 |
-|---|---|
+| 旧用法 | 当前用法 |
+| --- | --- |
 | `fastcli run claude danger` | `fastcli claude` |
-| `fastcli run claude install` | `fastcli install claude` |
+| `fastcli run claude install` 或 `fastcli upgrade claude` | `fastcli install claude` |
 | `fastcli run claude uninstall` | `fastcli uninstall claude` |
 | `pi-coding-agent` 工具 ID | `pi` |
 | `fastcli config edit` | `fastcli config --language zh-CN` 或直接编辑配置 |
-| `add/edit/remove/view/web`、旧版通用操作 | 已移除 |
-| `list --source/--tag/--category` | `fastcli list` 或 `fastcli info <tool>` |
+| `list --source/--tag/--category` | `fastcli list` 或 `fastcli info <工具 ID>` |
+| `add/edit/remove/view/web`、旧通用操作 | 已移除 |
 
-旧 `~/.fastcli/tools.json` 原样保留，新版不读取、不覆盖其中的工具。Web 编辑器、自定义命令链、通用工具及 Copilot、CodeBuddy、Cursor 内置条目已移除。需要回到旧版时，可安装指定旧版 fastcli 并恢复配置备份；工具本身的安装变更不会随 fastcli 降级而撤销。
+旧 `~/.fastcli/tools.json` 保留原样，新版不读取其中的工具或命令链。要在新版运行常用命令，可在自定义命令菜单重新保存整行命令。需要回到旧版时，可以安装指定旧版并恢复配置备份。AI CLI 自身的安装变更需要单独处理。
 
-## 开发
+## 参与开发
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm build
 pnpm test
 pnpm typecheck
-pnpm dev
 ```
 
-`src/builtin` 维护工具目录，`src/core` 负责检测、进程与 npm 管理，`src/cli` 负责命令和菜单，`src/config` 负责配置迁移和原子写入。构建仅生成 CLI。
+构建产物位于 `dist/`。可用 `pnpm dev` 监听改动。CI 在 Windows、macOS 和 Linux 上先构建再测试。测试使用临时目录、伪 AI CLI 和伪 npm，Windows 上的符号链接用例需要创建文件符号链接的权限。模块入口和开发约束见 [AGENTS.md](AGENTS.md)，版本变化见 [CHANGELOG.md](CHANGELOG.md)。
 
-测试通过临时目录、伪 AI CLI 和伪 npm 验证真实进程/文件系统边界，不安装真实 AI 工具。CI 配置覆盖 Linux、macOS、Windows，先构建再测试。
-
-发布由 `v*` tag 驱动：构建、测试通过后执行 `npm stage publish --access public --tag latest`，核对暂存版本后创建 GitHub Release，并在 Actions Summary 中给出 Stage ID。
-
-GitHub Actions 使用仓库 Secret `NPM_TOKEN`，可使用本包的 **Read and write (stage only)** 权限，无需开启 Bypass 2FA。维护者在 npmjs.com 的 **Staged Packages** 中审核并使用 2FA 确认后，版本才公开上架。GitHub Release 和 CI 成功仅表示暂存完成，不表示 npm 已发布。详见 [npm 暂存发布说明](https://docs.npmjs.com/staged-publishing/)。
-
-已存在标签但 npm 尚未暂存时，可在 Actions → Release → Run workflow 中选择 `master` 并填写原标签（例如 `v3.2.8`）补交。补交构建原标签对应内容，不修改标签或已有 GitHub Release；缺失的 Release 会创建。已有暂存或公开版本不能重复上传，恢复前先核对 `npm stage list @namewta/fastcli` 和 registry。
-
-项目协作约束见 [AGENTS.md](AGENTS.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。
+`v*` 标签触发 GitHub Actions 构建、测试并暂存 npm 包。维护者在 npm 的 Staged Packages 中通过 2FA 批准后，版本才会公开上架。补交及核验步骤见 [npm 发布手册](.agents/dev/deploy/npm/runbook.md)。

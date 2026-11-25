@@ -1,0 +1,4 @@
+interface:
+  display_name: "交付审查"
+  short_description: "分别检查规格符合性和项目规范，复核行为证据与实际影响范围"
+  default_prompt: "请使用 $dev-review 分别审查这次改动的规格符合性与项目规范，并核对行为证据和影响范围。"

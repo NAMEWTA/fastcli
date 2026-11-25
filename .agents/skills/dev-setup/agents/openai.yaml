@@ -1,0 +1,4 @@
+interface:
+  display_name: "开发环境与资源配置"
+  short_description: "核对运行环境和本机及指定远端资源，评估并发与工作树容量，按需保存显式引用的团队配置"
+  default_prompt: "使用 $dev-setup 核对项目运行要求与当前宿主及我指定远端的有效资源，给出有依据的 Agent、重任务和 worktree 预算及复测条件。"

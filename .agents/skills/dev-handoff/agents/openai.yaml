@@ -1,0 +1,4 @@
+interface:
+  display_name: "开发交接与接续"
+  short_description: "保存开发现场、交接下一会话并核对恢复点；明确暂停时留下可接续记录"
+  default_prompt: "请使用 $dev-handoff 沿用当前开发任务的目标、已有产物与证据，按我的意图保存交接、恢复工作或安全暂停，并明确下一会话重点、建议技能和恢复后的第一步。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "并行工作与候选比选"
+  short_description: "多执行者项目协调、分工覆盖、独立候选与证据汇总，保留可恢复的工作记录"
+  default_prompt: "使用 $dev-parallel 找出可以独立推进的工作，按本次约定安排写入范围，整合结果并验证交付。"

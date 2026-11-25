@@ -1,0 +1,4 @@
+interface:
+  display_name: "多 Change 编排"
+  short_description: "把已有 Change 编入一个 Goal，按跨变更依赖推进并验证整批结果"
+  default_prompt: "使用 $dev-program 编排这批 Change，说明当前可做项、前置产物和整体验收，并按本次目标推进。"

@@ -1,9 +1,0 @@
-{
-  "schema_version": 1,
-  "package_version": "2.1.0",
-  "targets": [
-    "agents"
-  ],
-  "skill_ids": [],
-  "packages": []
-}

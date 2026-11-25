@@ -1,0 +1,4 @@
+interface:
+  display_name: "规格实现"
+  short_description: "按明确规格和切片持续实现，在真实交付面验证并保留可恢复进度"
+  default_prompt: "请使用 $dev-build 核对规格与适用的已确认原型版本和范围，持续实现到本次授权的交付点，验证实际行为并记录进度。"

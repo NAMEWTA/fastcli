@@ -1,0 +1,4 @@
+interface:
+  display_name: "问题报告分诊"
+  short_description: "对指定来源的报告分类、查重和分流，在原报告或当前运行中交付可信结论"
+  default_prompt: "请使用 $dev-issue-triage 对这份报告分类、查重和分流，核对真实来源与已有授权，在指定位置交付结论。"
